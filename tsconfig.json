@@ -11,7 +11,8 @@
     "noImplicitAny": true,
     "outDir": "build",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["*"],
+      "react": [ "./node_modules/@types/react" ]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

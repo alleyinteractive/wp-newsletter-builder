@@ -1,0 +1,29 @@
+/*
+ * This adds enough specificity to override the core block-library styles while
+ * allowing our custom blocks' styles to win.
+ */
+html :where(.editor-styles-wrapper) {
+  @import '@/scss/core-blocks/heading';
+}
+
+// Block editor styles.
+.block-editor {
+  .editor-styles-wrapper {
+    margin: 0 auto;
+    max-width: 600px;
+    min-width: 320px;
+    width: 320px;
+    width: calc(28000% - 167400px);
+
+    // Some blocks require extra specificity.
+    .block-editor-block-list__layout.is-root-container {
+      /* tbd */
+    }
+
+    // Block style imports.
+    @import '@/scss/core-blocks/image';
+    @import '@/scss/core-blocks/paragraph';
+    @import '@/scss/core-blocks/button';
+    @import '@/scss/core-blocks/separator';
+  }
+}

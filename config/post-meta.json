@@ -1,0 +1,125 @@
+{
+  "nb_newsletter_email_type": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_template": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_from_name": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_subject": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_preview": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_list": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "array",
+    "schema": {
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "nb_newsletter_header_img": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "number"
+  },
+  "nb_breaking_email_type": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_breaking_template": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_breaking_from_name": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_breaking_subject": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_breaking_preview": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_breaking_list": {
+    "post_types": [
+      "post"
+    ],
+    "type": "array",
+    "schema": {
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "nb_breaking_header_img": {
+    "post_types": [
+      "post"
+    ],
+    "type": "number"
+  },
+  "nb_breaking_should_send": {
+    "post_types": [
+      "post"
+    ],
+    "type": "boolean"
+  },
+  "nb_breaking_content": {
+    "post_types": [
+      "post"
+    ],
+    "type": "string"
+  },
+  "nb_newsletter_should_send": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "boolean"
+  },
+  "nb_newsletter_sent_breaking_post_id": {
+    "post_types": [
+      "post"
+    ],
+    "type": "array",
+    "schema": {
+      "items": {
+        "type": "number"
+      }
+    }
+  }
+}

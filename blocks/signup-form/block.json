@@ -1,0 +1,38 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "newsletter-builder/signup-form",
+	"version": "0.1.0",
+	"title": "Newsletter Signup Form",
+	"category": "widgets",
+	"icon": "forms",
+	"description": "Shows a form to allow users to subscribe to newsletter lists",
+	"textdomain": "newsletter-builder",
+	"editorScript": "file:index.ts",
+	"editorStyle": "file:index.css",
+	"style": [
+		"file:style-index.css"
+	],
+	"render": "file:render.php",
+	"viewScript": [
+		"file:view.ts"
+	],
+	"attributes": {
+		"headerText": {
+			"type": "string"
+		},
+		"subheaderText": {
+			"type": "string"
+		},
+		"disclaimerText": {
+			"type": "string"
+		},
+		"buttonText": {
+			"type": "string"
+		},
+		"listId": {
+			"type": "string"
+		}
+	}
+
+}

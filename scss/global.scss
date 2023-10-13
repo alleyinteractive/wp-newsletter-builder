@@ -1,0 +1,35 @@
+.newsletter-builder-container {
+  margin: 0 auto;
+  max-width: 600px;
+  min-width: 320px;
+  width: 320px;
+  width: calc(28000% - 167400px);
+}
+
+// Text alignment.
+.has-text-align-left {
+  text-align: left;
+}
+
+.has-text-align-center {
+  text-align: center;
+}
+
+.has-text-align-right {
+  text-align: right;
+}
+
+.newsletter-builder__ad {
+  margin: 30px 0;
+}
+
+table.wrapper {
+  background-color: #fff;
+  min-width: 320px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.liveintent-disclosures img {
+  display: inline;
+}

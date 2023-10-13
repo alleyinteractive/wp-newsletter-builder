@@ -2,10 +2,10 @@
 /**
  * Contains functions for working with meta.
  *
- * @package create-wordpress-plugin
+ * @package newsletter-builder
  */
 
-namespace Create_WordPress_Plugin;
+namespace Newsletter_Builder;
 
 // Register custom meta fields.
 register_post_meta_from_defs();
@@ -18,25 +18,25 @@ register_post_meta_from_defs();
  * @see \register_post_meta
  * @see \register_term_meta
  *
- * @param string               $object_type  The type of meta to register, which must be one of 'post' or 'term'.
- * @param string|string[]      $object_slugs The post type or taxonomy slugs to register with.
- * @param string               $meta_key     The meta key to register.
- * @param array<string, mixed> $args         Optional. Additional arguments for register_post_meta or register_term_meta. Defaults to an empty array.
+ * @param string $object_type  The type of meta to register, which must be one of 'post' or 'term'.
+ * @param array  $object_slugs The post type or taxonomy slugs to register with.
+ * @param string $meta_key     The meta key to register.
+ * @param array  $args         Optional. Additional arguments for register_post_meta or register_term_meta. Defaults to an empty array.
  * @return bool True if the meta key was successfully registered in the global array, false if not.
  */
 function register_meta_helper(
 	string $object_type,
-	string|array $object_slugs,
+	array $object_slugs,
 	string $meta_key,
 	array $args = []
-): bool {
+) : bool {
 
 	// Object type must be either post or term.
 	if ( ! in_array( $object_type, [ 'post', 'term' ], true ) ) {
 		throw new \InvalidArgumentException(
-			esc_html__(
+			__(
 				'Object type must be one of "post", "term".',
-				'create-wordpress-plugin'
+				'newsletter-builder'
 			)
 		);
 	}
@@ -46,7 +46,7 @@ function register_meta_helper(
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
-	 * @param array           $args {
+	 * @param array  $args {
 	 *     Array of args to be passed to register_meta().
 	 *
 	 *     @type string     $object_subtype    A subtype; e.g. if the object type is "post", the post type. If left empty,
@@ -67,12 +67,12 @@ function register_meta_helper(
 	 *                                         complex meta values this argument may optionally be an array with 'schema'
 	 *                                         or 'prepare_callback' keys instead of a boolean.
 	 * }
-	 * @param string          $object_type  The type of meta to register, which must be one of 'post' or 'term'.
-	 * @param string|string[] $object_slugs The post type or taxonomy slugs to register with.
-	 * @param string          $meta_key     The meta key to register.
+	 * @param string $object_type  The type of meta to register, which must be one of 'post' or 'term'.
+	 * @param array  $object_slugs The post type or taxonomy slugs to register with.
+	 * @param string $meta_key     The meta key to register.
 	 */
 	$args = apply_filters(
-		'create_wordpress_plugin_register_meta_helper_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		'newsletter_builder_register_meta_helper_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		wp_parse_args(
 			$args,
 			[
@@ -85,26 +85,6 @@ function register_meta_helper(
 		$object_slugs,
 		$meta_key
 	);
-
-	// Allow setting meta for all of an object type.
-	if (
-		(
-			is_array( $object_slugs ) &&
-			1 === count( $object_slugs ) &&
-			'all' === $object_slugs[0]
-		) ||
-		(
-			is_string( $object_slugs ) &&
-			'all' === $object_slugs
-		)
-	) {
-		return register_meta( $object_type, $meta_key, $args );
-	}
-
-	// Fix potential errors since we're allowing `$object_slugs` to be a string or array.
-	if ( is_string( $object_slugs ) ) {
-		$object_slugs = [ $object_slugs ];
-	}
 
 	// Fork for object type.
 	switch ( $object_type ) {
@@ -132,7 +112,7 @@ function register_meta_helper(
 /**
  * Reads the post meta definitions from config and registers them.
  */
-function register_post_meta_from_defs(): void {
+function register_post_meta_from_defs() {
 	// Ensure the config file exists.
 	$filepath = dirname( __DIR__ ) . '/config/post-meta.json';
 	if ( ! file_exists( $filepath )
@@ -143,8 +123,8 @@ function register_post_meta_from_defs(): void {
 
 	// Try to read the file's contents. We can dismiss the "uncached" warning here because it is a local file.
 	// phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-	$definitions = json_decode( (string) file_get_contents( $filepath ), true );
-	if ( empty( $definitions ) || ! is_array( $definitions ) ) {
+	$definitions = json_decode( file_get_contents( $filepath ), true );
+	if ( empty( $definitions ) ) {
 		return;
 	}
 

@@ -1,0 +1,29 @@
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * All imported CSS files are bundled into one chunk named after the entry point,
+ * which defaults to index.js, and thus the file created becomes index.css.
+ * This is for styles used only in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+
+.wp-block-newsletter-builder-post {
+  margin: 0 auto;
+  width: 600px;
+
+  .newsletter-remove-post {
+    margin: 0;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+  }
+}
+
+.image-container {
+  line-height: 0;
+}
+
+.newsletter-read-more {
+  margin-bottom: 30px;
+}

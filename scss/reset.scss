@@ -1,0 +1,51 @@
+/**
+ * Email Reset
+ *
+ * https://templates.mailchimp.com/development/css/reset-styles/
+ */
+
+body,
+.main,
+.mso {
+  background-color: #fff;
+  color: #000;
+  margin: 0;
+  padding: 0;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-text-size-adjust: 100%;
+}
+
+figure {
+  display: block;
+  margin: 0;
+}
+
+img {
+  border: 0 none;
+  display: block;
+  height: auto;
+  line-height: 100%;
+  max-width: 100%;
+  outline: none;
+  text-decoration: none;
+}
+
+a img {
+  border: 0 none;
+}
+
+/**
+ * Some email clients add space below images by default, which is problematic if
+ * you’re tiling images. Attach the `.image-fix` class to remove the space. Be
+ * aware that, by setting images to block-level elements, you can’t align them
+ * without resorting to the float or position CSS properties, which aren’t widely
+ * supported.
+ */
+.image-fix {
+  display: block;
+}
+
+table,
+td {
+  border-collapse: collapse;
+}

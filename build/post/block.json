@@ -1,0 +1,93 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "newsletter-builder/post",
+  "version": "0.1.0",
+  "title": "Newsletter Single Post",
+  "category": "design",
+  "icon": "admin-post",
+  "description": "Displays a post",
+  "textdomain": "post",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "postId": {
+      "type": "number",
+      "default": 0
+    },
+    "showImage": {
+      "type": "boolean",
+      "default": true
+    },
+    "showExcerpt": {
+      "type": "boolean",
+      "default": true
+    },
+    "showContent": {
+      "type": "boolean",
+      "default": true
+    },
+    "showByline": {
+      "type": "boolean",
+      "default": true
+    },
+    "showCta": {
+      "type": "boolean",
+      "default": true
+    },
+    "showProBadge": {
+      "type": "boolean",
+      "default": true
+    },
+    "order": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "title",
+        "byline",
+        "image",
+        "excerpt",
+        "content",
+        "cta"
+      ]
+    },
+    "overrideTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "overrideImage": {
+      "type": "number",
+      "default": 0
+    },
+    "overrideExcerpt": {
+      "type": "string",
+      "default": ""
+    },
+    "overrideContent": {
+      "type": "string",
+      "default": ""
+    },
+    "overrideByline": {
+      "type": "string",
+      "default": ""
+    },
+    "number": {
+      "type": "number",
+      "default": null
+    },
+    "smallerFont": {
+      "type": "boolean",
+      "default": false
+    },
+    "imgSizes": {
+      "type": "string",
+      "default": ""
+    }
+  }
+}

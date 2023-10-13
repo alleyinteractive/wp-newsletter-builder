@@ -1,0 +1,1 @@
+!function(){"use strict";(0,window.wp.hooks.addFilter)("blocks.registerBlockType","newsletter-builder/separator",(e=>({...e,attributes:{...e.attributes,hasSeparator:{type:"boolean",default:!1},separatorIsWide:{type:"boolean",default:!1}}})))}();

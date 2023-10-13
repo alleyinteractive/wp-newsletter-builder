@@ -5,7 +5,7 @@
  * @package create-wordpress-plugin
  */
 
-namespace Create_WordPress_Plugin\Tests\Unit;
+namespace WP_Newsletter_Builder\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 

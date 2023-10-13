@@ -5,9 +5,9 @@
  * @package create-wordpress-plugin
  */
 
-namespace Create_WordPress_Plugin\Tests\Feature;
+namespace WP_Newsletter_Builder\Tests\Feature;
 
-use Create_WordPress_Plugin\Tests\Test_Case;
+use WP_Newsletter_Builder\Tests\Test_Case;
 
 /**
  * A test suite for an example feature.

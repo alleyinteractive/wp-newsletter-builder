@@ -5,7 +5,7 @@
  * @package create-wordpress-plugin
  */
 
-namespace Create_WordPress_Plugin;
+namespace WP_Newsletter_Builder;
 
 /**
  * Example Plugin

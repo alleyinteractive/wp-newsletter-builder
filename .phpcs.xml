@@ -36,8 +36,7 @@
   <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
     <properties>
       <property name="prefixes" type="array">
-        <element value="vendor_name" />
-        <element value="create_wordpress_plugin" />
+        <element value="wp_newsletter_builder" />
       </property>
     </properties>
   </rule>

@@ -14,7 +14,7 @@
  * phpcs:disable
  */
 
-namespace Create_WordPress_Plugin\Configure;
+namespace WP_Newsletter_Builder\Configure;
 
 if ( ! defined( 'STDIN' ) ) {
 	die( 'Not in CLI mode.' );
@@ -492,19 +492,19 @@ $search_and_replace = [
 	'A skeleton WordPress plugin' => $description,
 
 	// Escape the namespace used in composer.json.
-	'"Create_WordPress_Plugin\\"'        => (string) json_encode( $namespace ),
-	'"Create_WordPress_Plugin\\Tests\\"' => (string) json_encode( $namespace . '\\Tests' ),
+	'"WP_Newsletter_Builder\\"'        => (string) json_encode( $namespace ),
+	'"WP_Newsletter_Builder\\Tests\\"' => (string) json_encode( $namespace . '\\Tests' ),
 
-	'Create_WordPress_Plugin'     => $namespace,
+	'WP_Newsletter_Builder'     => $namespace,
 	'Example_Plugin'              => $class_name,
 
-	'create_wordpress_plugin'     => str_replace( '-', '_', $plugin_name_slug ),
+	'wp_newsletter_builder'     => str_replace( '-', '_', $plugin_name_slug ),
 	'plugin_name'                 => $plugin_name,
 
 	'create-wordpress-plugin'     => $plugin_name_slug,
 	'Create WordPress Plugin'     => $plugin_name,
 
-	'CREATE_WORDPRESS_PLUGIN'     => strtoupper( str_replace( '-', '_', $plugin_name_slug ) ),
+	'WP_NEWSLETTER_BUILDER'     => strtoupper( str_replace( '-', '_', $plugin_name_slug ) ),
 	'Skeleton'                    => $class_name,
 	'vendor_name'                 => $vendor_name,
 	'alleyinteractive'            => $vendor_slug,

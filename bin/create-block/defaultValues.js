@@ -4,7 +4,7 @@
  * @see https://github.com/WordPress/gutenberg/blob/trunk/packages/create-block/docs/external-template.md#defaultvalues
  */
 module.exports = {
-  namespace: 'newsletter-builder',
+  namespace: 'wp-newsletter-builder',
   plugin: false,
   description: '',
   dashicon: 'palmtree',

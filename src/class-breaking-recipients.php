@@ -2,10 +2,10 @@
 /**
  * Breaking_Recipients class file
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Breaking Recipients class
@@ -34,7 +34,7 @@ class Breaking_Recipients {
 	 */
 	public function maybe_register_settings_page() {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
-			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Breaking Recipients', 'newsletter-builder' ), __( 'Breaking Recipients', 'newsletter-builder' ) );
+			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Breaking Recipients', 'wp-newsletter-builder' ), __( 'Breaking Recipients', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
 		}
 	}
@@ -48,7 +48,7 @@ class Breaking_Recipients {
 		$settings = new \Fieldmanager_Group(
 			[
 				'name'           => static::SETTINGS_KEY,
-				'label'          => __( 'List', 'newsletter-builder' ),
+				'label'          => __( 'List', 'wp-newsletter-builder' ),
 				'children'       => [
 					'list' => new \Fieldmanager_Autocomplete(
 						[
@@ -61,7 +61,7 @@ class Breaking_Recipients {
 					),
 				],
 				'limit'          => 0,
-				'add_more_label' => __( 'Add Another List', 'newsletter-builder' ),
+				'add_more_label' => __( 'Add Another List', 'wp-newsletter-builder' ),
 				'sortable'       => true,
 			]
 		);

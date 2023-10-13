@@ -2,10 +2,10 @@
 /**
  * Ads class file
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Ads class
@@ -18,7 +18,7 @@ class Ads {
 	 */
 	public function __construct() {
 		add_filter( 'the_content', [ $this, 'insert_ads' ], 8, 1 );
-		add_filter( 'render_block_newsletter-builder/ad', [ $this, 'render_ad' ], 10, 2 );
+		add_filter( 'render_block_wp-newsletter-builder/ad', [ $this, 'render_ad' ], 10, 2 );
 		add_filter( 'wp_kses_allowed_html', [ $this, 'modify_allowed_html' ], 10, 2 );
 		add_filter( 'the_content', [ $this, 'reinsert_variable' ], 999, 1 );
 	}
@@ -42,7 +42,7 @@ class Ads {
 			$nb_list_ids = implode( ',', $nb_list_ids );
 		}
 
-		$email_types_class = new \Newsletter_Builder\Email_Types();
+		$email_types_class = new \WP_Newsletter_Builder\Email_Types();
 		$email_types       = $email_types_class->get_email_types();
 		$matching_types    = array_filter(
 			$email_types,
@@ -72,7 +72,7 @@ class Ads {
 
 		$blocks = parse_blocks( $content );
 		$rtb    = [
-			'blockName'    => 'newsletter-builder/ad',
+			'blockName'    => 'wp-newsletter-builder/ad',
 			'attrs'        => [
 				'adTag' => $this->replace_values( $safe_rtb, $key_value_string, $nb_list_ids ),
 			],
@@ -80,7 +80,7 @@ class Ads {
 			'innerHtml'    => $safe_rtb,
 		];
 		$ad1    = [
-			'blockName'    => 'newsletter-builder/ad',
+			'blockName'    => 'wp-newsletter-builder/ad',
 			'attrs'        => [
 				'adTag' => $this->replace_values( $ad_tags[0]['tag_code'] ?? '', $key_value_string, $nb_list_ids ),
 			],
@@ -89,7 +89,7 @@ class Ads {
 		];
 
 		$ad2 = [
-			'blockName'    => 'newsletter-builder/ad',
+			'blockName'    => 'wp-newsletter-builder/ad',
 			'attrs'        => [
 				'adTag' => $this->replace_values( $ad_tags[1]['tag_code'] ?? '', $key_value_string, $nb_list_ids ),
 			],
@@ -98,7 +98,7 @@ class Ads {
 		];
 		if ( $has_middle_ad ) {
 			$ad3 = [
-				'blockName'    => 'newsletter-builder/ad',
+				'blockName'    => 'wp-newsletter-builder/ad',
 				'attrs'        => [
 					'adTag' => $this->replace_values( $ad_tags[2]['tag_code'] ?? '', $key_value_string, $nb_list_ids ),
 				],
@@ -110,7 +110,7 @@ class Ads {
 			}
 		}
 		$ad_footer = [
-			'blockName'    => 'newsletter-builder/ad',
+			'blockName'    => 'wp-newsletter-builder/ad',
 			'attrs'        => [
 				'adTag' => '<table style="width:100%" class="liveintent-disclosures">
 						<tr>
@@ -148,7 +148,7 @@ class Ads {
 	}
 
 	/**
-	 * Renders our fake block: newsletter-builder/ad.
+	 * Renders our fake block: wp-newsletter-builder/ad.
 	 *
 	 * @param string $content The existing content - should be empty.
 	 * @param array  $block The block data.
@@ -157,7 +157,7 @@ class Ads {
 	public function render_ad( $content, $block ): string {
 		$ad_tag = $block['attrs']['adTag'];
 		$ad_tag = str_replace( '<$Enc.CampaignID$>', 'enc-campaign-id', $ad_tag );
-		return wp_kses_post( sprintf( '<div class="newsletter-builder__ad">%s</div>', $ad_tag ) );
+		return wp_kses_post( sprintf( '<div class="wp-newsletter-builder__ad">%s</div>', $ad_tag ) );
 	}
 
 	/**
@@ -169,7 +169,7 @@ class Ads {
 	public function get_middle_ad_location( $blocks ): ?int {
 		foreach ( $blocks as $index => $block ) {
 			if (
-				'newsletter-builder/section' === $block['blockName']
+				'wp-newsletter-builder/section' === $block['blockName']
 				&& true === $block['attrs']['adAfter']
 			) {
 				return $index + 1;

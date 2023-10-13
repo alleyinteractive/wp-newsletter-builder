@@ -2,10 +2,10 @@
 /**
  * Additional REST API Query class file
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Modifies the query for the REST API.

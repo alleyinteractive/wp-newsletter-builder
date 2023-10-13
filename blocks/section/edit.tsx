@@ -79,7 +79,7 @@ export default function Edit({
 
   const block = select('core/block-editor').getBlocksByClientId(clientId)[0] || null;
   const blocks = block ? block.innerBlocks : [];
-  const postBlocks = getClientIdsFromInnerBlocks(blocks, ['newsletter-builder/post'], []);
+  const postBlocks = getClientIdsFromInnerBlocks(blocks, ['wp-newsletter-builder/post'], []);
 
   const handleSelect = (posts: number[]) => {
     postBlocks.forEach((id: string) => {
@@ -104,7 +104,7 @@ export default function Edit({
             tagName="h2"
             value={heading}
             onChange={(value) => setAttributes({ heading: value })}
-            className="newsletter-builder-section__heading"
+            className="wp-newsletter-builder-section__heading"
           />
         ) : null}
         <InnerBlocks />
@@ -112,7 +112,7 @@ export default function Edit({
       <InspectorControls>
         { /* @ts-ignore */}
         <PanelBody
-          title={__('Post Selection', 'newsletter-builder')}
+          title={__('Post Selection', 'wp-newsletter-builder')}
           initialOpen
         >
           { /* @ts-ignore */}

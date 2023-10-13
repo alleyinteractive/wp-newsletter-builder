@@ -1,13 +1,13 @@
 <?php
 /**
- * Newsletter_Builder class file
+ * WP_Newsletter_Builder class file
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
-use Newsletter_Builder\Singleton;
+use WP_Newsletter_Builder\Singleton;
 
 /**
  * Campaign Monitor Client class
@@ -43,7 +43,7 @@ class Campaign_Monitor_Client {
 			<?php
 			printf(
 				/* translators: %1$s: Opening a tag to Fieldmanager plugin, %2$s closing a tag. */
-				esc_html__( 'The Newsletter Builder plugin requires the %1$sWordPress Fieldmanager plugin%2$s', 'newsletter-builder' ),
+				esc_html__( 'The Newsletter Builder plugin requires the %1$sWordPress Fieldmanager plugin%2$s', 'wp-newsletter-builder' ),
 				'<a href="https://github.com/alleyinteractive/wordpress-fieldmanager">',
 				'</a>',
 			);
@@ -65,7 +65,7 @@ class Campaign_Monitor_Client {
 		}
 
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
-			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Settings', 'newsletter-builder' ), __( 'Settings', 'newsletter-builder' ) );
+			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Settings', 'wp-newsletter-builder' ), __( 'Settings', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
 		}
 	}
@@ -80,42 +80,42 @@ class Campaign_Monitor_Client {
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
-					'api_key'            => new \Fieldmanager_TextField( __( 'API Key', 'newsletter-builder' ) ),
-					'client_id'          => new \Fieldmanager_TextField( __( 'Client ID', 'newsletter-builder' ) ),
-					'confirmation_email' => new \Fieldmanager_TextField( __( 'Confirmation Email', 'newsletter-builder' ) ),
-					'google_api_key'     => new \Fieldmanager_TextField( __( 'Google API Key', 'newsletter-builder' ) ),
-					'from_email'         => new \Fieldmanager_TextField( __( 'From Email', 'newsletter-builder' ) ),
-					'reply_to_email'     => new \Fieldmanager_TextField( __( 'Reply To Email', 'newsletter-builder' ) ),
+					'api_key'            => new \Fieldmanager_TextField( __( 'API Key', 'wp-newsletter-builder' ) ),
+					'client_id'          => new \Fieldmanager_TextField( __( 'Client ID', 'wp-newsletter-builder' ) ),
+					'confirmation_email' => new \Fieldmanager_TextField( __( 'Confirmation Email', 'wp-newsletter-builder' ) ),
+					'google_api_key'     => new \Fieldmanager_TextField( __( 'Google API Key', 'wp-newsletter-builder' ) ),
+					'from_email'         => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
+					'reply_to_email'     => new \Fieldmanager_TextField( __( 'Reply To Email', 'wp-newsletter-builder' ) ),
 					'from_names'         => new \Fieldmanager_TextField(
 						[
-							'label'              => __( 'From Names', 'newsletter-builder' ),
+							'label'              => __( 'From Names', 'wp-newsletter-builder' ),
 							'limit'              => 0,
-							'add_more_label'     => __( 'Add From Name', 'newsletter-builder' ),
+							'add_more_label'     => __( 'Add From Name', 'wp-newsletter-builder' ),
 							'one_label_per_item' => false,
 						]
 					),
 					'dev_settings'       => new \Fieldmanager_Group(
 						[
-							'label'       => __( 'Development Settings', 'newsletter-builder' ),
+							'label'       => __( 'Development Settings', 'wp-newsletter-builder' ),
 							'collapsed'   => true,
 							'collapsible' => true,
 							'children'    => [
 								'static_preview_url'  => new \Fieldmanager_Link(
 									[
-										'label'       => __( 'Static Preview URL', 'newsletter-builder' ),
-										'description' => __( 'For local development, provide an internet accessible file to use for the newsletter content.', 'newsletter-builder' ),
+										'label'       => __( 'Static Preview URL', 'wp-newsletter-builder' ),
+										'description' => __( 'For local development, provide an internet accessible file to use for the newsletter content.', 'wp-newsletter-builder' ),
 									]
 								),
 								'basic_auth_username' => new \Fieldmanager_TextField(
 									[
-										'label'       => __( 'Basic Auth Username', 'newsletter-builder' ),
-										'description' => __( 'For protected staging sites, provide a username for basic auth.', 'newsletter-builder' ),
+										'label'       => __( 'Basic Auth Username', 'wp-newsletter-builder' ),
+										'description' => __( 'For protected staging sites, provide a username for basic auth.', 'wp-newsletter-builder' ),
 									]
 								),
 								'basic_auth_password' => new \Fieldmanager_TextField(
 									[
-										'label'       => __( 'Basic Auth Password', 'newsletter-builder' ),
-										'description' => __( 'For protected staging sites, provide a password for basic auth.', 'newsletter-builder' ),
+										'label'       => __( 'Basic Auth Password', 'wp-newsletter-builder' ),
+										'description' => __( 'For protected staging sites, provide a password for basic auth.', 'wp-newsletter-builder' ),
 									]
 								),
 							],
@@ -123,39 +123,39 @@ class Campaign_Monitor_Client {
 					),
 					'footer_settings'    => new \Fieldmanager_Group(
 						[
-							'label'       => __( 'Footer Settings', 'newsletter-builder' ),
+							'label'       => __( 'Footer Settings', 'wp-newsletter-builder' ),
 							'collapsed'   => true,
 							'collapsible' => true,
 							'children'    => [
 								'facebook_url'  => new \Fieldmanager_Link(
 									[
-										'label' => __( 'Facebook URL', 'newsletter-builder' ),
+										'label' => __( 'Facebook URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'twitter_url'   => new \Fieldmanager_Link(
 									[
-										'label' => __( 'Twitter URL', 'newsletter-builder' ),
+										'label' => __( 'Twitter URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'instagram_url' => new \Fieldmanager_Link(
 									[
-										'label' => __( 'Instagram URL', 'newsletter-builder' ),
+										'label' => __( 'Instagram URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'youtube_url'   => new \Fieldmanager_Link(
 									[
-										'label' => __( 'YouTube URL', 'newsletter-builder' ),
+										'label' => __( 'YouTube URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'image'         => new \Fieldmanager_Media(
 									[
-										'label'        => __( 'Footer Image', 'newsletter-builder' ),
+										'label'        => __( 'Footer Image', 'wp-newsletter-builder' ),
 										'preview_size' => 'medium',
 									]
 								),
 								'address'       => new \Fieldmanager_TextField(
 									[
-										'label' => __( 'Company Address', 'newsletter-builder' ),
+										'label' => __( 'Company Address', 'wp-newsletter-builder' ),
 									]
 								),
 							],
@@ -283,7 +283,7 @@ class Campaign_Monitor_Client {
 		 *
 		 * @param string $url The URL.
 		 */
-		$url = apply_filters( 'newsletter_builder_html_url', $url );
+		$url = apply_filters( 'wp_newsletter_builder_html_url', $url );
 
 		$params = [
 			'Subject'    => get_post_meta( $newsletter->ID, 'nb_newsletter_subject', true ),

@@ -4,10 +4,10 @@
  *
  * This file will be copied to the assets build directory.
  *
- * @package newsletter-builder-demo-plugin
+ * @package wp-newsletter-builder-demo-plugin
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 add_action(
 	'enqueue_block_editor_assets',
@@ -21,9 +21,9 @@ add_action(
 function register_post_plugin_scripts() {
 	wp_register_script(
 		'plugin-newsletter-from-post',
-		get_entry_asset_url( 'newsletter-builder-from-post' ),
-		get_asset_dependency_array( 'newsletter-builder-from-post' ),
-		get_asset_version( 'newsletter-builder-from-post' ),
+		get_entry_asset_url( 'wp-newsletter-builder-from-post' ),
+		get_asset_dependency_array( 'wp-newsletter-builder-from-post' ),
+		get_asset_version( 'wp-newsletter-builder-from-post' ),
 		true
 	);
 	wp_set_script_translations( 'plugin-newsletter-from-post' );

@@ -2,7 +2,7 @@
 
 Contributors: alleyinteractive
 
-Tags: alleyinteractive, newsletter-builder
+Tags: alleyinteractive, wp-newsletter-builder
 
 Stable tag: 0.1.0
 
@@ -14,8 +14,8 @@ Requires PHP: 8.0
 
 License: GPL v2 or later
 
-[![Coding Standards](https://github.com/alleyinteractive/newsletter-builder/actions/workflows/coding-standards.yml/badge.svg)](https://github.com/alleyinteractive/newsletter-builder/actions/workflows/coding-standards.yml)
-[![Testing Suite](https://github.com/alleyinteractive/newsletter-builder/actions/workflows/unit-test.yml/badge.svg)](https://github.com/alleyinteractive/newsletter-builder/actions/workflows/unit-test.yml)
+[![Coding Standards](https://github.com/alleyinteractive/wp-newsletter-builder/actions/workflows/coding-standards.yml/badge.svg)](https://github.com/alleyinteractive/wp-newsletter-builder/actions/workflows/coding-standards.yml)
+[![Testing Suite](https://github.com/alleyinteractive/wp-newsletter-builder/actions/workflows/unit-test.yml/badge.svg)](https://github.com/alleyinteractive/wp-newsletter-builder/actions/workflows/unit-test.yml)
 
 Interface to manage email newsletters. Creates a Custom Post Type.
 
@@ -24,7 +24,7 @@ Interface to manage email newsletters. Creates a Custom Post Type.
 You can install the package via composer:
 
 ```bash
-composer require alleyinteractive/newsletter-builder
+composer require alleyinteractive/wp-newsletter-builder
 ```
 
 ## Usage
@@ -32,7 +32,7 @@ composer require alleyinteractive/newsletter-builder
 Activate the plugin in WordPress and use it like so:
 
 ```php
-$plugin = Newsletter_Builder\Newsletter_Builder\Newsletter_Builder();
+$plugin = WP_Newsletter_Builder\WP_Newsletter_Builder\WP_Newsletter_Builder();
 $plugin->perform_magic();
 ```
 

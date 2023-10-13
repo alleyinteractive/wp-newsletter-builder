@@ -6,7 +6,7 @@
  * @param string   $content        Rendered block output. ie. <InnerBlocks.Content />.
  * @param WP_Block $block_instance The instance of the WP_Block class that represents the block being rendered.
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
 $image_id = get_post_meta( get_the_ID(), 'nb_newsletter_header_img', true );

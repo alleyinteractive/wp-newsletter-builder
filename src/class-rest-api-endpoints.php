@@ -2,12 +2,12 @@
 /**
  * Additional REST API Endpoints class file
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
-use function Newsletter_Builder\get_byline;
+use function WP_Newsletter_Builder\get_byline;
 
 /**
  * Adds additional Endpoints to the REST API.
@@ -27,7 +27,7 @@ class Rest_API_Endpoints {
 	 */
 	public function register_endpoints() {
 		register_rest_route(
-			'newsletter-builder/v1',
+			'wp-newsletter-builder/v1',
 			'/lists/',
 			[
 				'methods'             => 'GET',
@@ -38,7 +38,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'newsletter-builder/v1',
+			'wp-newsletter-builder/v1',
 			'/email-types/',
 			[
 				'methods'             => 'GET',
@@ -49,7 +49,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'newsletter-builder/v1',
+			'wp-newsletter-builder/v1',
 			'/footer_settings/',
 			[
 				'methods'             => 'GET',
@@ -60,7 +60,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'newsletter-builder/v1/',
+			'wp-newsletter-builder/v1/',
 			'/status/(?P<post_id>[a-f0-9]+)',
 			[
 				'methods'             => 'GET',
@@ -71,7 +71,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'newsletter-builder/v1/',
+			'wp-newsletter-builder/v1/',
 			'/subscribe/',
 			[
 				'methods'             => 'POST',
@@ -88,7 +88,7 @@ class Rest_API_Endpoints {
 	 */
 	public function get_lists() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'newsletter-builder' ), [ 'status' => 401 ] );
+			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		$lists = Campaign_Monitor_Client::instance()->get_lists();
 		return $lists;
@@ -101,7 +101,7 @@ class Rest_API_Endpoints {
 	 */
 	public function get_email_types() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'newsletter-builder' ), [ 'status' => 401 ] );
+			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		$types_class = new Email_Types();
 		$types       = $types_class->get_email_types();
@@ -121,7 +121,7 @@ class Rest_API_Endpoints {
 	 */
 	public function get_footer_settings() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'newsletter-builder' ), [ 'status' => 401 ] );
+			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		$footer_settings = Campaign_Monitor_Client::instance()->get_footer_settings();
 		return $footer_settings;
@@ -145,14 +145,14 @@ class Rest_API_Endpoints {
 		}
 		$campaign_id = get_post_meta( $post_id, 'nb_newsletter_campaign_id', true );
 		if ( empty( $campaign_id ) ) {
-			$next = wp_next_scheduled( 'newsletter_builder_send_newsletter', [ $post_id ] );
+			$next = wp_next_scheduled( 'wp_newsletter_builder_send_newsletter', [ $post_id ] );
 			if ( ! empty( $next ) ) {
 				return [
-					'Status' => __( 'Queued', 'newsletter-builder' ),
+					'Status' => __( 'Queued', 'wp-newsletter-builder' ),
 				];
 			}
 			return [
-				'Status' => __( 'Not sent', 'newsletter-builder' ),
+				'Status' => __( 'Not sent', 'wp-newsletter-builder' ),
 			];
 		}
 		$status = Campaign_Monitor_Client::instance()->get_campaign_summary( $campaign_id );
@@ -198,14 +198,14 @@ class Rest_API_Endpoints {
 		if ( empty( $email ) ) {
 			return [
 				'success' => false,
-				'message' => __( 'No email address provided.', 'newsletter-builder' ),
+				'message' => __( 'No email address provided.', 'wp-newsletter-builder' ),
 			];
 		}
 		$list_ids = explode( ',', $request->get_param( 'listIds' ) );
 		if ( empty( $list_ids ) ) {
 			return [
 				'success' => false,
-				'message' => __( 'No lists selected.', 'newsletter-builder' ),
+				'message' => __( 'No lists selected.', 'wp-newsletter-builder' ),
 			];
 		}
 		$list_results = [];
@@ -214,7 +214,7 @@ class Rest_API_Endpoints {
 			if ( ! empty( $result ) && 200 === $result['http_status_code'] ) {
 				$list_results[ $list_id ] = [
 					'success' => true,
-					'message' => __( 'Successfully subscribed.', 'newsletter-builder' ),
+					'message' => __( 'Successfully subscribed.', 'wp-newsletter-builder' ),
 				];
 			} else {
 				$list_results[ $list_id ] = [
@@ -225,7 +225,7 @@ class Rest_API_Endpoints {
 		}
 		return [
 			'success' => true,
-			'message' => __( 'Successfully subscribed.', 'newsletter-builder' ),
+			'message' => __( 'Successfully subscribed.', 'wp-newsletter-builder' ),
 			'results' => $list_results,
 		];
 	}

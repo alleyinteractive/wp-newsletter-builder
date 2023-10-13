@@ -49,7 +49,7 @@ export default function Edit() {
   return (
     <div {...useBlockProps()}>
       {imageUrl ? (
-        <img src={imageUrl} alt={__('Header', 'newsletter-builder')} />
+        <img src={imageUrl} alt={__('Header', 'wp-newsletter-builder')} />
       ) : null }
     </div>
   );

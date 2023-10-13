@@ -2,7 +2,7 @@
 /**
  * Block Name: Post.
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
 /**
@@ -12,11 +12,11 @@
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function newsletter_builder_post_block_init() {
+function wp_newsletter_builder_post_block_init() {
 	// Register the block by passing the location of block.json.
 	register_block_type(
 		__DIR__
 	);
 
 }
-add_action( 'init', 'newsletter_builder_post_block_init' );
+add_action( 'init', 'wp_newsletter_builder_post_block_init' );

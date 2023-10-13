@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', () => {
-  const forms = document.querySelectorAll('[data-component="newsletter-builder-signup"]');
+  const forms = document.querySelectorAll('[data-component="wp-newsletter-builder-signup"]');
 
   forms.forEach((form) => {
     const button = form.querySelector('button');
@@ -9,8 +9,8 @@ window.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         const email = form.querySelector('input[type="email"]') as HTMLInputElement;
         const listIds = form.querySelectorAll('input[type="checkbox"]:checked');
-        const listId = form.querySelector('input[name="newsletter-builder-hidden"]') as HTMLInputElement;
-        const responseDiv = form.querySelector('.wp-block-newsletter-builder-signup-form__response');
+        const listId = form.querySelector('input[name="wp-newsletter-builder-hidden"]') as HTMLInputElement;
+        const responseDiv = form.querySelector('.wp-block-wp-newsletter-builder-signup-form__response');
         if (!responseDiv || !email) {
           return;
         }
@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', () => {
           formData.append('listIds', (Array.from(listIds).map((list) => (list as HTMLInputElement).value) ?? []).join(','));
         }
 
-        fetch('/wp-json/newsletter-builder/v1/subscribe', {
+        fetch('/wp-json/wp-newsletter-builder/v1/subscribe', {
           method: 'POST',
           body: formData,
           headers: {

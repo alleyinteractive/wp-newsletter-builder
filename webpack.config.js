@@ -24,8 +24,8 @@ module.exports = (env, { mode }) => ({
           return acc;
         }, {
           // All other custom entry points can be included here.
-          'newsletter-builder-separator/index': './block-filters/separator',
-          'newsletter-builder-from-post/index': './plugins/newsletter-from-post',
+          'wp-newsletter-builder-separator/index': './block-filters/separator',
+          'wp-newsletter-builder-from-post/index': './plugins/newsletter-from-post',
           'newsletter-status/index': './plugins/newsletter-status',
         }),
     };

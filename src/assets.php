@@ -4,14 +4,14 @@
  *
  * phpcs:disable phpcs:ignore Squiz.PHP.CommentedOutCode.Found
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 // Register and enqueue assets.
 add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\action_wp_enqueue_scripts' );
-add_action( 'newsletter_builder_enqueue_styles', __NAMESPACE__ . '\action_newsletters_enqueue_styles' );
+add_action( 'wp_newsletter_builder_enqueue_styles', __NAMESPACE__ . '\action_newsletters_enqueue_styles' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\action_admin_enqueue_scripts' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
 
@@ -34,17 +34,17 @@ function action_wp_enqueue_scripts() {
 	*/
 
 	// wp_enqueue_script(
-	// 	'newsletter-builder-example-entry',
+	// 	'wp-newsletter-builder-example-entry',
 	// 	get_entry_asset_url( 'example-entry' ),
 	// 	get_asset_dependency_array( 'example-entry' ),
 	// 	get_asset_version( 'example-entry' ),
 	// 	true
 	// );
-	// wp_set_script_translations( 'newsletter-builder-example-entry', 'newsletter-builder' );
+	// wp_set_script_translations( 'wp-newsletter-builder-example-entry', 'wp-newsletter-builder' );
 }
 
 /**
- * A callback for the newsletter_builder_enqueue_styles hook.
+ * A callback for the wp_newsletter_builder_enqueue_styles hook.
  */
 function action_newsletters_enqueue_styles() {
 	$blocks = [
@@ -94,13 +94,13 @@ function action_admin_enqueue_scripts() {
 	*/
 
 	// wp_enqueue_script(
-	// 	'newsletter-builder-admin-handle',
+	// 	'wp-newsletter-builder-admin-handle',
 	// 	get_entry_asset_url( 'admin-handle' ),
 	// 	get_asset_dependency_array( 'admin-handle' ),
 	// 	get_asset_version( 'admin-handle' ),
 	// 	true
 	// );
-	// wp_set_script_translations( 'newsletter-builder-admin-handle', 'newsletter-builder' );
+	// wp_set_script_translations( 'wp-newsletter-builder-admin-handle', 'wp-newsletter-builder' );
 }
 
 /**
@@ -125,13 +125,13 @@ function action_enqueue_block_editor_assets() {
 	}
 
 	wp_enqueue_style(
-		'newsletter-builder-editor',
+		'wp-newsletter-builder-editor',
 		get_entry_asset_url( 'editor', 'index.css' ),
 		get_asset_dependency_array( 'editor' ),
 		get_asset_version( 'editor' )
 	);
 	wp_localize_script(
-		'newsletter-builder-email-settings-editor-script',
+		'wp-newsletter-builder-email-settings-editor-script',
 		'newsletterBuilder',
 		[
 			'fromNames' => Campaign_Monitor_Client::instance()->get_from_names(),
@@ -161,7 +161,7 @@ function get_entry_dir_path( string $dir_entry_name, bool $dir = false ) {
 	// The relative path from the plugin root.
 	$asset_build_dir = "/build/{$dir_entry_name}/";
 	// Set the absolute file path from the root directory.
-	$asset_dir_path = NEWSLETTER_BUILDER_DIR . $asset_build_dir;
+	$asset_dir_path = WP_NEWSLETTER_BUILDER_DIR . $asset_build_dir;
 
 	if ( ! empty( $asset_dir_path ) && validate_path( $asset_dir_path ) ) {
 		// Negotiate the base path.
@@ -245,7 +245,7 @@ function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ) {
  * Load the php index files from the build directory for blocks, slotfills, and any other scripts with an index.php file.
  */
 function load_scripts() {
-	foreach ( glob( NEWSLETTER_BUILDER_DIR . '/build/**/index.php' ) as $path ) {
+	foreach ( glob( WP_NEWSLETTER_BUILDER_DIR . '/build/**/index.php' ) as $path ) {
 		if ( 0 === validate_file( $path ) && file_exists( $path ) ) {
 			require_once $path;  // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 		}

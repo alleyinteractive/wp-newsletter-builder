@@ -2,10 +2,10 @@
 /**
  * Adds a separator to a block.
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Registers assets so that they can be enqueued through Gutenberg in
@@ -14,9 +14,9 @@ namespace Newsletter_Builder;
 function register_separator_scripts() {
 	wp_register_script(
 		'plugin-newsletter-separator',
-		get_entry_asset_url( 'newsletter-builder-separator' ),
-		get_asset_dependency_array( 'newsletter-builder-separator' ),
-		get_asset_version( 'newsletter-builder-separator' ),
+		get_entry_asset_url( 'wp-newsletter-builder-separator' ),
+		get_asset_dependency_array( 'wp-newsletter-builder-separator' ),
+		get_asset_version( 'wp-newsletter-builder-separator' ),
 		true
 	);
 	wp_set_script_translations( 'plugin-newsletter-separator' );

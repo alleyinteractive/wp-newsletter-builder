@@ -70,7 +70,7 @@ export default function Edit({
       setIsLoading(false);
       return;
     }
-    apiFetch({ path: '/newsletter-builder/v1/footer_settings' }).then((response) => {
+    apiFetch({ path: '/wp-newsletter-builder/v1/footer_settings' }).then((response) => {
       setFooterSettings(response as any as FooterSettings);
     });
   }, [footerSettings]);
@@ -99,36 +99,36 @@ export default function Edit({
           <>
             {facebookUrl || twitterUrl || instagramUrl || youtubeUrl
               ? (
-                <div className="wp-block-newsletter-builder-footer__social-links">
+                <div className="wp-block-wp-newsletter-builder-footer__social-links">
                   {facebookUrl
                     ? (
-                      <span className="wp-block-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-newsletter-builder-footer__social-links__link" href={facebookUrl}>
-                          <img src="/wp-content/plugins/newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
+                      <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={facebookUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
                   {twitterUrl
                     ? (
-                      <span className="wp-block-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-newsletter-builder-footer__social-links__link" href={twitterUrl}>
-                          <img src="/wp-content/plugins/newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
+                      <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={twitterUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
                   {instagramUrl
                     ? (
-                      <span className="wp-block-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-newsletter-builder-footer__social-links__link" href={instagramUrl}>
-                          <img src="/wp-content/plugins/newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
+                      <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={instagramUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
                   {youtubeUrl
                     ? (
-                      <span className="wp-block-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-newsletter-builder-footer__social-links__link" href={youtubeUrl}>
-                          <img src="/wp-content/plugins/newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
+                      <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={youtubeUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
@@ -136,25 +136,25 @@ export default function Edit({
               ) : null}
             {imageUrl
               ? (
-                <div className="wp-block-newsletter-builder-footer__logo">
+                <div className="wp-block-wp-newsletter-builder-footer__logo">
                   <img src={imageUrl} alt={imageAltText} width="300" />
                 </div>
               ) : null}
             {address
               ? (
-                <div className="wp-block-newsletter-builder-footer__address">
+                <div className="wp-block-wp-newsletter-builder-footer__address">
                   {address}
                 </div>
               )
               : null}
           </>
         )}
-      <div className="wp-block-newsletter-builder-footer__links">
+      <div className="wp-block-wp-newsletter-builder-footer__links">
         {/* @ts-ignore */}
-        <preferences>{__('Preferences', 'newsletter-builder')}</preferences>
+        <preferences>{__('Preferences', 'wp-newsletter-builder')}</preferences>
         {' | '}
         {/* @ts-ignore */}
-        <unsubscribe>{__('Unsubscribe', 'newsletter-builder')}</unsubscribe>
+        <unsubscribe>{__('Unsubscribe', 'wp-newsletter-builder')}</unsubscribe>
       </div>
     </div>
   );

@@ -72,26 +72,26 @@ export default function Edit({
           <Button
             type="button"
             onClick={() => setAttributes({ logo: null })}
-            aria-label={__('Remove Logo', 'newsletter-builder')}
+            aria-label={__('Remove Logo', 'wp-newsletter-builder')}
             isDestructive
             variant="primary"
-            className="wp-block-newsletter-builder-signup-form-list__image_delete"
+            className="wp-block-wp-newsletter-builder-signup-form-list__image_delete"
           >
             X
           </Button>
           <img
             src={logoMedia.media_details?.sizes?.medium?.source_url || logoMedia.source_url}
-            alt={__('Newsletter Logo', 'newsletter-builder')}
+            alt={__('Newsletter Logo', 'wp-newsletter-builder')}
           />
         </>
       ) : (
         <MediaPlaceholder
           icon="format-image"
           labels={{
-            title: __('Image', 'newsletter-builder'),
+            title: __('Image', 'wp-newsletter-builder'),
             instructions: __(
               'Drag an image, upload a new one or select a file from your library.',
-              'newsletter-builder',
+              'wp-newsletter-builder',
             ),
           }}
           onSelect={(value) => setAttributes({ logo: value.id })}
@@ -99,26 +99,26 @@ export default function Edit({
           allowedTypes={['image']}
         />
       )}
-      <div className="wp-block-newsletter-builder-signup-form-list__content">
+      <div className="wp-block-wp-newsletter-builder-signup-form-list__content">
         <RichText
           tagName="h3"
           value={title}
           onChange={(value) => setAttributes({ title: value })}
-          placeholder={__('Title', 'newsletter-builder')}
+          placeholder={__('Title', 'wp-newsletter-builder')}
         />
         <RichText
           tagName="div"
           value={frequency}
-          className="wp-block-newsletter-builder-signup-form-list__frequency"
+          className="wp-block-wp-newsletter-builder-signup-form-list__frequency"
           onChange={(value) => setAttributes({ frequency: value })}
-          placeholder={__('Frequency', 'newsletter-builder')}
+          placeholder={__('Frequency', 'wp-newsletter-builder')}
         />
         <RichText
           tagName="div"
           value={description}
-          className="wp-block-newsletter-builder-signup-form-list__description"
+          className="wp-block-wp-newsletter-builder-signup-form-list__description"
           onChange={(value) => setAttributes({ description: value })}
-          placeholder={__('Description', 'newsletter-builder')}
+          placeholder={__('Description', 'wp-newsletter-builder')}
         />
         <CheckboxControl
           checked={initialChecked}
@@ -126,7 +126,7 @@ export default function Edit({
         />
       </div>
       <InspectorControls>
-        <PanelBody title={__('List Settings', 'newsletter-builder')}>
+        <PanelBody title={__('List Settings', 'wp-newsletter-builder')}>
           <PanelRow>
             <ListSelector
               selected={listId}

@@ -6,7 +6,7 @@
  * @param string   $content        Rendered block output. ie. <InnerBlocks.Content />.
  * @param WP_Block $block_instance The instance of the WP_Block class that represents the block being rendered.
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
 $nb_settings         = get_option( 'nb_campaign_monitor_settings' );
@@ -24,32 +24,32 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 	<hr class="wp-block-separator has-alpha-channel-opacity <?php echo esc_attr( $nb_separator_class ); ?>" />
 
 	<?php if ( $nb_has_social_links ) : ?>
-		<div class="wp-block-newsletter-builder-footer__social-links">
+		<div class="wp-block-wp-newsletter-builder-footer__social-links">
 			<?php if ( ! empty( $nb_facebook_url ) ) : ?>
-				<span class="wp-block-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_facebook_url ); ?>">
-						<img src="/wp-content/plugins/newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
+				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_facebook_url ); ?>">
+						<img src="/wp-content/plugins/wp-newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_twitter_url ) ) : ?>
-				<span class="wp-block-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_twitter_url ); ?>">
-						<img src="/wp-content/plugins/newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
+				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_twitter_url ); ?>">
+						<img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_instagram_url ) ) : ?>
-				<span class="wp-block-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_instagram_url ); ?>">
-						<img src="/wp-content/plugins/newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
+				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_instagram_url ); ?>">
+						<img src="/wp-content/plugins/wp-newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_youtube_url ) ) : ?>
-				<span class="wp-block-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_youtube_url ); ?>">
-						<img src="/wp-content/plugins/newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
+				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_youtube_url ); ?>">
+						<img src="/wp-content/plugins/wp-newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
 					</a>
 				</span>
 			<?php endif; ?>
@@ -57,20 +57,20 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 	<?php endif; ?>
 
 	<?php if ( ! empty( $nb_image_id ) ) : ?>
-		<div class="wp-block-newsletter-builder-footer__logo" align="center">
+		<div class="wp-block-wp-newsletter-builder-footer__logo" align="center">
 			<?php echo wp_kses_post( wp_get_attachment_image( $nb_image_id, 'full', false ) ); ?>
 		</div>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $nb_address ) ) : ?>
-		<div class="wp-block-newsletter-builder-footer__address">
+		<div class="wp-block-wp-newsletter-builder-footer__address">
 			<?php echo esc_html( $nb_address ); ?>
 		</div>
 	<?php endif; ?>
 
-	<div class="wp-block-newsletter-builder-footer__links">
-		<preferences><u><?php esc_html_e( 'Preferences', 'newsletter-builder' ); ?></u></preferences>
+	<div class="wp-block-wp-newsletter-builder-footer__links">
+		<preferences><u><?php esc_html_e( 'Preferences', 'wp-newsletter-builder' ); ?></u></preferences>
 		&nbsp;|&nbsp;
-		<unsubscribe><u><?php esc_html_e( 'Unsubscribe', 'newsletter-builder' ); ?></u></unsubscribe>
+		<unsubscribe><u><?php esc_html_e( 'Unsubscribe', 'wp-newsletter-builder' ); ?></u></unsubscribe>
 	</div>
 </div>

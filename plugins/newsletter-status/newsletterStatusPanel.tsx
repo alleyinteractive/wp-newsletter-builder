@@ -33,7 +33,7 @@ export default function NewsletterStatusPanel() {
   const fetchStatus = useCallback(async () => {
     setFetching(true);
     const res = await apiFetch({
-      path: `/newsletter-builder/v1/status/${postId}`,
+      path: `/wp-newsletter-builder/v1/status/${postId}`,
     });
     setStatus(res as Status);
     setFetching(false);
@@ -54,37 +54,37 @@ export default function NewsletterStatusPanel() {
   return (
     <PluginDocumentSettingPanel
       name="rubric-selection"
-      title={__('Newsletter Status', 'newsletter-builder')}
+      title={__('Newsletter Status', 'wp-newsletter-builder')}
     >
       {status ? (
         <>
           <dl>
             <dt>
-              {__('Status', 'newsletter-builder')}
+              {__('Status', 'wp-newsletter-builder')}
             </dt>
             <dd>
               {Status}
             </dd>
             <dt>
-              {__('Campaign Name', 'newsletter-builder')}
+              {__('Campaign Name', 'wp-newsletter-builder')}
             </dt>
             <dd>
               {Name}
             </dd>
             <dt>
-              {__('Recipients', 'newsletter-builder')}
+              {__('Recipients', 'wp-newsletter-builder')}
             </dt>
             <dd>
               {Recipients}
             </dd>
             <dt>
-              {__('Total Opened', 'newsletter-builder')}
+              {__('Total Opened', 'wp-newsletter-builder')}
             </dt>
             <dd>
               {TotalOpened}
             </dd>
             <dt>
-              {__('Unique Opened', 'newsletter-builder')}
+              {__('Unique Opened', 'wp-newsletter-builder')}
             </dt>
             <dd>
               {UniqueOpened}
@@ -95,7 +95,7 @@ export default function NewsletterStatusPanel() {
             variant="secondary"
             disabled={fetching}
           >
-            {__('Refresh', 'newsletter-builder')}
+            {__('Refresh', 'wp-newsletter-builder')}
           </Button>
         </>
       ) : (

@@ -107,7 +107,7 @@ export default function Edit() {
     if (lists.length > 0) {
       return;
     }
-    apiFetch({ path: '/newsletter-builder/v1/lists' }).then((response) => {
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(response as any as ListResult[]);
     });
   }, [lists]);
@@ -126,32 +126,32 @@ export default function Edit() {
       />
       {/* @ts-ignore */}
       <TextControl
-        label={__('Subject', 'newsletter-builder')}
-        placeholder={__('Enter subject', 'newsletter-builder')}
+        label={__('Subject', 'wp-newsletter-builder')}
+        placeholder={__('Enter subject', 'wp-newsletter-builder')}
         value={subject}
         onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
       />
       {/* @ts-ignore */}
       <TextControl
-        label={__('Preview Text', 'newsletter-builder')}
-        placeholder={__('Enter preview text', 'newsletter-builder')}
+        label={__('Preview Text', 'wp-newsletter-builder')}
+        placeholder={__('Enter preview text', 'wp-newsletter-builder')}
         value={preview}
         onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
       />
       {/* @ts-ignore */}
       {lists.length > 0 ? (
         <label
-          htmlFor="newsletter-builder-list"
+          htmlFor="wp-newsletter-builder-list"
         >
-          {__('Email List', 'newsletter-builder')}
+          {__('Email List', 'wp-newsletter-builder')}
           <MultiSelect
-            labelledBy={__('List', 'newsletter-builder')}
+            labelledBy={__('List', 'wp-newsletter-builder')}
             value={selected}
             options={options}
             onChange={setSelectedLists}
             hasSelectAll={false}
             overrideStrings={{
-              selectSomeItems: __('Select Email List', 'newsletter-builder'),
+              selectSomeItems: __('Select Email List', 'wp-newsletter-builder'),
             }}
           />
         </label>

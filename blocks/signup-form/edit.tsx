@@ -65,43 +65,43 @@ export default function Edit({
   return (
     <>
       <div {...useBlockProps()}>
-        <div className="wp-block-newsletter-builder-signup-form__header">
+        <div className="wp-block-wp-newsletter-builder-signup-form__header">
           <div>
             <RichText
               tagName="h2"
               value={headerText}
               onChange={(value) => setAttributes({ headerText: value })}
-              placeholder={__('Header Text', 'newsletter-builder')}
+              placeholder={__('Header Text', 'wp-newsletter-builder')}
             />
             <RichText
               tagName="div"
               value={subheaderText}
-              className="wp-block-newsletter-builder-signup-form__subheader"
+              className="wp-block-wp-newsletter-builder-signup-form__subheader"
               onChange={(value) => setAttributes({ subheaderText: value })}
-              placeholder={__('Subheader Text', 'newsletter-builder')}
+              placeholder={__('Subheader Text', 'wp-newsletter-builder')}
             />
           </div>
           <div>
             <div>
-              <span className="wp-block-newsletter-builder-signup-form__fake-text-input wp-block-newsletter-builder-signup-form__email-input">
-                {__('Email', 'newsletter-builder')}
+              <span className="wp-block-wp-newsletter-builder-signup-form__fake-text-input wp-block-wp-newsletter-builder-signup-form__email-input">
+                {__('Email', 'wp-newsletter-builder')}
               </span>
             </div>
             <RichText
               tagName="div"
               value={disclaimerText}
-              className="wp-block-newsletter-builder-signup-form__disclaimer"
+              className="wp-block-wp-newsletter-builder-signup-form__disclaimer"
               onChange={(value) => setAttributes({ disclaimerText: value })}
-              placeholder={__('Disclaimer Text', 'newsletter-builder')}
+              placeholder={__('Disclaimer Text', 'wp-newsletter-builder')}
             />
 
             <div className="wp-block-button is-style-subscribe">
-              <div className="wp-block-newsletter-builder-signup-form__fake-button wp-block-button__link wp-element-button">
+              <div className="wp-block-wp-newsletter-builder-signup-form__fake-button wp-block-button__link wp-element-button">
                 <RichText
                   tagName="span"
                   value={buttonText}
                   onChange={(value) => setAttributes({ buttonText: value })}
-                  placeholder={__('Button Text', 'newsletter-builder')}
+                  placeholder={__('Button Text', 'wp-newsletter-builder')}
                 />
               </div>
             </div>
@@ -109,12 +109,12 @@ export default function Edit({
         </div>
         {!listId ? (
           <InnerBlocks
-            allowedBlocks={['newsletter-builder/signup-form-list']}
+            allowedBlocks={['wp-newsletter-builder/signup-form-list']}
           />
         ) : null }
       </div>
       <InspectorControls>
-        <PanelBody title={__('List Settings', 'newsletter-builder')}>
+        <PanelBody title={__('List Settings', 'wp-newsletter-builder')}>
           <PanelRow>
             <ListSelector
               selected={listId ?? ''}

@@ -4,10 +4,10 @@
  *
  * This file will be copied to the assets build directory.
  *
- * @package newsletter-builder-demo-plugin
+ * @package wp-newsletter-builder-demo-plugin
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 add_action(
 	'enqueue_block_editor_assets',

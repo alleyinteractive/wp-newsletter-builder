@@ -1,12 +1,12 @@
 {
-    "name": "alleyinteractive/newsletter-builder",
+    "name": "alleyinteractive/wp-newsletter-builder",
     "description": "Interface to manage email newsletters",
     "type": "wordpress-plugin",
     "keywords": [
         "alleyinteractive",
-        "newsletter-builder"
+        "wp-newsletter-builder"
     ],
-    "homepage": "https://github.com/alleyinteractive/newsletter-builder",
+    "homepage": "https://github.com/alleyinteractive/wp-newsletter-builder",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
@@ -36,10 +36,10 @@
     "extra": {
         "wordpress-autoloader": {
             "autoload": {
-                "Newsletter_Builder\\": "src"
+                "WP_Newsletter_Builder\\": "src"
             },
             "autoload-dev": {
-                "Newsletter_Builder\\Tests\\": "tests"
+                "WP_Newsletter_Builder\\Tests\\": "tests"
             }
         }
     },

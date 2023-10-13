@@ -101,7 +101,7 @@ export default function Edit({
   let postTitle = record ? record.title.rendered : '';
   const postContent = record ? record.content.rendered : '';
   let postExcerpt = record ? record.excerpt.raw : '';
-  let postByline = record ? record.newsletter_builder_byline : '';
+  let postByline = record ? record.wp_newsletter_builder_byline : '';
   let featuredMediaId = record ? record.featured_media : null;
 
   postTitle = overrideTitle || postTitle;
@@ -140,7 +140,7 @@ export default function Edit({
             isDestructive
             onClick={() => handleSelect(0)}
             className="newsletter-remove-post"
-            aria-label={__('Remove Post', 'newsletter-builder')}
+            aria-label={__('Remove Post', 'wp-newsletter-builder')}
           >
             X
           </Button>
@@ -173,7 +173,7 @@ export default function Edit({
                 return (
                   showByline ? (
                     <p className="post__byline">
-                      {__('By ', 'newsletter-builder')}
+                      {__('By ', 'wp-newsletter-builder')}
                       <RichText
                         value={postByline}
                         tagName="span"
@@ -212,7 +212,7 @@ export default function Edit({
                   showCta ? (
                     <div className="newsletter-read-more has-text-align-center">
                       <span className="wp-element-button">
-                        {__('Read More', 'newsletter-builder')}
+                        {__('Read More', 'wp-newsletter-builder')}
                       </span>
                     </div>
                   ) : null
@@ -224,14 +224,14 @@ export default function Edit({
           <InspectorControls>
             {/* @ts-ignore */}
             <PanelBody
-              title={__('Post', 'newsletter-builder')}
+              title={__('Post', 'wp-newsletter-builder')}
               initialOpen
             >
               {/* @ts-ignore */}
               <PanelRow>
                 {/* @ts-ignore */}
                 <CheckboxControl
-                  label={__('Show image', 'newsletter-builder')}
+                  label={__('Show image', 'wp-newsletter-builder')}
                   checked={showImage}
                   onChange={(value) => setAttributes({ showImage: value })}
                 />
@@ -240,7 +240,7 @@ export default function Edit({
               <PanelRow>
                 {/* @ts-ignore */}
                 <CheckboxControl
-                  label={__('Show Byline', 'newsletter-builder')}
+                  label={__('Show Byline', 'wp-newsletter-builder')}
                   checked={showByline}
                   onChange={(value) => setAttributes({ showByline: value })}
                 />
@@ -249,7 +249,7 @@ export default function Edit({
               <PanelRow>
                 {/* @ts-ignore */}
                 <CheckboxControl
-                  label={__('Show dek', 'newsletter-builder')}
+                  label={__('Show dek', 'wp-newsletter-builder')}
                   checked={showExcerpt}
                   onChange={(value) => setAttributes({ showExcerpt: value })}
                 />
@@ -258,7 +258,7 @@ export default function Edit({
               <PanelRow>
                 {/* @ts-ignore */}
                 <CheckboxControl
-                  label={__('Show content', 'newsletter-builder')}
+                  label={__('Show content', 'wp-newsletter-builder')}
                   checked={showContent}
                   onChange={(value) => setAttributes({ showContent: value })}
                 />
@@ -267,7 +267,7 @@ export default function Edit({
               <PanelRow>
                 {/* @ts-ignore */}
                 <CheckboxControl
-                  label={__('Show CTA', 'newsletter-builder')}
+                  label={__('Show CTA', 'wp-newsletter-builder')}
                   checked={showCta}
                   onChange={(value) => setAttributes({ showCta: value })}
                 />
@@ -275,7 +275,7 @@ export default function Edit({
             </PanelBody>
             {/* @ts-ignore */}
             <PanelBody
-              title={__('Override Image', 'newsletter-builder')}
+              title={__('Override Image', 'wp-newsletter-builder')}
               initialOpen
             >
               {/* @ts-ignore */}
@@ -297,7 +297,7 @@ export default function Edit({
             allowedTypes={['post']}
             onReset={() => handleSelect(0)}
             params={{ after: cutoff.toISOString(), per_page: 20 }}
-            title={__('Please select a post', 'newsletter-builder')}
+            title={__('Please select a post', 'wp-newsletter-builder')}
             value={postId}
             // @ts-ignore
             searchRender={PostPickerResult}

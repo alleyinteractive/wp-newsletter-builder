@@ -21,7 +21,7 @@ export default function ListSelector({
 
   const listsToOptions = (rawLists: ListResult[]) => {
     const output = rawLists.map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
-    output.unshift({ label: __('Select a list', 'newsletter-builder'), value: '' });
+    output.unshift({ label: __('Select a list', 'wp-newsletter-builder'), value: '' });
     return output;
   };
 
@@ -31,7 +31,7 @@ export default function ListSelector({
     if (lists.length > 0) {
       return;
     }
-    apiFetch({ path: '/newsletter-builder/v1/lists' }).then((response) => {
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(response as any as ListResult[]);
     });
   }, [lists]);

@@ -1,21 +1,21 @@
 <?php
 /**
  * Plugin Name: Newsletter Builder
- * Plugin URI: https://github.com/alleyinteractive/newsletter-builder
+ * Plugin URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Description: Interface to manage email newsletters
  * Version: 0.1.0
  * Author: Alley Interactive
- * Author URI: https://github.com/alleyinteractive/newsletter-builder
+ * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 5.9
  * Tested up to: 6.2
  *
- * Text Domain: newsletter-builder
+ * Text Domain: wp-newsletter-builder
  * Domain Path: /languages/
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var string
  */
-define( 'NEWSLETTER_BUILDER_DIR', __DIR__ );
+define( 'WP_NEWSLETTER_BUILDER_DIR', __DIR__ );
 
 // Check if Composer is installed (remove if Composer is not required for your plugin).
 if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
@@ -35,7 +35,7 @@ if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 		function() {
 			?>
 			<div class="notice notice-error">
-				<p><?php esc_html_e( 'Composer is not installed and newsletter-builder cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'newsletter-builder' ); ?></p>
+				<p><?php esc_html_e( 'Composer is not installed and wp-newsletter-builder cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-newsletter-builder' ); ?></p>
 			</div>
 			<?php
 		}
@@ -67,7 +67,7 @@ function main() {
 	Campaign_Monitor_Client::instance()->setup();
 	new Email_Types();
 	new Media();
-	new Newsletter_Builder();
+	new WP_Newsletter_Builder();
 	new Rest_API_Endpoints();
 	new Rest_API_Fields();
 	new Rest_API_Query();

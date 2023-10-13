@@ -2,12 +2,12 @@
 /**
  * Additional REST API Fields class file
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
-use function Newsletter_Builder\get_byline;
+use function WP_Newsletter_Builder\get_byline;
 
 /**
  * Adds additional fields to the REST API.
@@ -27,7 +27,7 @@ class Rest_API_Fields {
 	public function register_field() {
 		register_rest_field(
 			'post',
-			'newsletter_builder_byline',
+			'wp_newsletter_builder_byline',
 			[
 				'get_callback' => [ $this, 'call_get_byline' ],
 			]

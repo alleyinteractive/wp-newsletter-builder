@@ -2,14 +2,14 @@
 /**
  * The template for displaying Newsletters.
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
 if ( function_exists( 'newrelic_disable_autorum' ) ) {
 	newrelic_disable_autorum();
 }
 
-$newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_preview', true );
+$wp_newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_preview', true );
 ?>
 <!doctype html>
 
@@ -25,7 +25,7 @@ $newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_previe
 	 * Fires in the head of single_nb_newsletter.php
 	 * Used to include inline styles.
 	 */
-	do_action( 'newsletter_builder_enqueue_styles' );
+	do_action( 'wp_newsletter_builder_enqueue_styles' );
 	?>
 </head>
 
@@ -35,8 +35,8 @@ $newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_previe
 <!--[if !mso]><!-->
 <body class="main">
 <!--<![endif]-->
-	<?php if ( ! empty( $newsletter_builder_preview ) ) : ?>
-		<div style="display:none;"><?php echo esc_html( $newsletter_builder_preview ); ?></div>
+	<?php if ( ! empty( $wp_newsletter_builder_preview ) ) : ?>
+		<div style="display:none;"><?php echo esc_html( $wp_newsletter_builder_preview ); ?></div>
 	<?php endif; ?>
 	<table class="wrapper" cellpadding="0" cellspacing="0" role="presentation">
 		<tbody>
@@ -46,7 +46,7 @@ $newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_previe
 					while ( have_posts() ) :
 						the_post();
 						?>
-						<div class="newsletter-builder-container">
+						<div class="wp-newsletter-builder-container">
 							<!--[if mso]><table class="wrapper" align="center" cellpadding="0" cellspacing="0" role="presentation"><tr><td style="width: 600px"><![endif]-->
 							<?php the_content(); ?>
 							<!--[if mso]></td></tr></table><![endif]-->

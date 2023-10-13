@@ -47,7 +47,7 @@ function SelectedList({
           <SortableItem key={t.id}>
             <div className="nb-post-picker-draggable">
               <SortableKnob>
-                <span aria-label={__('Move item', 'newsletter-builder')}>::</span>
+                <span aria-label={__('Move item', 'wp-newsletter-builder')}>::</span>
               </SortableKnob>
               { /* @ts-ignore */ }
               <Button

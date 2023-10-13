@@ -2,10 +2,10 @@
 /**
  * Various utility functions.
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Gets the byline for a post.
@@ -28,13 +28,13 @@ function get_byline( $post ) {
 			if ( 1 === count( $author_names ) ) {
 				$byline = sprintf(
 					/* translators: %s is the author name. */
-					__( 'By %s', 'newsletter-builder' ),
+					__( 'By %s', 'wp-newsletter-builder' ),
 					$author_names[0]
 				);
 			} elseif ( 2 === count( $author_names ) ) {
 				$byline = sprintf(
 					/* translators: %1$s is the first author name, %2$s is the second author name. */
-					__( 'By %1$s and %2$s', 'newsletter-builder' ),
+					__( 'By %1$s and %2$s', 'wp-newsletter-builder' ),
 					$author_names[0],
 					$author_names[1]
 				);
@@ -42,7 +42,7 @@ function get_byline( $post ) {
 				$last_author = array_pop( $author_names );
 				$byline      = sprintf(
 					/* translators: %1$s is a list of author names, %2$s is the last author name. */
-					__( 'By %1$s, and %2$s', 'newsletter-builder' ),
+					__( 'By %1$s, and %2$s', 'wp-newsletter-builder' ),
 					implode( ', ', $author_names ),
 					$last_author
 				);
@@ -53,7 +53,7 @@ function get_byline( $post ) {
 		if ( ! is_wp_error( $author ) ) {
 			$byline = sprintf(
 				/* translators: %s is the author name. */
-				__( 'By %s', 'newsletter-builder' ),
+				__( 'By %s', 'wp-newsletter-builder' ),
 				$author->display_name
 			);
 		}
@@ -61,7 +61,7 @@ function get_byline( $post ) {
 	/**
 	 * Filters the byline.
 	 */
-	return apply_filters( 'newsletter_builder_byline', $byline, $post );
+	return apply_filters( 'wp_newsletter_builder_byline', $byline, $post );
 }
 
 /**

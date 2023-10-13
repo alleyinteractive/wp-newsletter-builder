@@ -41,11 +41,11 @@ const {
 } = (window as any as Window);
 
 const templatesMap = {
-  'single-story.html': __('Single Story', 'newsletter-builder'),
-  'multi-story.html': __('Multi Story', 'newsletter-builder'),
-  'pro-single-story.html': __('Pro Single Story', 'newsletter-builder'),
-  'pro-multi-story.html': __('Pro Multi Story', 'newsletter-builder'),
-  'first-take.html': __('First Take', 'newsletter-builder'),
+  'single-story.html': __('Single Story', 'wp-newsletter-builder'),
+  'multi-story.html': __('Multi Story', 'wp-newsletter-builder'),
+  'pro-single-story.html': __('Pro Single Story', 'wp-newsletter-builder'),
+  'pro-multi-story.html': __('Pro Multi Story', 'wp-newsletter-builder'),
+  'first-take.html': __('First Take', 'wp-newsletter-builder'),
 };
 
 const fromOptions = fromNames.map((name: string) => (
@@ -68,7 +68,7 @@ function EmailTypeSelector({
     if (Object.keys(types).length > 0) {
       return;
     }
-    apiFetch({ path: '/newsletter-builder/v1/email-types' }).then((response) => {
+    apiFetch({ path: '/wp-newsletter-builder/v1/email-types' }).then((response) => {
       setTypes(response as any as TypeResult);
     });
   }, [types]);
@@ -85,7 +85,7 @@ function EmailTypeSelector({
     const output = Object.keys(rawTypes).map((key: string) => (
       { label: rawTypes[key].label, value: key }
     ));
-    output.unshift({ label: __('Select a type', 'newsletter-builder'), value: '' });
+    output.unshift({ label: __('Select a type', 'wp-newsletter-builder'), value: '' });
     return output;
   };
 
@@ -97,7 +97,7 @@ function EmailTypeSelector({
     const output = templates.map((value) => (
       { value, label: templatesMap[value as keyof typeof templatesMap] }
     ));
-    output.unshift({ label: __('Select a template', 'newsletter-builder'), value: '' });
+    output.unshift({ label: __('Select a template', 'wp-newsletter-builder'), value: '' });
     return output;
   };
 
@@ -110,7 +110,7 @@ function EmailTypeSelector({
     const { image, from_name: fromName } = type;
     imageHandler(parseInt(image, 10));
     fromNameHandler(fromName);
-    const response = await fetch(`/wp-content/plugins/newsletter-builder/layouts/${value}`);
+    const response = await fetch(`/wp-content/plugins/wp-newsletter-builder/layouts/${value}`);
     const html = await response.text();
     contentHandler(html);
   };
@@ -129,21 +129,21 @@ function EmailTypeSelector({
   return (
     <>
       <SelectControl
-        label={__('Select Header Type', 'newsletter-builder')}
+        label={__('Select Header Type', 'wp-newsletter-builder')}
         value={typeValue}
         options={typesToOptions(types)}
         onChange={typeHandler}
       />
       { templateToOptions(types).length ? (
         <SelectControl
-          label={__('Select Template', 'newsletter-builder')}
+          label={__('Select Template', 'wp-newsletter-builder')}
           value={templateValue}
           options={templateToOptions(types)}
           onChange={handleChange}
         />
       ) : null}
       <SelectControl
-        label={__('From Name', 'newsletter-builder')}
+        label={__('From Name', 'wp-newsletter-builder')}
         value={fromNameValue || types[typeValue]?.from_name}
         options={fromOptions}
         onChange={fromNameHandler}

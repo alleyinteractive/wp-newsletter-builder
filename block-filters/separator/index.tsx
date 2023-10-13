@@ -2,7 +2,7 @@ import { addFilter } from '@wordpress/hooks';
 
 addFilter(
   'blocks.registerBlockType',
-  'newsletter-builder/separator',
+  'wp-newsletter-builder/separator',
   (settings) => ({
     ...settings,
     attributes: {

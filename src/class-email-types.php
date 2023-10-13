@@ -2,10 +2,10 @@
 /**
  * Email_Types class file
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Email Types class
@@ -35,7 +35,7 @@ class Email_Types {
 	 */
 	public function maybe_register_settings_page() {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
-			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Email Types', 'newsletter-builder' ), __( 'Email Types', 'newsletter-builder' ) );
+			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Email Types', 'wp-newsletter-builder' ), __( 'Email Types', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
 		}
 	}
@@ -63,34 +63,34 @@ class Email_Types {
 							return $current_value ?: wp_generate_uuid4();
 						}
 					},
-					'label'      => new \Fieldmanager_TextField( __( 'Label', 'newsletter-builder' ) ),
+					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
 					'image'      => new \Fieldmanager_Media(
 						[
-							'label'        => __( 'Image', 'newsletter-builder' ),
+							'label'        => __( 'Image', 'wp-newsletter-builder' ),
 							'preview_size' => 'full',
 						]
 					),
 					'templates'  => new \Fieldmanager_CheckBoxes(
-						__( 'Templates', 'newsletter-builder' ),
+						__( 'Templates', 'wp-newsletter-builder' ),
 						[
 							'options' => [
-								'single-story.html'     => __( 'Single Story', 'newsletter-builder' ),
-								'multi-story.html'      => __( 'Multi Story', 'newsletter-builder' ),
-								'pro-single-story.html' => __( 'Pro Single Story', 'newsletter-builder' ),
-								'pro-multi-story.html'  => __( 'Pro Multi Story', 'newsletter-builder' ),
-								'first-take.html'       => __( 'First Take', 'newsletter-builder' ),
+								'single-story.html'     => __( 'Single Story', 'wp-newsletter-builder' ),
+								'multi-story.html'      => __( 'Multi Story', 'wp-newsletter-builder' ),
+								'pro-single-story.html' => __( 'Pro Single Story', 'wp-newsletter-builder' ),
+								'pro-multi-story.html'  => __( 'Pro Multi Story', 'wp-newsletter-builder' ),
+								'first-take.html'       => __( 'First Take', 'wp-newsletter-builder' ),
 							],
 						]
 					),
 					'from_name'  => new \Fieldmanager_Select(
-						__( 'From Name', 'newsletter-builder' ),
+						__( 'From Name', 'wp-newsletter-builder' ),
 						[
 							'options' => $from_names,
 						]
 					),
 					'safe_rtb'   => new \Fieldmanager_TextArea(
 						[
-							'label'    => __( 'SafeRTB Ad Tag', 'newsletter-builder' ),
+							'label'    => __( 'SafeRTB Ad Tag', 'wp-newsletter-builder' ),
 							'sanitize' => function ( $value ) {
 								return $value;
 							},
@@ -98,11 +98,11 @@ class Email_Types {
 					),
 					'ad_tags'    => new \Fieldmanager_Group(
 						[
-							'label'          => __( 'Tags', 'newsletter-builder' ),
+							'label'          => __( 'Tags', 'wp-newsletter-builder' ),
 							'children'       => [
 								'tag_code' => new \Fieldmanager_TextArea(
 									[
-										'label'    => __( 'Ad Tag', 'newsletter-builder' ),
+										'label'    => __( 'Ad Tag', 'wp-newsletter-builder' ),
 										'sanitize' => function ( $value ) {
 											return $value;
 										},
@@ -110,43 +110,43 @@ class Email_Types {
 								),
 							],
 							'limit'          => 0,
-							'add_more_label' => __( 'Add another tag', 'newsletter-builder' ),
+							'add_more_label' => __( 'Add another tag', 'wp-newsletter-builder' ),
 						]
 					),
 					'roadblock'  => new \Fieldmanager_Checkbox(
 						[
-							'label' => __( 'Enable Ad Roadblock', 'newsletter-builder' ),
+							'label' => __( 'Enable Ad Roadblock', 'wp-newsletter-builder' ),
 						]
 					),
 					'key_values' => new \Fieldmanager_Group(
 						[
-							'label'              => __( 'Key/Value Pairs', 'newsletter-builder' ),
+							'label'              => __( 'Key/Value Pairs', 'wp-newsletter-builder' ),
 							'children'           => [
 								'key'   => new \Fieldmanager_TextField(
 									[
-										'label' => __( 'Key', 'newsletter-builder' ),
+										'label' => __( 'Key', 'wp-newsletter-builder' ),
 									]
 								),
 								'value' => new \Fieldmanager_TextField(
 									[
-										'label' => __( 'Value', 'newsletter-builder' ),
+										'label' => __( 'Value', 'wp-newsletter-builder' ),
 									]
 								),
 							],
 							'limit'              => 0,
-							'add_more_label'     => __( 'Add another key/value pair', 'newsletter-builder' ),
+							'add_more_label'     => __( 'Add another key/value pair', 'wp-newsletter-builder' ),
 							'one_label_per_item' => false,
 						]
 					),
 				],
 				'limit'          => 0,
-				'add_more_label' => __( 'Add Another Email Type', 'newsletter-builder' ),
+				'add_more_label' => __( 'Add Another Email Type', 'wp-newsletter-builder' ),
 				'collapsible'    => true,
 				'collapsed'      => true,
-				'label'          => __( 'New Email Type', 'newsletter-builder' ),
+				'label'          => __( 'New Email Type', 'wp-newsletter-builder' ),
 				'label_macro'    => [
 					/* translators: %s is the label for the email type. */
-					__( 'Email Type: %s', 'newsletter-builder' ),
+					__( 'Email Type: %s', 'wp-newsletter-builder' ),
 					'label',
 				],
 				// We need to specify this condition since there will always be a UUID in the group.

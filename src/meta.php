@@ -2,10 +2,10 @@
 /**
  * Contains functions for working with meta.
  *
- * @package newsletter-builder
+ * @package wp-newsletter-builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 // Register custom meta fields.
 register_post_meta_from_defs();
@@ -36,7 +36,7 @@ function register_meta_helper(
 		throw new \InvalidArgumentException(
 			__(
 				'Object type must be one of "post", "term".',
-				'newsletter-builder'
+				'wp-newsletter-builder'
 			)
 		);
 	}
@@ -72,7 +72,7 @@ function register_meta_helper(
 	 * @param string $meta_key     The meta key to register.
 	 */
 	$args = apply_filters(
-		'newsletter_builder_register_meta_helper_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		'wp_newsletter_builder_register_meta_helper_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		wp_parse_args(
 			$args,
 			[

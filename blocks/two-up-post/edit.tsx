@@ -23,14 +23,14 @@ import './index.scss';
  * @return {WPElement} Element to render.
  */
 const MY_TEMPLATE = [
-  ['newsletter-builder/post', {
+  ['wp-newsletter-builder/post', {
     showContent: false,
     showExcerpt: false,
     showByline: false,
     showCta: false,
     order: ['image', 'title', 'excerpt', 'content', 'byline'],
   }],
-  ['newsletter-builder/post', {
+  ['wp-newsletter-builder/post', {
     showContent: false,
     showExcerpt: false,
     showByline: false,

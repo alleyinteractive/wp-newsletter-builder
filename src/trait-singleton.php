@@ -2,10 +2,10 @@
 /**
  * Trait file for Singletons.
  *
- * @package Newsletter_Builder
+ * @package WP_Newsletter_Builder
  */
 
-namespace Newsletter_Builder;
+namespace WP_Newsletter_Builder;
 
 /**
  * Make a class into a singleton.

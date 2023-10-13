@@ -11,7 +11,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/#block-styles
  */
 
-.wp-block-newsletter-builder-post {
+.wp-block-wp-newsletter-builder-post {
   > * {
     margin: 15px 0;
   }
@@ -36,7 +36,7 @@
     }
   }
 
-  .wp-block-newsletter-builder-two-up-post & {
+  .wp-block-wp-newsletter-builder-two-up-post & {
     h2 {
       font-size: 18px;
     }

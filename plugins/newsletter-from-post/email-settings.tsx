@@ -108,14 +108,14 @@ function EmailSettings() {
     if (lists.length > 0) {
       return;
     }
-    apiFetch({ path: '/newsletter-builder/v1/lists' }).then((response) => {
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(response as any as ListResult[]);
     });
   }, [lists]);
 
   const contentHandler = (html: string) => {
     const blocks = parse(html);
-    const postIndex = blocks.findIndex((block) => block.name === 'newsletter-builder/post');
+    const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
     blocks[postIndex].attributes.postId = postId;
 
     setMeta({ nb_breaking_content: serialize(blocks) });
@@ -131,11 +131,11 @@ function EmailSettings() {
     <PluginSidebar
       icon="email-alt2"
       name="nb-newsletter"
-      title={__('Newsletter', 'newsletter-builder')}
+      title={__('Newsletter', 'wp-newsletter-builder')}
     >
       <PanelBody
         initialOpen
-        title={__('Send Newsletter', 'newsletter-builder')}
+        title={__('Send Newsletter', 'wp-newsletter-builder')}
       >
         <EmailTypeSelector
           contentHandler={contentHandler}
@@ -148,14 +148,14 @@ function EmailSettings() {
           fromNameValue={fromName}
         />
         <TextareaControl
-          label={manualSubject ? __('Subject', 'newsletter-builder') : __('Subject (linked)', 'newsletter-builder')}
-          placeholder={__('Enter subject', 'newsletter-builder')}
+          label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
+          placeholder={__('Enter subject', 'wp-newsletter-builder')}
           value={subject !== '' ? subject : postTitle}
           onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
         />
         <TextareaControl
-          label={manualPreview ? __('Preview Text', 'newsletter-builder') : __('Preview Text (linked)', 'newsletter-builder')}
-          placeholder={__('Enter preview text', 'newsletter-builder')}
+          label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
+          placeholder={__('Enter preview text', 'wp-newsletter-builder')}
           value={preview !== '' ? preview : postExcerpt}
           onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
         />
@@ -176,17 +176,17 @@ function EmailSettings() {
         })}
         {lists.length > 0 ? (
           <label
-            htmlFor="newsletter-builder-list"
+            htmlFor="wp-newsletter-builder-list"
           >
-            {__('Email List', 'newsletter-builder')}
+            {__('Email List', 'wp-newsletter-builder')}
             <MultiSelect
-              labelledBy={__('List', 'newsletter-builder')}
+              labelledBy={__('List', 'wp-newsletter-builder')}
               value={selected}
               options={options}
               onChange={setSelectedLists}
               hasSelectAll={false}
               overrideStrings={{
-                selectSomeItems: __('Select Email List', 'newsletter-builder'),
+                selectSomeItems: __('Select Email List', 'wp-newsletter-builder'),
               }}
             />
           </label>
@@ -195,35 +195,35 @@ function EmailSettings() {
         )}
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl
-            label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'newsletter-builder') : __('Send Newsletter on Update', 'newsletter-builder')}
+            label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'wp-newsletter-builder') : __('Send Newsletter on Update', 'wp-newsletter-builder')}
             checked={send && !disabled}
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
             disabled={disabled}
           />
           {!type ? (
-            <p style={{ color: 'red' }}>{__('Header Type is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('Header Type is Required', 'wp-newsletter-builder')}</p>
           ) : null}
           {!template ? (
-            <p style={{ color: 'red' }}>{__('Template is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('Template is Required', 'wp-newsletter-builder')}</p>
           ) : null}
           {!fromName ? (
-            <p style={{ color: 'red' }}>{__('From Name is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('From Name is Required', 'wp-newsletter-builder')}</p>
           ) : null}
           {!subject && !postTitle ? (
-            <p style={{ color: 'red' }}>{__('Subject is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('Subject is Required', 'wp-newsletter-builder')}</p>
           ) : null}
           {!preview && !postExcerpt ? (
-            <p style={{ color: 'red' }}>{__('Preview Text is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('Preview Text is Required', 'wp-newsletter-builder')}</p>
           ) : null}
           {list.length === 0 ? (
-            <p style={{ color: 'red' }}>{__('Email List is Required', 'newsletter-builder')}</p>
+            <p style={{ color: 'red' }}>{__('Email List is Required', 'wp-newsletter-builder')}</p>
           ) : null}
         </div>
       </PanelBody>
       {sentBreakingPostId ? (
         <PanelBody
           initialOpen={false}
-          title={__('Sent Newsletters', 'newsletter-builder')}
+          title={__('Sent Newsletters', 'wp-newsletter-builder')}
         >
           {sentBreakingPostId.map((id: number) => (
             <SentNewsletter postId={id} key={id} />

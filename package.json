@@ -107,7 +107,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@alleyinteractive/eslint-config": "^0.1.0",
+    "@alleyinteractive/eslint-config": "^0.1.4",
     "@alleyinteractive/stylelint-config": "^0.0.2",
     "@babel/preset-env": "^7.21.5",
     "@types/wordpress__components": "^23.0.1",

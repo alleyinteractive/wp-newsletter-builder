@@ -104,7 +104,7 @@
     "react-dom": "18.2.0",
     "react-easy-sort": "^1.5.1",
     "react-multi-select-component": "^4.3.4",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@alleyinteractive/eslint-config": "^0.1.0",

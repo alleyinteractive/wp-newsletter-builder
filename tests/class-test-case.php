@@ -5,7 +5,7 @@
  * @package create-wordpress-plugin
  */
 
-namespace Create_WordPress_Plugin\Tests;
+namespace WP_Newsletter_Builder\Tests;
 
 use Mantle\Testkit\Test_Case as TestkitTest_Case;
 

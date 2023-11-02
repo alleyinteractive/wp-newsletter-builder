@@ -37,7 +37,7 @@
     <properties>
       <property name="prefixes" type="array">
         <element value="vendor_name" />
-        <element value="create_wordpress_plugin" />
+        <element value="WP_Newsletter_Builder" />
       </property>
     </properties>
   </rule>

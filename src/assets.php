@@ -124,15 +124,17 @@ function action_enqueue_block_editor_assets() {
 		return;
 	}
 
-	$templates = get_posts(
+	$templates    = get_posts( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_posts_get_posts
 		[
-			'post_type'      => 'nb_template',
-			'posts_per_page' => -1,
-			'orderby'        => 'ID',		]
+			'post_type'        => 'nb_template',
+			'posts_per_page'   => -1,
+			'orderby'          => 'ID',
+			'suppress_filters' => false,
+		]
 	);
 	$template_map = [];
 
-	foreach( $templates as $template ) {
+	foreach ( $templates as $template ) {
 		$template_map[ $template->ID ] = $template->post_title;
 	};
 	wp_enqueue_style(

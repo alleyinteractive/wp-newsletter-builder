@@ -70,7 +70,7 @@ class Email_Types {
 							'preview_size' => 'full',
 						]
 					),
-					'templates'   => new \Fieldmanager_Checkboxes(
+					'templates'  => new \Fieldmanager_Checkboxes(
 						'Checkboxes',
 						[
 							'datasource' => new \Fieldmanager_Datasource_Post(
@@ -80,9 +80,9 @@ class Email_Types {
 										'posts_per_page' => -1,
 										'orderby'        => 'title',
 									],
-									'use_ajax' => false
+									'use_ajax'   => false,
 								]
-							)
+							),
 						]
 					),
 					'from_name'  => new \Fieldmanager_Select(

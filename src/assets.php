@@ -124,6 +124,17 @@ function action_enqueue_block_editor_assets() {
 		return;
 	}
 
+	$templates = get_posts(
+		[
+			'post_type'      => 'nb_template',
+			'posts_per_page' => -1,
+			'orderby'        => 'ID',		]
+	);
+	$template_map = [];
+
+	foreach( $templates as $template ) {
+		$template_map[ $template->ID ] = $template->post_title;
+	};
 	wp_enqueue_style(
 		'wp-newsletter-builder-editor',
 		get_entry_asset_url( 'editor', 'index.css' ),
@@ -135,6 +146,7 @@ function action_enqueue_block_editor_assets() {
 		'newsletterBuilder',
 		[
 			'fromNames' => Campaign_Monitor_Client::instance()->get_from_names(),
+			'templates' => $template_map,
 		]
 	);
 }

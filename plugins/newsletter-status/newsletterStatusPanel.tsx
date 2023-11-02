@@ -44,7 +44,7 @@ export default function NewsletterStatusPanel() {
   }, [fetchStatus]);
 
   const {
-    Status,
+    Status: statusString = '',
     Name = '',
     Recipients = null,
     TotalOpened = null,
@@ -63,7 +63,7 @@ export default function NewsletterStatusPanel() {
               {__('Status', 'wp-newsletter-builder')}
             </dt>
             <dd>
-              {Status}
+              {statusString}
             </dd>
             <dt>
               {__('Campaign Name', 'wp-newsletter-builder')}

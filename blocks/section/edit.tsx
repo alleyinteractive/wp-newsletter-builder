@@ -6,13 +6,12 @@ import {
 } from '@wordpress/block-editor';
 import { dispatch, select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+import { PanelBody, PanelRow } from '@wordpress/components';
+import { useEffect } from '@wordpress/element';
 
 import MultiplePostPicker from '@/components/multiplePostPicker';
 import PostPickerResult from '@/components/postPickerResult';
 import './index.scss';
-import { PanelBody, PanelRow } from '@wordpress/components';
-
-import { useEffect } from '@wordpress/element';
 
 interface EditProps {
   clientId: string;

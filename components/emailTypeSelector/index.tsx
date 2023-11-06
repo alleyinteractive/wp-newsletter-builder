@@ -2,6 +2,7 @@ import { SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import { WP_REST_API_Post } from 'wp-types'; // eslint-disable-line camelcase
 
 interface AdTag {
   tag_code: string;
@@ -31,22 +32,23 @@ interface EmailTypeSelectorProps {
 interface Window {
   newsletterBuilder: {
     fromNames: Array<string>;
+    templates: {
+      [key: number]: string;
+    };
   };
+}
+
+interface Option {
+  label: string;
+  value: string;
 }
 
 const {
   newsletterBuilder: {
     fromNames = [],
+    templates: templatesMap = {},
   } = {},
 } = (window as any as Window);
-
-const templatesMap = {
-  'single-story.html': __('Single Story', 'wp-newsletter-builder'),
-  'multi-story.html': __('Multi Story', 'wp-newsletter-builder'),
-  'pro-single-story.html': __('Pro Single Story', 'wp-newsletter-builder'),
-  'pro-multi-story.html': __('Pro Multi Story', 'wp-newsletter-builder'),
-  'first-take.html': __('First Take', 'wp-newsletter-builder'),
-};
 
 const fromOptions = fromNames.map((name: string) => (
   { value: name, label: name }
@@ -81,10 +83,22 @@ function EmailTypeSelector({
     }
   }, [fromNameHandler, fromNameValue]);
 
+  const sortByLabel = (a: Option, b: Option): number => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  };
+
   const typesToOptions = (rawTypes: TypeResult) => {
     const output = Object.keys(rawTypes).map((key: string) => (
       { label: rawTypes[key].label, value: key }
     ));
+    output.sort(sortByLabel);
+
     output.unshift({ label: __('Select a type', 'wp-newsletter-builder'), value: '' });
     return output;
   };
@@ -95,8 +109,9 @@ function EmailTypeSelector({
       return [];
     }
     const output = templates.map((value) => (
-      { value, label: templatesMap[value as keyof typeof templatesMap] }
+      { value, label: templatesMap[parseInt(value, 10) as keyof typeof templatesMap] }
     ));
+    output.sort(sortByLabel);
     output.unshift({ label: __('Select a template', 'wp-newsletter-builder'), value: '' });
     return output;
   };
@@ -110,9 +125,12 @@ function EmailTypeSelector({
     const { image, from_name: fromName } = type;
     imageHandler(parseInt(image, 10));
     fromNameHandler(fromName);
-    const response = await fetch(`/wp-content/plugins/wp-newsletter-builder/layouts/${value}`);
-    const html = await response.text();
-    contentHandler(html);
+    apiFetch({
+      path: `/wp/v2/nb_template/${value}?context=edit`,
+    }).then((response) => {
+      const { content } = response as WP_REST_API_Post; // eslint-disable-line camelcase
+      contentHandler(content.raw as string);
+    });
   };
 
   // Set the template to be the first option if there's only one option.

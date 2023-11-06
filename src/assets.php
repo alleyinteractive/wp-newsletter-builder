@@ -32,15 +32,6 @@ function action_wp_enqueue_scripts() {
 	|     https://github.com/alleyinteractive/wp-asset-manager
 	|
 	*/
-
-	// wp_enqueue_script(
-	// 	'wp-newsletter-builder-example-entry',
-	// 	get_entry_asset_url( 'example-entry' ),
-	// 	get_asset_dependency_array( 'example-entry' ),
-	// 	get_asset_version( 'example-entry' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-newsletter-builder-example-entry', 'wp-newsletter-builder' );
 }
 
 /**
@@ -92,15 +83,6 @@ function action_admin_enqueue_scripts() {
 	| assets that are loaded only in the WordPress admin.
 	|
 	*/
-
-	// wp_enqueue_script(
-	// 	'wp-newsletter-builder-admin-handle',
-	// 	get_entry_asset_url( 'admin-handle' ),
-	// 	get_asset_dependency_array( 'admin-handle' ),
-	// 	get_asset_version( 'admin-handle' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-newsletter-builder-admin-handle', 'wp-newsletter-builder' );
 }
 
 /**
@@ -124,6 +106,19 @@ function action_enqueue_block_editor_assets() {
 		return;
 	}
 
+	$templates    = get_posts( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_posts_get_posts
+		[
+			'post_type'        => 'nb_template',
+			'posts_per_page'   => -1,
+			'orderby'          => 'ID',
+			'suppress_filters' => false,
+		]
+	);
+	$template_map = [];
+
+	foreach ( $templates as $template ) {
+		$template_map[ $template->ID ] = $template->post_title;
+	}
 	wp_enqueue_style(
 		'wp-newsletter-builder-editor',
 		get_entry_asset_url( 'editor', 'index.css' ),
@@ -135,6 +130,7 @@ function action_enqueue_block_editor_assets() {
 		'newsletterBuilder',
 		[
 			'fromNames' => Campaign_Monitor_Client::instance()->get_from_names(),
+			'templates' => $template_map,
 		]
 	);
 }
@@ -145,7 +141,7 @@ function action_enqueue_block_editor_assets() {
  * @param string $path The file path to validate.
  * @return bool        True if the path is valid and the file exists.
  */
-function validate_path( string $path ) : bool {
+function validate_path( string $path ): bool {
 	return 0 === validate_file( $path ) && file_exists( $path );
 }
 
@@ -201,7 +197,7 @@ function get_entry_asset_map( string $dir_entry_name ) {
  *
  * @return array The asset's dependency array.
  */
-function get_asset_dependency_array( string $dir_entry_name ) : array {
+function get_asset_dependency_array( string $dir_entry_name ): array {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );
 	return $asset_arr['dependencies'] ?? [];
 }
@@ -213,7 +209,7 @@ function get_asset_dependency_array( string $dir_entry_name ) : array {
  *
  * @return string The asset's version hash.
  */
-function get_asset_version( string $dir_entry_name ) : string {
+function get_asset_version( string $dir_entry_name ): string {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );
 	return $asset_arr['version'] ?? '1.0';
 }

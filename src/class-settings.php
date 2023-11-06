@@ -23,7 +23,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function __construct() {
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
 	}
 

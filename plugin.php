@@ -64,12 +64,13 @@ require_once __DIR__ . '/plugins/newsletter-status/index.php';
 function main() {
 	new Ads();
 	new Breaking_Recipients();
-	Campaign_Monitor_Client::instance()->setup();
 	new Email_Types();
+	new Settings();
 	new Media();
 	new WP_Newsletter_Builder();
 	new Rest_API_Endpoints();
 	new Rest_API_Fields();
 	new Rest_API_Query();
+	// TODO: Find selected email provider and instantiate it.
 }
 main();

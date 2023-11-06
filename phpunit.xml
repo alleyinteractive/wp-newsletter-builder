@@ -6,10 +6,4 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer"
->
-	<testsuites>
-		<testsuite name="Unit">
-			<directory suffix=".php">tests/unit</directory>
-		</testsuite>
-	</testsuites>
-</phpunit>
+/>

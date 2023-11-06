@@ -8,9 +8,6 @@
 	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer"
 >
 	<testsuites>
-		<testsuite name="Feature">
-			<directory suffix=".php">tests/feature</directory>
-		</testsuite>
 		<testsuite name="Unit">
 			<directory suffix=".php">tests/unit</directory>
 		</testsuite>

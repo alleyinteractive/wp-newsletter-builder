@@ -118,7 +118,7 @@ function action_enqueue_block_editor_assets() {
 
 	foreach ( $templates as $template ) {
 		$template_map[ $template->ID ] = $template->post_title;
-	};
+	}
 	wp_enqueue_style(
 		'wp-newsletter-builder-editor',
 		get_entry_asset_url( 'editor', 'index.css' ),
@@ -141,7 +141,7 @@ function action_enqueue_block_editor_assets() {
  * @param string $path The file path to validate.
  * @return bool        True if the path is valid and the file exists.
  */
-function validate_path( string $path ) : bool {
+function validate_path( string $path ): bool {
 	return 0 === validate_file( $path ) && file_exists( $path );
 }
 
@@ -197,7 +197,7 @@ function get_entry_asset_map( string $dir_entry_name ) {
  *
  * @return array The asset's dependency array.
  */
-function get_asset_dependency_array( string $dir_entry_name ) : array {
+function get_asset_dependency_array( string $dir_entry_name ): array {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );
 	return $asset_arr['dependencies'] ?? [];
 }
@@ -209,7 +209,7 @@ function get_asset_dependency_array( string $dir_entry_name ) : array {
  *
  * @return string The asset's version hash.
  */
-function get_asset_version( string $dir_entry_name ) : string {
+function get_asset_version( string $dir_entry_name ): string {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );
 	return $asset_arr['version'] ?? '1.0';
 }

@@ -34,7 +34,7 @@ function register_meta_helper(
 	// Object type must be either post or term.
 	if ( ! in_array( $object_type, [ 'post', 'term' ], true ) ) {
 		throw new \InvalidArgumentException(
-			__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			esc_html__(
 				'Object type must be one of "post", "term".',
 				'wp-newsletter-builder'
 			)

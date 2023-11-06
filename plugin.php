@@ -32,7 +32,7 @@ define( 'WP_NEWSLETTER_BUILDER_DIR', __DIR__ );
 if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	\add_action(
 		'admin_notices',
-		function() {
+		function () {
 			?>
 			<div class="notice notice-error">
 				<p><?php esc_html_e( 'Composer is not installed and wp-newsletter-builder cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-newsletter-builder' ); ?></p>

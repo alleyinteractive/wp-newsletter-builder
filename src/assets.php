@@ -32,15 +32,6 @@ function action_wp_enqueue_scripts() {
 	|     https://github.com/alleyinteractive/wp-asset-manager
 	|
 	*/
-
-	// wp_enqueue_script(
-	// 	'wp-newsletter-builder-example-entry',
-	// 	get_entry_asset_url( 'example-entry' ),
-	// 	get_asset_dependency_array( 'example-entry' ),
-	// 	get_asset_version( 'example-entry' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-newsletter-builder-example-entry', 'wp-newsletter-builder' );
 }
 
 /**
@@ -92,15 +83,6 @@ function action_admin_enqueue_scripts() {
 	| assets that are loaded only in the WordPress admin.
 	|
 	*/
-
-	// wp_enqueue_script(
-	// 	'wp-newsletter-builder-admin-handle',
-	// 	get_entry_asset_url( 'admin-handle' ),
-	// 	get_asset_dependency_array( 'admin-handle' ),
-	// 	get_asset_version( 'admin-handle' ),
-	// 	true
-	// );
-	// wp_set_script_translations( 'wp-newsletter-builder-admin-handle', 'wp-newsletter-builder' );
 }
 
 /**

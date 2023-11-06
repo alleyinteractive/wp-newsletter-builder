@@ -5,9 +5,9 @@
  * @package wp-curate
  */
 
-namespace Alley\WP\WP_Curate\Tests\Feature;
+namespace Alley\WP\WP_Newsletter_Builder\Tests\Feature;
 
-use Alley\WP\WP_Curate\Tests\Test_Case;
+use Alley\WP\WP_Newsletter_Builder\Tests\Test_Case;
 
 /**
  * A test suite for an example feature.

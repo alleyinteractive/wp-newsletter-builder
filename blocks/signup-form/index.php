@@ -17,7 +17,6 @@ function wp_newsletter_builder_signup_form_block_init() {
 	register_block_type(
 		__DIR__
 	);
-
 }
 add_action( 'init', 'wp_newsletter_builder_signup_form_block_init' );
 

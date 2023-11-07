@@ -83,7 +83,7 @@ class Breaking_Recipients {
 		$lists = [];
 		foreach ( $settings as $recipient_list ) {
 			$lists[ $recipient_list['list'] ] = $options[ $recipient_list['list'] ];
-		};
+		}
 		return $lists;
 	}
 

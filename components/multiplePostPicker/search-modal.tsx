@@ -7,7 +7,7 @@ import {
 
 import { __ } from '@wordpress/i18n';
 
-import type { WP_REST_API_Search_Result } from 'wp-types';
+import type { WP_REST_API_Search_Result } from 'wp-types'; // eslint-disable-line camelcase
 
 import './search-modal.scss';
 import PostList from './post-list';
@@ -26,18 +26,18 @@ function SearchModal({
   onUpdate,
   searchRender,
 }: SearchModalProps) {
-  const [selected, setSelected] = useState<WP_REST_API_Search_Result[]>([]);
+  const [selected, setSelected] = useState<WP_REST_API_Search_Result[]>([]); // eslint-disable-line camelcase, max-len
 
   const doSelect = () => {
     if (!selected) {
       return;
     }
-    const ids = selected.map((item: WP_REST_API_Search_Result) => item.id);
+    const ids = selected.map((item: WP_REST_API_Search_Result) => item.id); // eslint-disable-line camelcase, max-len
     onUpdate(ids as number[]);
     closeModal();
   };
 
-  const addToSelected = (newValue: WP_REST_API_Search_Result) => {
+  const addToSelected = (newValue: WP_REST_API_Search_Result) => { // eslint-disable-line camelcase
     setSelected([...selected, newValue]);
   };
 

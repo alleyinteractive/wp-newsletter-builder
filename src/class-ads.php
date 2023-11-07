@@ -46,7 +46,7 @@ class Ads {
 		$email_types       = $email_types_class->get_email_types();
 		$matching_types    = array_filter(
 			$email_types,
-			function( $email_type ) use ( $nb_email_type ) {
+			function ( $email_type ) use ( $nb_email_type ) {
 				return $email_type['uuid4'] === $nb_email_type;
 			}
 		);

@@ -6,7 +6,7 @@ import {
   Button,
   PanelRow,
 } from '@wordpress/components';
-import type { WP_REST_API_Post } from 'wp-types';
+import type { WP_REST_API_Post } from 'wp-types'; // eslint-disable-line camelcase
 
 import { usePost } from '@alleyinteractive/block-editor-tools';
 
@@ -14,7 +14,7 @@ interface SentNewsletterProps {
   postId: number;
 }
 
-interface Post extends WP_REST_API_Post {
+interface Post extends WP_REST_API_Post { // eslint-disable-line camelcase
   meta: {
     nb_newsletter_subject?: string;
   };

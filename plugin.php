@@ -3,7 +3,7 @@
  * Plugin Name: Newsletter Builder
  * Plugin URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Description: Interface to manage email newsletters
- * Version: 0.1.0
+ * Version: 0.2.0
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 5.9
@@ -32,7 +32,7 @@ define( 'WP_NEWSLETTER_BUILDER_DIR', __DIR__ );
 if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
 	\add_action(
 		'admin_notices',
-		function() {
+		function () {
 			?>
 			<div class="notice notice-error">
 				<p><?php esc_html_e( 'Composer is not installed and wp-newsletter-builder cannot load. Try using a `*-built` branch if the plugin is being loaded as a submodule.', 'wp-newsletter-builder' ); ?></p>

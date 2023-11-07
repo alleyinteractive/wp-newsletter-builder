@@ -70,16 +70,19 @@ class Email_Types {
 							'preview_size' => 'full',
 						]
 					),
-					'templates'  => new \Fieldmanager_CheckBoxes(
-						__( 'Templates', 'wp-newsletter-builder' ),
+					'templates'  => new \Fieldmanager_Checkboxes(
+						'Checkboxes',
 						[
-							'options' => [
-								'single-story.html'     => __( 'Single Story', 'wp-newsletter-builder' ),
-								'multi-story.html'      => __( 'Multi Story', 'wp-newsletter-builder' ),
-								'pro-single-story.html' => __( 'Pro Single Story', 'wp-newsletter-builder' ),
-								'pro-multi-story.html'  => __( 'Pro Multi Story', 'wp-newsletter-builder' ),
-								'first-take.html'       => __( 'First Take', 'wp-newsletter-builder' ),
-							],
+							'datasource' => new \Fieldmanager_Datasource_Post(
+								[
+									'query_args' => [
+										'post_type'      => 'nb_template',
+										'posts_per_page' => -1,
+										'orderby'        => 'title',
+									],
+									'use_ajax'   => false,
+								]
+							),
 						]
 					),
 					'from_name'  => new \Fieldmanager_Select(

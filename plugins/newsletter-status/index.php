@@ -27,13 +27,6 @@ function register_status_plugin_scripts() {
 		true
 	);
 	wp_set_script_translations( 'plugin-newsletter-status' );
-	wp_localize_script(
-		'plugin-newsletter-status',
-		'newsletterBuilder',
-		[
-			'fromNames' => Campaign_Monitor_Client::instance()->get_from_names(),
-		]
-	);
 }
 add_action( 'init', __NAMESPACE__ . '\register_status_plugin_scripts' );
 

@@ -3,14 +3,14 @@ import SortableList, { SortableItem, SortableKnob } from 'react-easy-sort';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
 import { arrayMoveImmutable } from 'array-move';
-import type { WP_REST_API_Search_Result } from 'wp-types';
+import type { WP_REST_API_Search_Result } from 'wp-types'; // eslint-disable-line camelcase
 
 import './selected-list.scss';
 
 interface SelectedListProps {
   searchRender: (post: object) => JSX.Element;
-  selected?: WP_REST_API_Search_Result[];
-  setSelected: (posts: WP_REST_API_Search_Result[]) => void;
+  selected?: WP_REST_API_Search_Result[]; // eslint-disable-line camelcase
+  setSelected: (posts: WP_REST_API_Search_Result[]) => void; // eslint-disable-line camelcase
 }
 
 /**
@@ -23,13 +23,13 @@ function SelectedList({
   selected,
   setSelected,
 }: SelectedListProps) {
-  const removeFromSelected = (removeValue: WP_REST_API_Search_Result) => {
+  const removeFromSelected = (removeValue: WP_REST_API_Search_Result) => { // eslint-disable-line camelcase, max-len
     setSelected(selected ? selected.filter((item) => item.id !== removeValue.id) : []);
   };
 
   const onSortEnd = (oldIndex: number, newIndex: number) => {
     const newSelected = arrayMoveImmutable(
-      [...selected as WP_REST_API_Search_Result[]],
+      [...selected as WP_REST_API_Search_Result[]], // eslint-disable-line camelcase
       oldIndex,
       newIndex,
     );

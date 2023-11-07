@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from '@wordpress/element';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
@@ -44,7 +44,7 @@ export default function NewsletterStatusPanel() {
   }, [fetchStatus]);
 
   const {
-    Status,
+    Status: statusString = '',
     Name = '',
     Recipients = null,
     TotalOpened = null,
@@ -63,7 +63,7 @@ export default function NewsletterStatusPanel() {
               {__('Status', 'wp-newsletter-builder')}
             </dt>
             <dd>
-              {Status}
+              {statusString}
             </dd>
             <dt>
               {__('Campaign Name', 'wp-newsletter-builder')}

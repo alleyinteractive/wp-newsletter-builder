@@ -3,15 +3,15 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { __, sprintf } from '@wordpress/i18n';
 import { Button, TextControl, Spinner } from '@wordpress/components';
-import type { WP_REST_API_Search_Results, WP_REST_API_Search_Result } from 'wp-types';
+import type { WP_REST_API_Search_Results, WP_REST_API_Search_Result } from 'wp-types'; // eslint-disable-line camelcase
 
 import './post-list.scss';
 
 interface PostListProps {
   baseUrl: string;
   searchRender: (post: object) => JSX.Element;
-  selected?: WP_REST_API_Search_Result[];
-  setSelected: (post: WP_REST_API_Search_Result) => void;
+  selected?: WP_REST_API_Search_Result[]; // eslint-disable-line camelcase
+  setSelected: (post: WP_REST_API_Search_Result) => void; // eslint-disable-line camelcase
 }
 
 interface Params {
@@ -31,7 +31,7 @@ function PostList({
   setSelected,
 }: PostListProps) {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [listposts, setListposts] = useState<WP_REST_API_Search_Results>([]);
+  const [listposts, setListposts] = useState<WP_REST_API_Search_Results>([]); // eslint-disable-line camelcase, max-len
   const [initialLoad, setInitialLoad] = useState(false);
   const [totalPages, setTotalPages] = useState(0);
   const [pathParams, setPathParams] = useState({
@@ -83,18 +83,18 @@ function PostList({
     ));
     // @ts-ignore
     const result = await response.json();
-    let posts = result as any as WP_REST_API_Search_Results;
+    let posts = result as any as WP_REST_API_Search_Results; // eslint-disable-line camelcase
     if (params.page > 1) {
       posts = [
         ...listposts,
-        ...result as any as WP_REST_API_Search_Results,
+        ...result as any as WP_REST_API_Search_Results, // eslint-disable-line camelcase
       ];
     }
     if (cancelled) {
       return;
     }
     // @ts-ignore
-    setListposts(posts as any as WP_REST_API_Search_Results);
+    setListposts(posts as any as WP_REST_API_Search_Results); // eslint-disable-line camelcase
     setIsUpdating(false);
   }, [listposts, baseUrl]);
 

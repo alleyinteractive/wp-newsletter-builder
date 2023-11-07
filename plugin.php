@@ -58,6 +58,8 @@ require_once __DIR__ . '/plugins/newsletter-status/index.php';
 
 /* class files get loaded by the autoloader */
 
+global $newsletter_builder_email_provider;
+
 /**
  * Instantiate the plugin.
  */
@@ -71,6 +73,38 @@ function main() {
 	new Rest_API_Endpoints();
 	new Rest_API_Fields();
 	new Rest_API_Query();
-	// TODO: Find selected email provider and instantiate it.
+	// Find selected email provider and instantiate it.
+	$selected_email_provider = apply_filters( 'wp_newsletter_builder_selected_provider', '' );
+
+	// Check if provider has been selected and exists.
+	if ( empty( $selected_email_provider ) || ! class_exists( $selected_email_provider ) ) {
+		\add_action(
+			'admin_notices',
+			function () {
+				?>
+				<div class="notice notice-error">
+					<p>
+						<?php
+						printf(
+							// translators: %s is the filter name.
+							esc_html__(
+								'No email provider selected for WP Newsletter Builder. Use the %s filter to specify one.',
+								'wp-newsletter-builder'
+							),
+							'<code>wp_newsletter_builder_selected_provider</code>'
+						);
+						?>
+					</p>
+				</div>
+				<?php
+			}
+		);
+
+		return;
+	}
+	global $newsletter_builder_email_provider;
+	$provider                          = new $selected_email_provider();
+	$newsletter_builder_email_provider = $provider::instance();
+	$newsletter_builder_email_provider->setup();
 }
 main();

@@ -46,8 +46,9 @@ class Email_Types {
 	 * @return void
 	 */
 	public function register_fields() {
-		$from_names = Campaign_Monitor_Client::instance()->get_from_names();
-		$settings   = new \Fieldmanager_Group(
+		$plugin_settings = new Settings();
+		$from_names      = $plugin_settings->get_from_names();
+		$settings        = new \Fieldmanager_Group(
 			[
 				'name'           => static::SETTINGS_KEY,
 				'children'       => [

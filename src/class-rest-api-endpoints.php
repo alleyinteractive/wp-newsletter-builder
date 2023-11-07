@@ -90,7 +90,8 @@ class Rest_API_Endpoints {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
-		$lists = Campaign_Monitor_Client::instance()->get_lists();
+		global $newsletter_builder_email_provider;
+		$lists = $newsletter_builder_email_provider->get_lists();
 		return $lists;
 	}
 
@@ -123,7 +124,8 @@ class Rest_API_Endpoints {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
-		$footer_settings = Campaign_Monitor_Client::instance()->get_footer_settings();
+		$settings        = new Settings();
+		$footer_settings = $settings->get_footer_settings();
 		return $footer_settings;
 	}
 
@@ -155,7 +157,8 @@ class Rest_API_Endpoints {
 				'Status' => __( 'Not sent', 'wp-newsletter-builder' ),
 			];
 		}
-		$status = Campaign_Monitor_Client::instance()->get_campaign_summary( $campaign_id );
+		global $newsletter_builder_email_provider;
+		$status = $newsletter_builder_email_provider->get_campaign_summary( $campaign_id );
 		if ( ! empty( $status ) && 200 === $status['http_status_code'] ) {
 			$status['response']->Status = __( 'Sent' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			wp_cache_set( $cache_key, $status['response'], null, 5 * MINUTE_IN_SECONDS );
@@ -209,8 +212,9 @@ class Rest_API_Endpoints {
 			];
 		}
 		$list_results = [];
+		global $newsletter_builder_email_provider;
 		foreach ( $list_ids as $list_id ) {
-			$result = Campaign_Monitor_Client::instance()->add_subscriber( $list_id, $email );
+			$result = $newsletter_builder_email_provider->add_subscriber( $list_id, $email );
 			if ( ! empty( $result ) && 200 === $result['http_status_code'] ) {
 				$list_results[ $list_id ] = [
 					'success' => true,

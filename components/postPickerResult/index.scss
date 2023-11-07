@@ -1,35 +1,37 @@
-.alley-scripts-post-picker__post-list .alley-scripts-post-picker__post {
-  height: auto;
-  padding: 0 5px 0 0;
-  width: 99%;
-}
+.post-type-nb_newsletter {
+  .alley-scripts-post-picker__post-list .alley-scripts-post-picker__post {
+    height: auto;
+    padding: 0 5px 0 0;
+    width: 99%;
+  }
 
-.nb-post-picker-result {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: flex-start;
-  width: 100%;
+  .nb-post-picker-result {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    width: 100%;
 
-  &-image__container {
-    height: 56px;
-    width: 100px;
+    &-image__container {
+      height: 56px;
+      width: 100px;
 
-    img {
-      max-height: 56px;
-      max-width: 100px;
+      img {
+        max-height: 56px;
+        max-width: 100px;
+      }
     }
-  }
 
-  &-title {
-    font-weight: 600;
-    margin: 5px 0;
-    text-align: left;
-  }
+    &-title {
+      font-weight: 600;
+      margin: 5px 0;
+      text-align: left;
+    }
 
-  &-date {
-    margin-left: auto;
-    text-align: right;
+    &-date {
+      margin-left: auto;
+      text-align: right;
+    }
   }
 }

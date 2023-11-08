@@ -246,10 +246,11 @@ class WP_Newsletter_Builder {
 			return;
 		}
 		$campaign_id = get_post_meta( $post_id, 'nb_newsletter_campaign_id', true );
-		$result      = Campaign_Monitor_Client::instance()->create_campaign( $post_id, $lists );
+		global $newsletter_builder_email_provider;
+		$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists );
 		if ( 201 === $result['http_status_code'] ) {
 			update_post_meta( $post_id, 'nb_newsletter_campaign_id', $result['response'] );
-			$send_result = Campaign_Monitor_Client::instance()->send_campaign( $result['response'] );
+			$send_result = $newsletter_builder_email_provider->send_campaign( $result['response'] );
 			update_post_meta( $post_id, 'nb_newsletter_send_result', $send_result );
 		}
 		update_post_meta( $post_id, 'nb_newsletter_campaign_result', $result );

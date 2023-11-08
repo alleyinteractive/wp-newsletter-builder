@@ -93,7 +93,8 @@ class Breaking_Recipients {
 	 * @return array
 	 */
 	private function get_options() {
-		$lists   = Campaign_Monitor_Client::instance()->get_lists();
+		global $newsletter_builder_email_provider;
+		$lists   = $newsletter_builder_email_provider->get_lists();
 		$options = [];
 		foreach ( $lists as $list ) {
 			$options[ $list->ListID ] = $list->Name; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase

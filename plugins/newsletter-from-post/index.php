@@ -38,12 +38,29 @@ function action_enqueue_post_sidebar_assets() {
 	if ( 'post' !== $post_type ) {
 		return;
 	}
+	$settings = new Settings();
+
+	$templates    = get_posts( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_posts_get_posts
+		[
+			'post_type'        => 'nb_template',
+			'posts_per_page'   => -1,
+			'orderby'          => 'ID',
+			'suppress_filters' => false,
+		]
+	);
+	$template_map = [];
+
+	foreach ( $templates as $template ) {
+		$template_map[ $template->ID ] = $template->post_title;
+	}
+
 	wp_enqueue_script( 'plugin-newsletter-from-post' );
 	wp_localize_script(
 		'plugin-newsletter-from-post',
 		'newsletterBuilder',
 		[
-			'fromNames'     => Campaign_Monitor_Client::instance()->get_from_names(),
+			'fromNames'     => $settings->get_from_names(),
+			'templates'     => $template_map,
 			'breakingLists' => ( new Breaking_Recipients() )->get_breaking_recipients(),
 		]
 	);

@@ -125,11 +125,12 @@ function action_enqueue_block_editor_assets() {
 		get_asset_dependency_array( 'editor' ),
 		get_asset_version( 'editor' )
 	);
+	$settings = new Settings();
 	wp_localize_script(
 		'wp-newsletter-builder-email-settings-editor-script',
 		'newsletterBuilder',
 		[
-			'fromNames' => Campaign_Monitor_Client::instance()->get_from_names(),
+			'fromNames' => $settings->get_from_names(),
 			'templates' => $template_map,
 		]
 	);

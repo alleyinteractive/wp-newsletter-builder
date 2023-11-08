@@ -38,6 +38,7 @@
       <property name="prefixes" type="array">
         <element value="vendor_name" />
         <element value="WP_Newsletter_Builder" />
+        <element value="newsletter_builder" />
       </property>
     </properties>
   </rule>

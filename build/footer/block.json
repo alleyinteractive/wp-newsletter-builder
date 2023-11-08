@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/footer",
+  "version": "0.1.0",
+  "title": "Newsletter Footer",
+  "category": "design",
+  "icon": "align-wide",
+  "description": "Outputs the company logo, social links, address, and footer links.",
+  "textdomain": "footer",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "narrow_separator": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

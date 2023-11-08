@@ -78,7 +78,7 @@ function EmailTypeSelector({
   // Set the meta to be the first option if it's not set. This matches what is already
   // happpening in the UI.
   useEffect(() => {
-    if (!fromNameValue) {
+    if (!fromNameValue && fromNames.length > 0) {
       fromNameHandler(fromNames[0]);
     }
   }, [fromNameHandler, fromNameValue]);

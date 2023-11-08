@@ -103,7 +103,8 @@ function main() {
 		return;
 	}
 	global $newsletter_builder_email_provider;
-	$provider                          = new $selected_email_provider();
+	$provider = new $selected_email_provider();
+
 	$newsletter_builder_email_provider = $provider::instance();
 	$newsletter_builder_email_provider->setup();
 }

@@ -7,14 +7,10 @@
 
 namespace WP_Newsletter_Builder\Email_Providers;
 
-use WP_Newsletter_Builder\Singleton;
-
 /**
  * Campaign Monitor Client class
  */
 class Campaign_Monitor implements Email_Provider {
-	use Singleton;
-
 	/**
 	 * Settings key.
 	 *

@@ -54,10 +54,6 @@ interface Option {
  */
 export default function Edit() {
   const [meta, setMeta] = usePostMeta();
-  // const meta = {};
-  // const setMeta = (newMeta: any) => {
-  //   console.log(newMeta);
-  // };
   const {
     nb_newsletter_subject: subject,
     nb_newsletter_preview: preview,

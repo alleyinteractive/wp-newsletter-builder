@@ -102,7 +102,7 @@ function action_enqueue_block_editor_assets() {
 	global $post_type;
 
 	// Only enqueue the script to register the scripts if supported.
-	if ( 'nb_newsletter' !== $post_type ) {
+	if ( 'nb_newsletter' !== $post_type && 'nb_template' !== $post_type ) {
 		return;
 	}
 

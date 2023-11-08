@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.1 - 2023-11-08
+
+- Remove singleton pattern of Email Providers
+
 ## 0.3.0 - 2023-11-07
 
 - Set up email provider adapter system

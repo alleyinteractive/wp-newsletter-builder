@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.3 - 2023-11-10
+
+- Add URL override to post block
+
 ## 0.3.1 - 2023-11-08
 
 - Remove singleton pattern of Email Providers

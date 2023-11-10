@@ -27,23 +27,39 @@ class Omeda implements Email_Provider {
 	 * @return void
 	 */
 	public function setup() {
-		// TODO.
+		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
 	}
 
 	/**
 	 * Registers the submenu settings page for the Email Provider options.
 	 */
 	public function maybe_register_settings_page() {
-		// TODO.
+		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
+			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Omeda Settings', 'wp-newsletter-builder' ), __( 'Omeda Settings', 'wp-newsletter-builder' ) );
+			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
+		}
 	}
 
 	/**
-	 * Registers the fields on the settings page for the Email Provider.
+	 * Registers the fields on the settings page for the Campaign Monitor options.
 	 *
 	 * @return void
 	 */
 	public function register_fields() {
-		// TODO.
+		$settings = new \Fieldmanager_Group(
+			[
+				'name'     => static::SETTINGS_KEY,
+				'children' => [
+					'api_url'            => new \Fieldmanager_TextField( __( 'API URL', 'wp-newsletter-builder' ) ),
+					'api_key'            => new \Fieldmanager_TextField( __( 'API Key', 'wp-newsletter-builder' ) ),
+					'customer_id'        => new \Fieldmanager_TextField( __( 'Customer ID', 'wp-newsletter-builder' ) ),
+					'client_abbrev'      => new \Fieldmanager_TextField( __( 'Client Abbreviation', 'wp-newsletter-builder' ) ),
+					'brand'              => new \Fieldmanager_TextField( __( 'Brand', 'wp-newsletter-builder' ) ),
+				],
+			]
+		);
+
+		$settings->activate_submenu_page();
 	}
 
 	/**

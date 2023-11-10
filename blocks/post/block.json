@@ -77,6 +77,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"overrideUrl": {
+			"type": "string",
+			"default": ""
+		},
 		"number": {
 			"type": "number",
 			"default": null

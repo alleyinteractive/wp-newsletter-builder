@@ -12,6 +12,7 @@ import {
   PanelBody,
   PanelRow,
   Spinner,
+  TextControl,
 } from '@wordpress/components';
 
 /**
@@ -45,6 +46,7 @@ interface EditProps {
     overrideExcerpt?: string;
     overrideContent?: string;
     overrideByline?: string;
+    overrideUrl?: string,
     number?: number;
     smallerFont?: boolean;
   },
@@ -73,6 +75,7 @@ export default function Edit({
     overrideExcerpt,
     overrideContent,
     overrideByline,
+    overrideUrl,
     number,
     smallerFont,
   },
@@ -85,6 +88,7 @@ export default function Edit({
       overrideImage: 0,
       overrideExcerpt: '',
       overrideContent: '',
+      overrideUrl: '',
     });
   };
 
@@ -284,6 +288,18 @@ export default function Edit({
                   value={overrideImage ?? 0}
                   onUpdate={({ id }) => setAttributes({ overrideImage: id })}
                   onReset={() => setAttributes({ overrideImage: 0 })}
+                />
+              </PanelRow>
+            </PanelBody>
+            <PanelBody
+              title={__('Override URL', 'wp-newsletter-builder')}
+              initialOpen
+            >
+              <PanelRow>
+                <TextControl
+                  value={overrideUrl ?? ''}
+                  onChange={(newValue: string) => setAttributes({ overrideUrl: newValue })}
+                  type="url"
                 />
               </PanelRow>
             </PanelBody>

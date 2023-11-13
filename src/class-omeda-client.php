@@ -116,21 +116,21 @@ class Omeda_Client {
 	/**
 	 * Initialize and set values for properties.
 	 */
-	public function __construct() {
+	public function __construct( $config ) {
 
 		// Set options.
-		$this->set_license_key( site_config( 'omeda.license_key', $this->license_key ) );
+		$this->set_license_key( $config[ 'license_key' ] ?? $this->license_key );
 
 		// Set properties.
-		$this->set_api_user( site_config( 'omeda.api.user', $this->api_user ) );
-		$this->set_app_id( site_config( 'omeda.api.app_id', $this->app_id ) );
-		$this->set_brand( site_config( 'omeda.api.brand', $this->brand ) );
-		$this->set_client_abbr( site_config( 'omeda.api.client_abbr', $this->client_abbr ) );
-		$this->set_from_name( site_config( 'omeda.api.from_name', $this->from_name ) );
-		$this->set_input_id( site_config( 'omeda.api.input_id', $this->input_id ) );
-		$this->set_mailbox( site_config( 'omeda.api.mailbox', $this->mailbox ) );
-		$this->set_namespace( site_config( 'omeda.api.namespace', $this->namespace ) );
-		$this->set_reply_to( site_config( 'omeda.api.reply_to', $this->reply_to ) );
+		$this->set_api_user( $config[ 'user' ] );
+		$this->set_app_id( $config[ 'app_id' ] );
+		$this->set_brand( $config[ 'brand' ] );
+		$this->set_client_abbr( $config[ 'client_abbr' ] );
+		$this->set_from_name( $config[ 'from_name' ] );
+		$this->set_input_id( $config[ 'input_id' ] );
+		$this->set_mailbox( $config[ 'mailbox' ] );
+		$this->set_namespace( $config[ 'namespace' ] );
+		$this->set_reply_to( $config[ 'reply_to' ] );
 	}
 
 	/**
@@ -147,9 +147,9 @@ class Omeda_Client {
 	 *
 	 * @param string $api_user The API user.
 	 *
-	 * @return API Returns this API object for method chaining.
+	 * @return Omeda_Client Returns this API object for method chaining.
 	 */
-	public function set_api_user( string $api_user ): API {
+	public function set_api_user( string $api_user ): Omeda_Client {
 		$this->api_user = $api_user;
 
 		return $this;
@@ -171,9 +171,9 @@ class Omeda_Client {
 	 *
 	 * @param string $app_id The app ID to be set.
 	 *
-	 * @return API Returns an instance of the API class.
+	 * @return Omeda_Client Returns an instance of the API class.
 	 */
-	public function set_app_id( string $app_id ): API {
+	public function set_app_id( string $app_id ): Omeda_Client {
 		$this->app_id = $app_id;
 
 		return $this;
@@ -193,9 +193,9 @@ class Omeda_Client {
 	 *
 	 * @param string $brand The brand name to be set.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_brand( string $brand ): API {
+	public function set_brand( string $brand ): Omeda_Client {
 		$this->brand = $brand;
 
 		return $this;
@@ -215,9 +215,9 @@ class Omeda_Client {
 	 *
 	 * @param string $license_key The license key to set.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_license_key( string $license_key ): API {
+	public function set_license_key( string $license_key ): Omeda_Client {
 		$this->license_key = $license_key;
 
 		return $this;
@@ -237,9 +237,9 @@ class Omeda_Client {
 	 *
 	 * @param bool $debug The debug mode flag.
 	 *
-	 * @return API The API instance.
+	 * @return Omeda_Client The API instance.
 	 */
-	public function set_debug( bool $debug ): API {
+	public function set_debug( bool $debug ): Omeda_Client {
 		$this->debug = $debug;
 
 		return $this;
@@ -277,9 +277,9 @@ class Omeda_Client {
 	 *
 	 * @param string $staging_url The staging URL of the API.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_staging_url( string $staging_url ): API {
+	public function set_staging_url( string $staging_url ): Omeda_Client {
 		$this->staging_url = $staging_url;
 
 		return $this;
@@ -299,9 +299,9 @@ class Omeda_Client {
 	 *
 	 * @param string $base_url The base URL of the API.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_base_url( string $base_url ): API {
+	public function set_base_url( string $base_url ): Omeda_Client {
 		$this->base_url = $base_url;
 
 		return $this;
@@ -321,9 +321,9 @@ class Omeda_Client {
 	 *
 	 * @param string $client_abbr The client abbreviation to set.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_client_abbr( string $client_abbr ): API {
+	public function set_client_abbr( string $client_abbr ): Omeda_Client {
 		$this->client_abbr = $client_abbr;
 
 		return $this;
@@ -343,9 +343,9 @@ class Omeda_Client {
 	 *
 	 * @param string $input_id The ID of the input.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_input_id( string $input_id ): API {
+	public function set_input_id( string $input_id ): Omeda_Client {
 		$this->input_id = $input_id;
 
 		return $this;
@@ -365,9 +365,9 @@ class Omeda_Client {
 	 *
 	 * @param string $namespace The namespace of the API.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_namespace( string $namespace ): API {
+	public function set_namespace( string $namespace ): Omeda_Client {
 		$this->namespace = $namespace;
 
 		return $this;
@@ -387,9 +387,9 @@ class Omeda_Client {
 	 *
 	 * @param string $mailbox The mailbox to set.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_mailbox( string $mailbox ): API {
+	public function set_mailbox( string $mailbox ): Omeda_Client {
 		$this->mailbox = $mailbox;
 
 		return $this;
@@ -411,9 +411,9 @@ class Omeda_Client {
 	 *
 	 * @param string $reply_to The email address to reply to.
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_reply_to( string $reply_to ): API {
+	public function set_reply_to( string $reply_to ): Omeda_Client {
 		$this->reply_to = $reply_to;
 
 		return $this;
@@ -433,9 +433,9 @@ class Omeda_Client {
 	 *
 	 * @param string $from_name The value to set as the "from_name".
 	 *
-	 * @return API Returns the instance of the API class for method chaining.
+	 * @return Omeda_Client Returns the instance of the API class for method chaining.
 	 */
-	public function set_from_name( string $from_name ): API {
+	public function set_from_name( string $from_name ): Omeda_Client {
 		$this->from_name = $from_name;
 
 		return $this;

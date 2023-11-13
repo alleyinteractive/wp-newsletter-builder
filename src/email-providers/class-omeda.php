@@ -10,6 +10,8 @@
 
 namespace WP_Newsletter_Builder\Email_Providers;
 
+use \WP_Newsletter_Builder\Omeda_Client;
+
 /**
  * Interface Email_Provider
  */
@@ -27,6 +29,19 @@ class Omeda implements Email_Provider {
 	 * @return void
 	 */
 	public function setup() {
+		$config = [
+			'license_key' => '',
+			'user'        => '',
+			'app_id'      => '',
+			'brand'       => '',
+			'client_abbr' => '',
+			'from_name'   => '',
+			'input_id'    => '',
+			'mailbox'     => '',
+			'namespace'   => '',
+			'reply_to'    => '',
+		];
+		$client = new Omeda_Client( $config );
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
 	}
 
@@ -50,11 +65,16 @@ class Omeda implements Email_Provider {
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
-					'api_url'            => new \Fieldmanager_TextField( __( 'API URL', 'wp-newsletter-builder' ) ),
-					'api_key'            => new \Fieldmanager_TextField( __( 'API Key', 'wp-newsletter-builder' ) ),
-					'customer_id'        => new \Fieldmanager_TextField( __( 'Customer ID', 'wp-newsletter-builder' ) ),
+					'license_key'            => new \Fieldmanager_TextField( __( 'License Key', 'wp-newsletter-builder' ) ),
+					'user'            => new \Fieldmanager_TextField( __( 'User', 'wp-newsletter-builder' ) ),
+					'app_id'        => new \Fieldmanager_TextField( __( 'App ID', 'wp-newsletter-builder' ) ),
+					'brand' 	   => new \Fieldmanager_TextField( __( 'Brand', 'wp-newsletter-builder' ) ),
 					'client_abbrev'      => new \Fieldmanager_TextField( __( 'Client Abbreviation', 'wp-newsletter-builder' ) ),
-					'brand'              => new \Fieldmanager_TextField( __( 'Brand', 'wp-newsletter-builder' ) ),
+					'from_name'   => new \Fieldmanager_TextField( __( 'From Name', 'wp-newsletter-builder' ) ),
+					'input_id'    => new \Fieldmanager_TextField( __( 'Input ID', 'wp-newsletter-builder' ) ),
+					'mailbox'     => new \Fieldmanager_TextField( __( 'Mailbox', 'wp-newsletter-builder' ) ),
+					'namespace'   => new \Fieldmanager_TextField( __( 'Namespace', 'wp-newsletter-builder' ) ),
+					'reply_to'    => new \Fieldmanager_TextField( __( 'Reply To', 'wp-newsletter-builder' ) ),
 				],
 			]
 		);

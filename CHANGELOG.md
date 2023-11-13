@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.4 - 2023-11-13
+
+- Allow editing of post block attributes with no block selected. Allow order attribute to be edited.
+
 ## 0.3.3 - 2023-11-10
 
 - Add URL override attribute and slotfill to post block

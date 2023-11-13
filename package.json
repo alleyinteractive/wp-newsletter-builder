@@ -36,8 +36,8 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-    "@alleyinteractive/block-editor-tools": "^0.3",
-    "@types/jest": "^29.5.7",
+    "@alleyinteractive/block-editor-tools": "^0.4",
+    "@types/jest": "^29.5.8",
     "@types/wordpress__block-editor": "^7.0.0",
     "@wordpress/a11y": "^3.30.0",
     "@wordpress/annotations": "^2.30.0",
@@ -111,7 +111,7 @@
   "devDependencies": {
     "@alleyinteractive/eslint-config": "^0.1.4",
     "@alleyinteractive/stylelint-config": "^0.0.2",
-    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-env": "^7.23.3",
     "@types/wordpress__components": "^23.0.1",
     "@types/wordpress__edit-post": "^7.0.2",
     "@types/wordpress__plugins": "^3.0.0",

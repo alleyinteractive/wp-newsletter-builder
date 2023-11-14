@@ -3,7 +3,7 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { ImagePicker, PostPicker } from '@alleyinteractive/block-editor-tools';
 import { useSelect } from '@wordpress/data';
 import {
@@ -14,6 +14,9 @@ import {
   Spinner,
   TextControl,
 } from '@wordpress/components';
+import { arrayMoveImmutable } from 'array-move';
+
+import SortableList, { SortableItem, SortableKnob } from 'react-easy-sort';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -92,6 +95,47 @@ export default function Edit({
     });
   };
 
+  const isShown = (item: string) => {
+    switch (item) {
+      case 'image':
+        return showImage;
+      case 'title':
+        return true;
+      case 'byline':
+        return showByline;
+      case 'excerpt':
+        return showExcerpt;
+      case 'content':
+        return showContent;
+      case 'cta':
+        return showCta;
+      default:
+        return false;
+    }
+  };
+
+  const toggleShown = (item: string) => {
+    switch (item) {
+      case 'image':
+        setAttributes({ showImage: !showImage });
+        break;
+      case 'byline':
+        setAttributes({ showByline: !showByline });
+        break;
+      case 'excerpt':
+        setAttributes({ showExcerpt: !showExcerpt });
+        break;
+      case 'content':
+        setAttributes({ showContent: !showContent });
+        break;
+      case 'cta':
+        setAttributes({ showCta: !showCta });
+        break;
+      default:
+        break;
+    }
+  };
+
   const removeLinks = (html: string) => (
     html ? html.replace(/<a[^>]*?>(.*?)<\/a>/gi, '$1') : ''
   );
@@ -129,6 +173,15 @@ export default function Edit({
   cutoff.setMonth(cutoff.getMonth() - 3);
 
   const titleClass = smallerFont ? 'post__title--small' : '';
+
+  const onSortEnd = (oldIndex: number, newIndex: number) => {
+    const newOrder = arrayMoveImmutable(
+      [...order as string[]], // eslint-disable-line camelcase
+      oldIndex,
+      newIndex,
+    );
+    setAttributes({ order: newOrder });
+  };
 
   return (
     <div {...useBlockProps()}>
@@ -225,59 +278,62 @@ export default function Edit({
                 return '';
             }
           })}
-          <InspectorControls>
-            {/* @ts-ignore */}
-            <PanelBody
-              title={__('Post', 'wp-newsletter-builder')}
-              initialOpen
+        </>
+      ) : (
+        <div>
+          {/* @ts-ignore */}
+          <PostPicker
+            onUpdate={handleSelect}
+            allowedTypes={['post']}
+            onReset={() => handleSelect(0)}
+            params={{ after: cutoff.toISOString(), per_page: 20 }}
+            title={__('Please select a post', 'wp-newsletter-builder')}
+            value={postId}
+            // @ts-ignore
+            searchRender={PostPickerResult}
+          />
+        </div>
+      )}
+      <InspectorControls>
+        {/* @ts-ignore */}
+        <PanelBody
+          title={__('Post', 'wp-newsletter-builder')}
+          initialOpen
+        >
+          <PanelRow>
+            <SortableList
+              onSortEnd={onSortEnd}
+              className="sortable"
+              lockAxis="y"
             >
-              {/* @ts-ignore */}
-              <PanelRow>
-                {/* @ts-ignore */}
-                <CheckboxControl
-                  label={__('Show image', 'wp-newsletter-builder')}
-                  checked={showImage}
-                  onChange={(value) => setAttributes({ showImage: value })}
-                />
-              </PanelRow>
-              {/* @ts-ignore */}
-              <PanelRow>
-                {/* @ts-ignore */}
-                <CheckboxControl
-                  label={__('Show Byline', 'wp-newsletter-builder')}
-                  checked={showByline}
-                  onChange={(value) => setAttributes({ showByline: value })}
-                />
-              </PanelRow>
-              {/* @ts-ignore */}
-              <PanelRow>
-                {/* @ts-ignore */}
-                <CheckboxControl
-                  label={__('Show dek', 'wp-newsletter-builder')}
-                  checked={showExcerpt}
-                  onChange={(value) => setAttributes({ showExcerpt: value })}
-                />
-              </PanelRow>
-              {/* @ts-ignore */}
-              <PanelRow>
-                {/* @ts-ignore */}
-                <CheckboxControl
-                  label={__('Show content', 'wp-newsletter-builder')}
-                  checked={showContent}
-                  onChange={(value) => setAttributes({ showContent: value })}
-                />
-              </PanelRow>
-              {/* @ts-ignore */}
-              <PanelRow>
-                {/* @ts-ignore */}
-                <CheckboxControl
-                  label={__('Show CTA', 'wp-newsletter-builder')}
-                  checked={showCta}
-                  onChange={(value) => setAttributes({ showCta: value })}
-                />
-              </PanelRow>
-            </PanelBody>
-            {/* @ts-ignore */}
+              {order.map((item) => (
+                <SortableItem key={item}>
+                  <div style={{ display: 'flex' }}>
+                    <SortableKnob>
+                      <span
+                        aria-label={__('Move item', 'wp-newsletter-builder')}
+                        style={{ width: '15px', height: '100%', cursor: 'move' }}
+                      >
+                        ::
+                      </span>
+                    </SortableKnob>
+                    {item === 'title' ? (
+                      <p>{__('Title', 'wp-newsletter-builder')}</p>
+                    ) : (
+                      <CheckboxControl
+                        label={sprintf(__('Show %s', 'wp-newsletter-builder'), item)}
+                        checked={isShown(item)}
+                        onChange={() => toggleShown(item)}
+                      />
+                    )}
+                  </div>
+                </SortableItem>
+              ))}
+            </SortableList>
+          </PanelRow>
+        </PanelBody>
+        {postId ? (
+          <>
             <PanelBody
               title={__('Override Image', 'wp-newsletter-builder')}
               initialOpen
@@ -303,23 +359,9 @@ export default function Edit({
                 />
               </PanelRow>
             </PanelBody>
-          </InspectorControls>
-        </>
-      ) : (
-        <div>
-          {/* @ts-ignore */}
-          <PostPicker
-            onUpdate={handleSelect}
-            allowedTypes={['post']}
-            onReset={() => handleSelect(0)}
-            params={{ after: cutoff.toISOString(), per_page: 20 }}
-            title={__('Please select a post', 'wp-newsletter-builder')}
-            value={postId}
-            // @ts-ignore
-            searchRender={PostPickerResult}
-          />
-        </div>
-      )}
+          </>
+        ) : null}
+      </InspectorControls>
     </div>
   );
 }

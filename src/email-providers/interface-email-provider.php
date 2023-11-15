@@ -83,6 +83,14 @@ interface Email_Provider {
 	public function get_campaign_summary( $campaign_id );
 
 	/**
+	 * Determine if the campaign was created successfully.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return boolean
+	 */
+	public function campaign_created_successfully( array $result ): bool;
+
+	/**
 	 * Add subscriber to list
 	 *
 	 * @param string $list_id The list id.

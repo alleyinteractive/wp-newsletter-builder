@@ -217,6 +217,27 @@ class Campaign_Monitor implements Email_Provider {
 	}
 
 	/**
+	 * Determine if the campaign was created successfully.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return boolean
+	 */
+	public function campaign_created_successfully( array $result ): bool {
+		return 201 === $result['http_status_code'];
+	}
+
+	/**
+	 * Gets the campaign id from the result.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return string|false
+	 */
+	public function get_campaign_id_from_create_result( array $result ): string|false {
+		return $result['response'] ?? false;
+	}
+
+
+	/**
 	 * Add subscriber to list
 	 *
 	 * @param string $list_id The list id.

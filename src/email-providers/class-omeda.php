@@ -182,7 +182,7 @@ class Omeda implements Email_Provider {
 
 		$params = [
 			'DeploymentName'   => sprintf( '%s - Post %d - %s', $newsletter->post_title, $newsletter->ID, get_post_modified_time( 'Y-m-d H:i:s', false, $newsletter->ID ) ),
-			'DeploymentTypeId' => intval( $list_ids[0] ), // array not allowed - how do we handle properly?
+			'DeploymentTypeId' => intval( $list_ids[0] ), // array not allowed - how do we handle properly? Maybe splits?
 			'DeploymentDate'   => date( 'Y-m-d H:i', strtotime( '+1 minute' ) ), // Must be in the future. 'yyyy-MM-dd HH:mm' format.
 			'OwnerUserId'      => 'nalley', // Need to figure this out.
 			'Splits'           => 1,
@@ -198,6 +198,13 @@ class Omeda implements Email_Provider {
 		];
 
 		$response = $this->client->call( 'omail/deployment', $params, 'brand', 'POST' );
+
+		if ( is_wp_error( $response ) ) {
+			return [
+				'response'         => $response,
+				'http_status_code' => 500,
+			];
+		}
 
 		// get the trackId.
 		$track_id = $response['TrackId'];
@@ -223,25 +230,26 @@ class Omeda implements Email_Provider {
 		$this->array_to_xml( $content_params, $content_xml );
 
 		$content_response = $this->client->call( 'omail/deployment/content', $content_xml->asXML(), 'brand', 'POST' );
-
-		if ( is_set( $content_response['TrackId'] ) ) {
-
-		}
-die();
-		return [
-			'response'         => $result->response,
-			'http_status_code' => $result->http_status_code,
-		];
+		return $content_response;
 	}
 
 	/**
 	 * Sends a campaign.
+	 * TODO: I don't know how this process should work yet. I think we need to send a test
+	 * and then it gets approved?
+	 *
+	 * @see https://training.omeda.com/knowledge-base/api-email-deployment-test-resource/
 	 *
 	 * @param string $campaign_id The campaign id.
 	 * @return array|false The response from the API.
 	 */
 	public function send_campaign( $campaign_id ) {
-		// TODO.
+		$params = [
+			'UserId' => 'nalley',
+			'TrackId' => $campaign_id,
+		];
+		$response = $this->client->call( 'omail/deployment/sendtest', $params, 'brand', 'POST' );
+		var_dump( $response );
 	}
 
 	/**
@@ -251,7 +259,29 @@ die();
 	 * @return array|false The response from the API.
 	 */
 	public function get_campaign_summary( $campaign_id ) {
-		// TODO.
+		$response = $this->client->call( 'omail/deployment/lookup/' . $campaign_id, [], 'brand', 'GET' );
+		// This data will need some massaging before being returned.
+		return $response;
+	}
+
+	/**
+	 * Determine if the campaign was created successfully.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return boolean
+	 */
+	public function campaign_created_successfully( array $result ): bool {
+		return isset( $result['TrackId'] ) && ! empty( $result['TrackId'] );
+	}
+
+	/**
+	 * Gets the campaign id from the result.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return string|false
+	 */
+	public function get_campaign_id_from_create_result( array $result ): string|false {
+		return $result['TrackId'] ?? false;
 	}
 
 	/**

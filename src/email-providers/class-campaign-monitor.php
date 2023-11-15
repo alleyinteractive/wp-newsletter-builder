@@ -106,6 +106,7 @@ class Campaign_Monitor implements Email_Provider {
 	 * @return array The response from the API.
 	 */
 	public function create_campaign( $newsletter_id, $list_ids, $campaign_id = null ) {
+		// TODO: Move non-email provider code to the core plugin.
 		$settings = get_option( static::SETTINGS_KEY );
 		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;

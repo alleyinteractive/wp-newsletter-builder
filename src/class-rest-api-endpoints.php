@@ -33,7 +33,8 @@ class Rest_API_Endpoints {
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'get_lists' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_posts' );
+					return true;
+					// return current_user_can( 'edit_posts' );
 				},
 			]
 		);
@@ -88,7 +89,7 @@ class Rest_API_Endpoints {
 	 */
 	public function get_lists() {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
+			// return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		global $newsletter_builder_email_provider;
 		$lists = $newsletter_builder_email_provider->get_lists();

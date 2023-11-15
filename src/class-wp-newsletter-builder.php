@@ -245,9 +245,10 @@ class WP_Newsletter_Builder {
 		if ( empty( $lists ) ) {
 			return;
 		}
-		$campaign_id = get_post_meta( $post_id, 'nb_newsletter_campaign_id', true );
+
 		global $newsletter_builder_email_provider;
 		$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists );
+		// TODO: This needs to be more provider agnostic.
 		if ( 201 === $result['http_status_code'] ) {
 			update_post_meta( $post_id, 'nb_newsletter_campaign_id', $result['response'] );
 			$send_result = $newsletter_builder_email_provider->send_campaign( $result['response'] );

@@ -49,7 +49,10 @@ interface Email_Provider {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array|false
+	 * @return array{
+	 *   ListID: string,
+	 *   Name: string,
+	 * }|false
 	 */
 	public function get_lists();
 

@@ -114,6 +114,13 @@ class Omeda_Client {
 	private string $client_abbr = '';
 
 	/**
+	 * Whether to use the staging URL or not.
+	 *
+	 * @var boolean
+	 */
+	private $use_staging = false;
+
+	/**
 	 * Initialize and set values for properties.
 	 */
 	public function __construct( $config ) {
@@ -261,6 +268,28 @@ class Omeda_Client {
 		$type = 'client' === $api ? $this->get_client_abbr() : $this->get_brand();
 
 		return "{$url}/webservices/rest/{$api}/{$type}/{$endpoint}/*";
+	}
+
+	/**
+	 * Returns whether the API is using the staging environment.
+	 *
+	 * @return bool
+	 */
+	public function is_use_staging(): bool {
+		return $this->use_staging;
+	}
+
+	/**
+	 * Set the usage of staging environment.
+	 *
+	 * @param bool $use_staging Whether to use the staging environment or not.
+	 *
+	 * @return API The current API instance.
+	 */
+	public function set_use_staging( bool $use_staging ): API {
+		$this->use_staging = $use_staging;
+
+		return $this;
 	}
 
 	/**
@@ -497,13 +526,13 @@ class Omeda_Client {
 	/**
 	 * Sends an API request to the specified endpoint with the given data.
 	 *
-	 * @param string     $service The endpoint to send the request to.
-	 * @param array|null $data The data to send with the request.
-	 * @param string     $api The API to use (client or brand).
+	 * @param string            $service The endpoint to send the request to.
+	 * @param array|string|null $data The data to send with the request.
+	 * @param string            $api The API to use (client or brand).
 	 *
 	 * @return array|WP_Error The response data as an associative array, or a WP_Error object if there was an error.
 	 */
-	public function call( string $service, ?array $data, string $api = 'client' ): array|WP_Error {
+	public function call( string $service, array|string|null $data, string $api = 'client', string $method = 'POST' ): array|WP_Error {
 		if ( ! $this->check_requirements() ) {
 			$this->log( 'Missing required properties.' );
 
@@ -512,14 +541,24 @@ class Omeda_Client {
 
 		$endpoint = $this->get_endpoint( $api, $service );
 
-		$response = wp_remote_post( esc_url_raw( $endpoint ), [
-			'headers' => [
-				'x-omeda-appid' => $this->get_app_id(),
-				'x-omeda-inputid' => $this->get_input_id(),
-				'Content-Type'  => 'application/json',
-			],
-			'body'    => wp_json_encode( $data ),
-		] );
+		if ( 'POST' === $method ) {
+			$response = wp_remote_post( esc_url_raw( $endpoint ), [
+				'headers' => [
+					'x-omeda-appid' => $this->get_app_id(),
+					'x-omeda-inputid' => $this->get_input_id(),
+					'Content-Type'  => is_string( $data ) ? 'application/xml' : 'application/json',
+				],
+				'body'    => is_string( $data ) ? $data : wp_json_encode( $data ),
+			] );
+		} else {
+			$response = wp_remote_get( esc_url_raw( $endpoint ), [
+				'headers' => [
+					'x-omeda-appid' => $this->get_app_id(),
+					'x-omeda-inputid' => $this->get_input_id(),
+					'Content-Type'  => 'application/json',
+				],
+			] );
+		}
 
 		if ( is_wp_error( $response ) ) {
 			$this->log( 'Something went wrong: ' . $response->get_error_message() );
@@ -537,8 +576,13 @@ class Omeda_Client {
 
 			return new WP_Error( 'http_error', wp_remote_retrieve_body( $response ) );
 		}
-
-		return json_decode( wp_remote_retrieve_body( $response ), true );
+		$body = wp_remote_retrieve_body( $response );
+		if ( is_string( $data ) ) {
+			$xml = simplexml_load_string( $body );
+			$json = json_encode( $xml );
+			return json_decode( $json, true );
+		}
+		return json_decode( $body, true );
 	}
 
 	/**

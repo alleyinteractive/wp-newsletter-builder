@@ -208,6 +208,7 @@ class Omeda implements Email_Provider {
 
 		// get the trackId.
 		$track_id = $response['TrackId'];
+
 		// Get the content from $url.
 		$html_content = file_get_contents( $url );
 
@@ -316,10 +317,6 @@ class Omeda implements Email_Provider {
 	 */
 	private function array_to_xml( $array, &$root_element ) {
 		foreach ( $array as $key => $value ) {
-			// If $value contains html, wrap it in a CDATA tag.
-			if ( is_string( $value ) && ( 1 === preg_match( '/[&<>]/', $value ) ) ) {
-				$value = sprintf( '<![CDATA[%s]]>', $value );
-			}
 			if ( is_array( $value ) ) {
 				if ( ! is_numeric( $key ) ) {
 					$subnode = $root_element->addChild( "$key" );
@@ -329,7 +326,16 @@ class Omeda implements Email_Provider {
 					$this->array_to_xml( $value, $subnode );
 				}
 			} else {
-				$root_element->addChild( "$key", htmlspecialchars( "$value" ) );
+				// If $value contains html, wrap it in a CDATA tag.
+				// This isn't working right. See https://stackoverflow.com/questions/6260224/how-to-write-cdata-using-simplexmlelement
+				// for a better approach.
+				if ( is_string( $value ) && ( 1 === preg_match( '/[&<>]/', $value ) ) ) {
+					$value = sprintf( '<![CDATA[%s]]>', $value );
+				} else {
+					$value = htmlspecialchars( $value, ENT_QUOTES );
+				}
+
+				$root_element->addChild( "$key", $value );
 			}
 		}
 	}

@@ -2,7 +2,7 @@
 /**
  * Trait file for Instance.
  *
- * @package nr
+ * @package wp-newsletter-builder
  */
 
 namespace WP_Newsletter_Builder;
@@ -21,9 +21,9 @@ trait Instance {
 	/**
 	 * Get class instance.
 	 *
-	 * @return static
+	 * @return static The instance of the called class.
 	 */
-	public static function instance() {
+	public static function instance(): static {
 		$class = get_called_class();
 
 		if ( ! isset( static::$instances[ $class ] ) ) {

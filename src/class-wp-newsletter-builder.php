@@ -7,6 +7,8 @@
 
 namespace WP_Newsletter_Builder;
 
+use WP_Post;
+
 /**
  * Example Plugin
  */
@@ -97,7 +99,7 @@ class WP_Newsletter_Builder {
 		$local_path = WP_NEWSLETTER_BUILDER_DIR . '/single-nb_newsletter.php';
 
 		if (
-			$post instanceof \WP_Post
+			$post instanceof WP_Post
 			&& is_singular( 'nb_newsletter' )
 			&& file_exists( $local_path )
 			&& 0 === validate_file( $local_path )
@@ -111,18 +113,20 @@ class WP_Newsletter_Builder {
 	/**
 	 * Sends the newsletter when the newsletter post is published.
 	 *
-	 * @param int      $post_id The post id.
-	 * @param \WP_Post $post The post.
-	 * @param bool     $update Whether this is an update.
-	 * @param \WP_Post $post_before The post before the update.
+	 * @param int $post_id The post id.
+	 * @param WP_Post $post The post.
+	 * @param bool $update Whether this is an update.
+	 * @param WP_Post|null $post_before The post before the update.
 	 */
-	public function on_newsletter_after_insert_post( $post_id, $post, $update, $post_before ): void {
+	public function on_newsletter_after_insert_post( int $post_id, WP_Post $post, bool $update, ?WP_Post $post_before ): void {
 		if ( 'nb_newsletter' !== $post->post_type ) {
 			return;
 		}
 		$new_status = $post->post_status;
-		$old_status = $post_before->post_status;
-		if ( $new_status === $old_status || 'publish' !== $new_status ) {
+		if (
+			$new_status === $post_before?->post_status
+			|| 'publish' !== $new_status
+		) {
 			return;
 		}
 		$this->do_send( $post->ID );

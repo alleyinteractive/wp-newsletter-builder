@@ -10,7 +10,7 @@
 
 namespace WP_Newsletter_Builder\Email_Providers;
 
-use \WP_Newsletter_Builder\Omeda_Client;
+use WP_Newsletter_Builder\Omeda_Client;
 
 /**
  * Interface Email_Provider
@@ -36,8 +36,8 @@ class Omeda implements Email_Provider {
 	 * @return void
 	 */
 	public function setup() {
-		$settings = get_option( static::SETTINGS_KEY, [] );
-		$config = [
+		$settings     = get_option( static::SETTINGS_KEY, [] );
+		$config       = [
 			'license_key' => $settings['license_key'] ?? '',
 			'user'        => $settings['user'] ?? '',
 			'app_id'      => $settings['app_id'] ?? '',
@@ -50,7 +50,7 @@ class Omeda implements Email_Provider {
 			'reply_to'    => $settings['reply_to'] ?? '',
 			'use_staging' => $settings['use_staging'] ?? false,
 		];
-		$client = new Omeda_Client( $config );
+		$client       = new Omeda_Client( $config );
 		$this->client = $client;
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
 	}
@@ -116,8 +116,8 @@ class Omeda implements Email_Provider {
 	 */
 	public function get_lists() {
 		$response = $this->client->call( 'deploymenttypes', null, 'brand', 'GET' );
-		$lists = array_map(
-			function( $list ) {
+		$lists    = array_map(
+			function ( $list ) {
 				return [
 					'ListID' => (string) $list['Id'],
 					'Name'   => $list['Name'],
@@ -128,7 +128,7 @@ class Omeda implements Email_Provider {
 		// Sort lists by Name.
 		usort(
 			$lists,
-			function( $a, $b ) {
+			function ( $a, $b ) {
 				return strcmp( $a['Name'], $b['Name'] );
 			}
 		);
@@ -190,11 +190,11 @@ class Omeda implements Email_Provider {
 			'TrackLinks'       => 1,
 			'Testers'          => [
 				[
-					'FirstName' => 'Greg',
-					'LastName'  => 'Marshall',
-					'EmailAddress' => 'greg@alley.com'
-				]
-			]
+					'FirstName'    => 'Greg',
+					'LastName'     => 'Marshall',
+					'EmailAddress' => 'greg@alley.com',
+				],
+			],
 		];
 
 		$response = $this->client->call( 'omail/deployment', $params, 'brand', 'POST' );
@@ -245,8 +245,8 @@ class Omeda implements Email_Provider {
 	 * @return array|false The response from the API.
 	 */
 	public function send_campaign( $campaign_id ) {
-		$params = [
-			'UserId' => 'nalley',
+		$params   = [
+			'UserId'  => 'nalley',
 			'TrackId' => $campaign_id,
 		];
 		$response = $this->client->call( 'omail/deployment/sendtest', $params, 'brand', 'POST' );
@@ -311,7 +311,7 @@ class Omeda implements Email_Provider {
 	/**
 	 * Converts an array to an XML string
 	 *
-	 * @param array $array
+	 * @param array       $array
 	 * @param \Simple_XML $root_element
 	 * @return string
 	 */

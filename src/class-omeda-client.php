@@ -1,16 +1,15 @@
 <?php
 /**
- * Class file for WP Omeda API calls.
+ * Class file for WP Omeda API integration.
  *
- * @package nr
+ * @package wp-newsletter-builder
  */
 
 declare(strict_types=1);
 
 namespace WP_Newsletter_Builder;
 
-use WP_Newsletter_Builder\Instance;
-
+use Exception;
 use WP_Error;
 use WP_REST_Request;
 
@@ -142,32 +141,18 @@ class Omeda_Client {
 	public function __construct( $config ) {
 
 		// Set options.
-		$this->set_license_key( $config[ 'license_key' ] ?? $this->license_key );
+		$this->set_license_key( $config['license_key'] ?? $this->license_key );
 
 		// Set properties.
-		$this->set_api_user( $config[ 'user' ] );
-		$this->set_app_id( $config[ 'app_id' ] );
-		$this->set_brand( $config[ 'brand' ] );
-		$this->set_client_abbr( $config[ 'client_abbr' ] );
-		$this->set_from_name( $config[ 'from_name' ] );
-		$this->set_input_id( $config[ 'input_id' ] );
-		$this->set_mailbox( $config[ 'mailbox' ] );
-		$this->set_namespace( $config[ 'namespace' ] );
-		$this->set_reply_to( $config[ 'reply_to' ] );
-
-		// Turn on debug mode if we're on a local or staging environment.
-		if ( 'production' !== ENV ) {
-			$this->set_debug( true );
-			$this->set_use_staging( false );
-		}
-		// Set staging to use the production endpoint, see NR-5283.
-		if ( 'staging' === ENV ) {
-			$this->set_use_staging( false );
-		}
-		// Set staging to use the production endpoint, see NR-5283.
-		if ( 'staging' === ENV ) {
-			$this->set_use_staging( false );
-		}
+		$this->set_api_user( $config['user'] );
+		$this->set_app_id( $config['app_id'] );
+		$this->set_brand( $config['brand'] );
+		$this->set_client_abbr( $config['client_abbr'] );
+		$this->set_from_name( $config['from_name'] );
+		$this->set_input_id( $config['input_id'] );
+		$this->set_mailbox( $config['mailbox'] );
+		$this->set_namespace( $config['namespace'] );
+		$this->set_reply_to( $config['reply_to'] );
 	}
 
 	/**
@@ -314,9 +299,9 @@ class Omeda_Client {
 	 *
 	 * @param bool $use_staging Whether to use the staging environment or not.
 	 *
-	 * @return API The current API instance.
+	 * @return Omeda_Client The current API instance.
 	 */
-	public function set_use_staging( bool $use_staging ): API {
+	public function set_use_staging( bool $use_staging ): Omeda_Client {
 		$this->use_staging = $use_staging;
 
 		return $this;
@@ -570,7 +555,7 @@ class Omeda_Client {
 		if ( defined( 'DOING_UNIT_TEST' ) && DOING_UNIT_TEST ) {
 			return;
 		}
-		if ( ! ( $this->is_debug() && 'local' === ENV ) ) {
+		if ( ! $this->is_debug() ) {
 			return;
 		}
 		error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -585,7 +570,7 @@ class Omeda_Client {
 	 *
 	 * @return array|WP_Error The response data as an associative array, or a WP_Error object if there was an error.
 	 */
-	public function call( string $service, ?array $data, string $api = self::CLIENT ): array|WP_Error {
+	public function call( string $service, ?array $data, string $api = self::CLIENT, string $method = 'POST' ): array|WP_Error {
 		if ( ! $this->check_requirements() ) {
 			$this->log( 'Missing required properties.' );
 
@@ -594,29 +579,38 @@ class Omeda_Client {
 
 		$endpoint = $this->get_endpoint( $api, $service );
 
-		$response = wp_remote_post( esc_url_raw( $endpoint ), [
-			'headers' => $this->get_headers( $service ),
-			'body'    => wp_json_encode( $data ),
-		] );
+		$response = wp_remote_post(
+			esc_url_raw( $endpoint ),
+			[
+				'headers' => $this->get_headers( $service ),
+				'body'    => wp_json_encode( $data ),
+			] 
+		);
 
-// TODO move content type to get header
+		// TODO move content type to get header
 		if ( 'POST' === $method ) {
-			$response = wp_remote_post( esc_url_raw( $endpoint ), [
-				'headers' => [
-					'x-omeda-appid' => $this->get_app_id(),
-					'x-omeda-inputid' => $this->get_input_id(),
-					'Content-Type'  => is_string( $data ) ? 'application/xml' : 'application/json',
-				],
-				'body'    => is_string( $data ) ? $data : wp_json_encode( $data ),
-			] );
+			$response = wp_remote_post(
+				esc_url_raw( $endpoint ),
+				[
+					'headers' => [
+						'x-omeda-appid'   => $this->get_app_id(),
+						'x-omeda-inputid' => $this->get_input_id(),
+						'Content-Type'    => is_string( $data ) ? 'application/xml' : 'application/json',
+					],
+					'body'    => is_string( $data ) ? $data : wp_json_encode( $data ),
+				] 
+			);
 		} else {
-			$response = wp_remote_get( esc_url_raw( $endpoint ), [
-				'headers' => [
-					'x-omeda-appid' => $this->get_app_id(),
-					'x-omeda-inputid' => $this->get_input_id(),
-					'Content-Type'  => 'application/json',
-				],
-			] );
+			$response = wp_remote_get(
+				esc_url_raw( $endpoint ),
+				[
+					'headers' => [
+						'x-omeda-appid'   => $this->get_app_id(),
+						'x-omeda-inputid' => $this->get_input_id(),
+						'Content-Type'    => 'application/json',
+					],
+				] 
+			);
 		}
 
 		if ( is_wp_error( $response ) ) {
@@ -637,12 +631,12 @@ class Omeda_Client {
 		}
 		$body = wp_remote_retrieve_body( $response );
 		if ( is_string( $data ) ) {
-			$xml = simplexml_load_string( $body );
+			$xml  = simplexml_load_string( $body );
 			$json = json_encode( $xml );
 			return json_decode( $json, true );
 		}
 		return json_decode( $body, true );
-		//return json_decode( wp_remote_retrieve_body( $response ), true );
+		// return json_decode( wp_remote_retrieve_body( $response ), true );
 	}
 
 	/**
@@ -686,16 +680,19 @@ class Omeda_Client {
 		}
 
 		// Then, send the opt-in.
-		return $this->call( 'optinfilterqueue', [
-			'DeploymentTypeOptIn' => [
-				[
-					'EmailAddress'     => $email,
-					'Source'           => $request->get_param( 'source' ),
-					'DeploymentTypeId' => $request->get_param( 'newsletters' ),
-					'DeleteOptOut'     => 1,
+		return $this->call(
+			'optinfilterqueue',
+			[
+				'DeploymentTypeOptIn' => [
+					[
+						'EmailAddress'     => $email,
+						'Source'           => $request->get_param( 'source' ),
+						'DeploymentTypeId' => $request->get_param( 'newsletters' ),
+						'DeleteOptOut'     => 1,
+					],
 				],
-			],
-		] );
+			] 
+		);
 	}
 
 	/**
@@ -714,15 +711,18 @@ class Omeda_Client {
 			return $email;
 		}
 
-		return $this->call( 'optoutfilterqueue', [
-			'DeploymentTypeOptIn' => [
-				[
-					'EmailAddress'     => $email,
-					'Source'           => $request->get_param( 'source' ),
-					'DeploymentTypeId' => $request->get_param( 'newsletters' ),
+		return $this->call(
+			'optoutfilterqueue',
+			[
+				'DeploymentTypeOptIn' => [
+					[
+						'EmailAddress'     => $email,
+						'Source'           => $request->get_param( 'source' ),
+						'DeploymentTypeId' => $request->get_param( 'newsletters' ),
+					],
 				],
-			],
-		] );
+			] 
+		);
 	}
 
 	/**
@@ -815,15 +815,24 @@ class Omeda_Client {
 
 		// This input ID needs to be included when calling
 		// the Store Customer and Order API.
-		add_filter('nr_modify_omeda_headers', function ( $headers ) {
-			$headers['x-omeda-inputid'] = '7900G2456689A2G';
-			return $headers;
-		}, 10, 2);
+		add_filter(
+			'nr_modify_omeda_headers',
+			function ( $headers ) {
+				$headers['x-omeda-inputid'] = '7900G2456689A2G';
+				return $headers;
+			},
+			10,
+			2
+		);
 
-		return $this->call( 'storecustomerandorder', [
-			'Emails' => [
-				[ 'EmailAddress' => $email ],
+		return $this->call(
+			'storecustomerandorder',
+			[
+				'Emails' => [
+					[ 'EmailAddress' => $email ],
+				],
 			],
-		], self::BRAND );
+			self::BRAND 
+		);
 	}
 }

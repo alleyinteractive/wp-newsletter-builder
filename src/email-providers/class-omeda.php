@@ -2,7 +2,7 @@
 /**
  * Interface for email provider.
  *
- * @package WP_Newsletter_Builder
+ * @package wp-newsletter-builder
  */
 
 // Remove once implemented.

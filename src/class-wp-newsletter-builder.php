@@ -8,6 +8,8 @@
 namespace WP_Newsletter_Builder;
 
 use WP_Post;
+use WP_Query;
+use function wp_update_post;
 
 /**
  * Example Plugin
@@ -20,80 +22,71 @@ class WP_Newsletter_Builder {
 		add_action( 'init', [ $this, 'register_post_types' ] );
 		add_filter( 'template_include', [ $this, 'include_template' ] );
 		add_action( 'wp_after_insert_post', [ $this, 'on_newsletter_after_insert_post' ], 10, 4 );
-		add_action( 'wp_after_insert_post', [ $this, 'on_after_insert_post' ], 10, 1 );
+		add_action( 'wp_after_insert_post', [ $this, 'on_after_insert_post' ] );
 		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ], 10, 2 );
-		add_filter( 'pre_get_posts', [ $this, 'modify_query' ], 10, 1 );
+		add_filter( 'pre_get_posts', [ $this, 'modify_query' ] );
 		add_action( 'init', [ $this, 'check_for_fieldmanager' ] );
 	}
 
 	/**
 	 * Register post types
 	 */
-	public function register_post_types() {
-		register_post_type(
-			'nb_newsletter',
-			[
-				'labels'              => [
-					'name'          => __( 'Newsletters', 'wp-newsletter-builder' ),
-					'singular_name' => __( 'Newsletter', 'wp-newsletter-builder' ),
-				],
-				'public'              => true,
-				'has_archive'         => true,
-				'rewrite'             => [ 'slug' => 'nb-newsletters' ],
-				'supports'            => [ 'title', 'editor', 'custom-fields' ],
-				'show_in_rest'        => true,
-				'exclude_from_search' => true,
-				'template'            => [
-					[
-						'wp-newsletter-builder/email-settings',
-						[
-							'lock' => [
-								'move'   => true,
-								'remove' => true,
-							],
-						],
-					],
-				],
-				'menu_icon'           => 'dashicons-email-alt2',
-			],
-		);
+	public function register_post_types(): void {
 
-		register_post_type(
-			'nb_template',
+		$post_types = [
 			[
-				'labels'              => [
-					'name'          => __( 'Templates', 'wp-newsletter-builder' ),
-					'singular_name' => __( 'Template', 'wp-newsletter-builder' ),
-				],
-				'public'              => true,
-				'has_archive'         => true,
-				'rewrite'             => [ 'slug' => 'nb-templates' ],
-				'supports'            => [ 'title', 'editor', 'custom-fields' ],
-				'show_in_rest'        => true,
-				'exclude_from_search' => true,
-				'template'            => [
-					[
-						'wp-newsletter-builder/email-settings',
+				'name'          => 'nb_newsletter',
+				'singular_name' => 'Newsletter',
+				'rewrite_slug'  => 'nb_newsletters',
+				'menu_icon'     => 'dashicons-email-alt2',
+			],
+			[
+				'name'          => 'nb_template',
+				'singular_name' => 'Template',
+				'rewrite_slug'  => 'nb_templates',
+				'menu_icon'     => 'dashicons-admin-customizer',
+			],
+		];
+
+		foreach ( $post_types as $post_type ) {
+			register_post_type(
+				$post_type['name'],
+				[
+					'labels'              => [
+						'name'          => __( ucfirst( $post_type['singular_name'] ) . 's', 'wp-newsletter_builder' ),
+						'singular_name' => __( ucfirst( $post_type['singular_name'] ), 'wp-newsletter_builder' ),
+					],
+					'public'              => true,
+					'has_archive'         => true,
+					'rewrite'             => [ 'slug' => $post_type['rewrite_slug'] ],
+					'supports'            => [ 'title', 'editor', 'custom_fields' ],
+					'show_in_rest'        => true,
+					'exclude_from_search' => true,
+					'template'            => [
 						[
-							'lock' => [
-								'move'   => true,
-								'remove' => true,
+							'wp-newsletter-builder/email-settings',
+							[
+								'lock' => [
+									'move'   => true,
+									'remove' => true,
+								],
 							],
 						],
 					],
+					'menu_icon'           => $post_type['menu_icon'],
 				],
-				'menu_icon'           => 'dashicons-admin-customizer',
-			],
-		);
+			);
+		}
 	}
 
 	/**
 	 * Adds the local template file to the template hierarchy.
 	 *
 	 * @param string $template The existing template.
+	 *
 	 * @return string
 	 */
-	public function include_template( $template ) {
+	public function include_template( string $template ): string {
 		global $post;
 
 		$local_path = WP_NEWSLETTER_BUILDER_DIR . '/single-nb_newsletter.php';
@@ -113,9 +106,9 @@ class WP_Newsletter_Builder {
 	/**
 	 * Sends the newsletter when the newsletter post is published.
 	 *
-	 * @param int $post_id The post id.
-	 * @param WP_Post $post The post.
-	 * @param bool $update Whether this is an update.
+	 * @param int          $post_id The post id.
+	 * @param WP_Post      $post The post.
+	 * @param bool         $update Whether this is an update.
 	 * @param WP_Post|null $post_before The post before the update.
 	 */
 	public function on_newsletter_after_insert_post( int $post_id, WP_Post $post, bool $update, ?WP_Post $post_before ): void {
@@ -137,7 +130,7 @@ class WP_Newsletter_Builder {
 	 *
 	 * @param int $post_id The post id.
 	 */
-	public function on_after_insert_post( $post_id ): void {
+	public function on_after_insert_post( int $post_id ): void {
 		$post = get_post( $post_id );
 		if ( 'post' !== $post->post_type ) {
 			return;
@@ -193,7 +186,7 @@ class WP_Newsletter_Builder {
 		delete_post_meta( $post->ID, 'nb_breaking_list' );
 		delete_post_meta( $post->ID, 'nb_breaking_should_send' );
 
-		\wp_update_post(
+		wp_update_post(
 			[
 				'ID'          => $breaking_post_id,
 				'post_status' => 'publish',
@@ -205,9 +198,10 @@ class WP_Newsletter_Builder {
 	 * Override the HTML URL for the newsletter - return a public url if local, add auth if staging.
 	 *
 	 * @param string $url The existing url.
+	 *
 	 * @return string
 	 */
-	public function modify_html_url( $url ): string {
+	public function modify_html_url( string $url ): string {
 		$url      = str_replace(
 			[
 				'https://www.',
@@ -239,9 +233,10 @@ class WP_Newsletter_Builder {
 	 * Sends the newsletter.
 	 *
 	 * @param int $post_id The post id.
+	 *
 	 * @return void
 	 */
-	public function do_send( $post_id ) {
+	public function do_send( int $post_id ): void {
 		$lists = get_post_meta( $post_id, 'nb_newsletter_list', true );
 		if ( ! is_array( $lists ) ) {
 			$lists = [ $lists ];
@@ -262,12 +257,13 @@ class WP_Newsletter_Builder {
 	}
 
 	/**
-	 * Modifies the query so we can view draft newsletters as well as published ones.
+	 * Modifies the query, so we can view draft newsletters as well as published ones.
 	 *
-	 * @param \WP_Query $query The query.
-	 * @return \WP_Query
+	 * @param WP_Query $query The query.
+	 *
+	 * @return WP_Query
 	 */
-	public function modify_query( $query ) {
+	public function modify_query( WP_Query $query ): WP_Query {
 		if (
 			$query->is_main_query()
 			&& isset( $query->query_vars['post_type'] )
@@ -284,7 +280,7 @@ class WP_Newsletter_Builder {
 	 *
 	 * @return void
 	 */
-	public function fieldmanager_not_found_error() {
+	public function fieldmanager_not_found_error(): void {
 		?>
 		<div class="error notice">
 			<p>
@@ -306,10 +302,9 @@ class WP_Newsletter_Builder {
 	 *
 	 * @return void
 	 */
-	public function check_for_fieldmanager() {
+	public function check_for_fieldmanager(): void {
 		if ( ! defined( 'FM_VERSION' ) ) {
 			add_action( 'admin_notices', [ $this, 'fieldmanager_not_found_error' ] );
-			return;
 		}
 	}
 }

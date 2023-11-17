@@ -5,6 +5,8 @@
  * @package nr
  */
 
+declare(strict_types=1);
+
 namespace WP_Newsletter_Builder;
 
 use WP_Newsletter_Builder\Instance;
@@ -19,6 +21,20 @@ use WP_REST_Request;
  */
 class Omeda_Client {
 	use Instance;
+
+	/**
+	 * Constant for brand API endpoints
+	 *
+	 * @var string
+	 */
+	const BRAND = 'brand';
+
+	/**
+	 * Constant for client API endpoints
+	 *
+	 * @var string
+	 */
+	const CLIENT = 'client';
 
 	/**
 	 * The Omeda API user.
@@ -40,6 +56,13 @@ class Omeda_Client {
 	 * @var boolean
 	 */
 	private bool $debug = false;
+
+	/**
+	 * Whether to use the staging environment for the Omeda API.
+	 *
+	 * @var bool
+	 */
+	private bool $use_staging = false;
 
 	/**
 	 * The base production URL for the API.
@@ -114,13 +137,6 @@ class Omeda_Client {
 	private string $client_abbr = '';
 
 	/**
-	 * Whether to use the staging URL or not.
-	 *
-	 * @var boolean
-	 */
-	private $use_staging = false;
-
-	/**
 	 * Initialize and set values for properties.
 	 */
 	public function __construct( $config ) {
@@ -138,6 +154,20 @@ class Omeda_Client {
 		$this->set_mailbox( $config[ 'mailbox' ] );
 		$this->set_namespace( $config[ 'namespace' ] );
 		$this->set_reply_to( $config[ 'reply_to' ] );
+
+		// Turn on debug mode if we're on a local or staging environment.
+		if ( 'production' !== ENV ) {
+			$this->set_debug( true );
+			$this->set_use_staging( false );
+		}
+		// Set staging to use the production endpoint, see NR-5283.
+		if ( 'staging' === ENV ) {
+			$this->set_use_staging( false );
+		}
+		// Set staging to use the production endpoint, see NR-5283.
+		if ( 'staging' === ENV ) {
+			$this->set_use_staging( false );
+		}
 	}
 
 	/**
@@ -265,7 +295,7 @@ class Omeda_Client {
 		$url = $this->is_use_staging() ? $this->get_staging_url() : $this->get_base_url();
 
 		// Set type based on whether we are calling client or brand APIs.
-		$type = 'client' === $api ? $this->get_client_abbr() : $this->get_brand();
+		$type = self::CLIENT === $api ? $this->get_client_abbr() : $this->get_brand();
 
 		return "{$url}/webservices/rest/{$api}/{$type}/{$endpoint}/*";
 	}
@@ -471,6 +501,27 @@ class Omeda_Client {
 	}
 
 	/**
+	 * Get the headers for the specified Omeda API service.
+	 *
+	 * Allows other functions to modify headers with
+	 * the nr_modify_omeda_headers filter.
+	 *
+	 * @param string $service The name of the API service.
+	 *
+	 * @return array Returns an array of headers.
+	 */
+	private function get_headers( string $service = '' ): array {
+		$http_response_header = [
+			'x-omeda-appid' => $this->get_app_id(),
+			'Content-Type'  => 'application/json',
+		];
+
+		$http_response_header = apply_filters( 'nr_modify_omeda_headers', $http_response_header, $service );
+
+		return $http_response_header;
+	}
+
+	/**
 	 * Checks if all the required properties are set.
 	 *
 	 * @return bool Returns true if all the properties are set, false otherwise.
@@ -508,6 +559,8 @@ class Omeda_Client {
 	/**
 	 * Logs a message (if debug mode is enabled).
 	 *
+	 * Only enabled for local environment.
+	 *
 	 * @param string $message The message to log.
 	 *
 	 * @return void
@@ -517,7 +570,7 @@ class Omeda_Client {
 		if ( defined( 'DOING_UNIT_TEST' ) && DOING_UNIT_TEST ) {
 			return;
 		}
-		if ( $this->is_debug() ) {
+		if ( ! ( $this->is_debug() && 'local' === ENV ) ) {
 			return;
 		}
 		error_log( $message ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -526,13 +579,13 @@ class Omeda_Client {
 	/**
 	 * Sends an API request to the specified endpoint with the given data.
 	 *
-	 * @param string            $service The endpoint to send the request to.
-	 * @param array|string|null $data The data to send with the request.
-	 * @param string            $api The API to use (client or brand).
+	 * @param string     $service The endpoint to send the request to.
+	 * @param array|null $data The data to send with the request.
+	 * @param string     $api The API to use (client or brand).
 	 *
 	 * @return array|WP_Error The response data as an associative array, or a WP_Error object if there was an error.
 	 */
-	public function call( string $service, array|string|null $data, string $api = 'client', string $method = 'POST' ): array|WP_Error {
+	public function call( string $service, ?array $data, string $api = self::CLIENT ): array|WP_Error {
 		if ( ! $this->check_requirements() ) {
 			$this->log( 'Missing required properties.' );
 
@@ -541,6 +594,12 @@ class Omeda_Client {
 
 		$endpoint = $this->get_endpoint( $api, $service );
 
+		$response = wp_remote_post( esc_url_raw( $endpoint ), [
+			'headers' => $this->get_headers( $service ),
+			'body'    => wp_json_encode( $data ),
+		] );
+
+// TODO move content type to get header
 		if ( 'POST' === $method ) {
 			$response = wp_remote_post( esc_url_raw( $endpoint ), [
 				'headers' => [
@@ -583,6 +642,7 @@ class Omeda_Client {
 			return json_decode( $json, true );
 		}
 		return json_decode( $body, true );
+		//return json_decode( wp_remote_retrieve_body( $response ), true );
 	}
 
 	/**
@@ -595,7 +655,7 @@ class Omeda_Client {
 	 * @return array|WP_Error The response data as an associative array, or a WP_Error object if there was an error.
 	 */
 	public function get_deployment_types( ?array $data = null ): WP_Error|array {
-		return $this->call( 'deploymenttypes', $data, 'brand' );
+		return $this->call( 'deploymenttypes', $data, self::BRAND );
 	}
 
 	/**
@@ -614,9 +674,18 @@ class Omeda_Client {
 			return $email;
 		}
 
-		// NR-5278: Set the input ID to automatically create customers.
-		$this->set_input_id( '7900G2456689A2G' );
+		// First, store the customer in Omeda.
+		$result = $this->store_customer( $email );
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
 
+		// Check for a 'SubmissionId' in the response.
+		if ( ! isset( $result['SubmissionId'] ) ) {
+			return new WP_Error( 'store_customer_error', __( 'Something went wrong while storing the customer.', 'nr' ) );
+		}
+
+		// Then, send the opt-in.
 		return $this->call( 'optinfilterqueue', [
 			'DeploymentTypeOptIn' => [
 				[
@@ -671,6 +740,90 @@ class Omeda_Client {
 		if ( is_wp_error( $email ) ) {
 			return $email;
 		}
-		return $this->call( 'filter/email/' . $email, null, 'brand' );
+
+		return $this->call( 'filter/email/' . $email, null, self::BRAND );
+	}
+
+	/**
+	 * Sends an on-demand deployment (email).
+	 *
+	 * @see https://training.omeda.com/knowledge-base/email-on-demand-send/
+	 *
+	 * @param array       $data The data to send to the API.
+	 * @param string|null $email The email address to use. If not provided, it will be extracted from the $data array.
+	 *
+	 * @return array|WP_Error Returns an array of API response data or a WP_Error object if there was an error during API call.
+	 */
+	public function send( array $data, ?string $email = null ): array|WP_Error {
+		// Check for valid email address.
+		$email = $email ?? $data['EmailAddress'] ?? $data['email'] ?? '';
+		$email = $this->is_email_valid( $email );
+		if ( is_wp_error( $email ) ) {
+			return $email;
+		}
+
+		// The API cannot send email using the Omeda staging URL, so
+		// for any methods the involve sending email, we need to
+		// make sure we are using the production URL.
+		return $this->with_bypass_staging(
+			fn() => $this->call( 'omail/deployemails', $data, self::BRAND )
+		);
+	}
+
+	/**
+	 * Execute a callback with the use_staging flag set to false.
+	 *
+	 * Omeda email API calls cannot be made using the staging URL.
+	 *
+	 * @param callable $callback The callback to execute.
+	 *
+	 * @return mixed The result of the callback.
+	 *
+	 * @throws Exception If an exception occurs during the callback execution.
+	 */
+	private function with_bypass_staging( callable $callback ): mixed {
+		// Remember the initial staging status.
+		$initial_use_staging = $this->is_use_staging();
+		// Bypass staging.
+		$this->set_use_staging( false );
+		try {
+			// Execute the callback.
+			$result = $callback();
+		} finally {
+			// Ensure use_staging is always reset,
+			// even if an exception occurs in the callback.
+			$this->set_use_staging( $initial_use_staging );
+		}
+
+		return $result;
+	}
+
+
+	/**
+	 * Store a customer by email in the Omeda database.
+	 *
+	 * @param string $email The email address of the customer. Optional, defaults to an empty string.
+	 *
+	 * @return array|WP_Error Returns the response from the API call to store the customer. If the email is invalid, an instance of WP_Error will be returned.
+	 */
+	public function store_customer( string $email = '' ): WP_Error|array {
+		// Check for valid email address.
+		$email = $this->is_email_valid( $email );
+		if ( is_wp_error( $email ) ) {
+			return $email;
+		}
+
+		// This input ID needs to be included when calling
+		// the Store Customer and Order API.
+		add_filter('nr_modify_omeda_headers', function ( $headers ) {
+			$headers['x-omeda-inputid'] = '7900G2456689A2G';
+			return $headers;
+		}, 10, 2);
+
+		return $this->call( 'storecustomerandorder', [
+			'Emails' => [
+				[ 'EmailAddress' => $email ],
+			],
+		], self::BRAND );
 	}
 }

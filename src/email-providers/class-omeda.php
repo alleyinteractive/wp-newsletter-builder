@@ -10,6 +10,7 @@
 
 namespace WP_Newsletter_Builder\Email_Providers;
 
+use Simple_XML;
 use WP_Newsletter_Builder\Omeda_Client;
 
 /**
@@ -183,7 +184,7 @@ class Omeda implements Email_Provider {
 		$params = [
 			'DeploymentName'   => sprintf( '%s - Post %d - %s', $newsletter->post_title, $newsletter->ID, get_post_modified_time( 'Y-m-d H:i:s', false, $newsletter->ID ) ),
 			'DeploymentTypeId' => intval( $list_ids[0] ), // array not allowed - how do we handle properly? Maybe splits?
-			'DeploymentDate'   => date( 'Y-m-d H:i', strtotime( '+1 minute' ) ), // Must be in the future. 'yyyy-MM-dd HH:mm' format.
+			'DeploymentDate'   => gmdate( 'Y-m-d H:i', strtotime( '+1 minute' ) ), // Must be in the future. 'yyyy-MM-dd HH:mm' format.
 			'OwnerUserId'      => 'nalley', // Need to figure this out.
 			'Splits'           => 1,
 			'TrackOpens'       => 1,
@@ -210,12 +211,12 @@ class Omeda implements Email_Provider {
 		$track_id = $response['TrackId'];
 
 		// Get the content from $url.
-		$html_content = file_get_contents( $url );
+		$html_content = file_get_contents( $url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 
 		$settings = get_option( static::SETTINGS_KEY, [] );
 
 		$content_params = [
-			'UserId'      => 'nalley', // Need to figure this out.'
+			'UserId'      => 'nalley', // TODO Need to figure this out.
 			'TrackId'     => $track_id,
 			'Subject'     => get_post_meta( $newsletter->ID, 'nb_newsletter_subject', true ),
 			'FromName'    => $nl_from_name,
@@ -244,13 +245,13 @@ class Omeda implements Email_Provider {
 	 * @param string $campaign_id The campaign id.
 	 * @return array|false The response from the API.
 	 */
-	public function send_campaign( $campaign_id ) {
+	public function send_campaign( $campaign_id ): false|array {
 		$params   = [
 			'UserId'  => 'nalley',
 			'TrackId' => $campaign_id,
 		];
 		$response = $this->client->call( 'omail/deployment/sendtest', $params, 'brand', 'POST' );
-		var_dump( $response );
+		return $response;
 	}
 
 	/**
@@ -311,11 +312,12 @@ class Omeda implements Email_Provider {
 	/**
 	 * Converts an array to an XML string
 	 *
-	 * @param array       $array
-	 * @param \Simple_XML $root_element
+	 * @param array $array
+	 * @param Simple_XML $root_element
+	 *
 	 * @return string
 	 */
-	private function array_to_xml( $array, &$root_element ) {
+	private function array_to_xml( array $array, Simple_XML $root_element ): string {
 		foreach ( $array as $key => $value ) {
 			if ( is_array( $value ) ) {
 				if ( ! is_numeric( $key ) ) {

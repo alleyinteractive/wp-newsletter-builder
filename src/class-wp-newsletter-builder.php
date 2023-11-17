@@ -33,50 +33,61 @@ class WP_Newsletter_Builder {
 	 */
 	public function register_post_types(): void {
 
-		$post_types = [
+		register_post_type(
+			'nb_newsletter',
 			[
-				'name'          => 'nb_newsletter',
-				'singular_name' => 'Newsletter',
-				'rewrite_slug'  => 'nb_newsletters',
-				'menu_icon'     => 'dashicons-email-alt2',
-			],
-			[
-				'name'          => 'nb_template',
-				'singular_name' => 'Template',
-				'rewrite_slug'  => 'nb_templates',
-				'menu_icon'     => 'dashicons-admin-customizer',
-			],
-		];
-
-		foreach ( $post_types as $post_type ) {
-			register_post_type(
-				$post_type['name'],
-				[
-					'labels'              => [
-						'name'          => __( ucfirst( $post_type['singular_name'] ) . 's', 'wp-newsletter_builder' ),
-						'singular_name' => __( ucfirst( $post_type['singular_name'] ), 'wp-newsletter_builder' ),
-					],
-					'public'              => true,
-					'has_archive'         => true,
-					'rewrite'             => [ 'slug' => $post_type['rewrite_slug'] ],
-					'supports'            => [ 'title', 'editor', 'custom_fields' ],
-					'show_in_rest'        => true,
-					'exclude_from_search' => true,
-					'template'            => [
+				'labels'              => [
+					'name'          => __( 'Newsletters', 'wp-newsletter-builder' ),
+					'singular_name' => __( 'Newsletter', 'wp-newsletter-builder' ),
+				],
+				'public'              => true,
+				'has_archive'         => true,
+				'rewrite'             => [ 'slug' => 'nb-newsletters' ],
+				'supports'            => [ 'title', 'editor', 'custom-fields' ],
+				'show_in_rest'        => true,
+				'exclude_from_search' => true,
+				'template'            => [
+					[
+						'wp-newsletter-builder/email-settings',
 						[
-							'wp-newsletter-builder/email-settings',
-							[
-								'lock' => [
-									'move'   => true,
-									'remove' => true,
-								],
+							'lock' => [
+								'move'   => true,
+								'remove' => true,
 							],
 						],
 					],
-					'menu_icon'           => $post_type['menu_icon'],
 				],
-			);
-		}
+				'menu_icon'           => 'dashicons-email-alt2',
+			],
+		);
+
+		register_post_type(
+			'nb_template',
+			[
+				'labels'              => [
+					'name'          => __( 'Templates', 'wp-newsletter-builder' ),
+					'singular_name' => __( 'Template', 'wp-newsletter-builder' ),
+				],
+				'public'              => true,
+				'has_archive'         => true,
+				'rewrite'             => [ 'slug' => 'nb-templates' ],
+				'supports'            => [ 'title', 'editor', 'custom-fields' ],
+				'show_in_rest'        => true,
+				'exclude_from_search' => true,
+				'template'            => [
+					[
+						'wp-newsletter-builder/email-settings',
+						[
+							'lock' => [
+								'move'   => true,
+								'remove' => true,
+							],
+						],
+					],
+				],
+				'menu_icon'           => 'dashicons-admin-customizer',
+			],
+		);
 	}
 
 	/**

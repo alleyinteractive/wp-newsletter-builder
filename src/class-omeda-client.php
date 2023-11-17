@@ -136,7 +136,21 @@ class Omeda_Client {
 	private string $client_abbr = '';
 
 	/**
+	 * Omeda_Client Constructor.
+	 *
 	 * Initialize and set values for properties.
+	 *
+	 * @param array $config The configuration options for the Omeda Client.
+	 *                      - license_key: The license key for authentication.
+	 *                      - user: The API user.
+	 *                      - app_id: The app ID.
+	 *                      - brand: The brand.
+	 *                      - client_abbr: The client abbreviation.
+	 *                      - from_name: The name to be used as the sender.
+	 *                      - input_id: The input ID.
+	 *                      - mailbox: The mailbox.
+	 *                      - namespace: The namespace.
+	 *                      - Reply_to: The reply to address.
 	 */
 	public function __construct( $config ) {
 
@@ -489,7 +503,7 @@ class Omeda_Client {
 	 * Get the headers for the specified Omeda API service.
 	 *
 	 * Allows other functions to modify headers with
-	 * the nr_modify_omeda_headers filter.
+	 * the wp_newsletter_builder_modify_headers filter.
 	 *
 	 * @param string $service The name of the API service.
 	 *
@@ -501,7 +515,7 @@ class Omeda_Client {
 			'Content-Type'  => 'application/json',
 		];
 
-		$http_response_header = apply_filters( 'nr_modify_omeda_headers', $http_response_header, $service );
+		$http_response_header = apply_filters( 'wp_newsletter_builder_modify_headers', $http_response_header, $service );
 
 		return $http_response_header;
 	}
@@ -567,6 +581,7 @@ class Omeda_Client {
 	 * @param string     $service The endpoint to send the request to.
 	 * @param array|null $data The data to send with the request.
 	 * @param string     $api The API to use (client or brand).
+	 * @param string     $method The HTTP method to use (GET or POST).
 	 *
 	 * @return array|WP_Error The response data as an associative array, or a WP_Error object if there was an error.
 	 */
@@ -584,10 +599,10 @@ class Omeda_Client {
 			[
 				'headers' => $this->get_headers( $service ),
 				'body'    => wp_json_encode( $data ),
-			] 
+			]
 		);
 
-		// TODO move content type to get header
+		// TODO move content type to get header.
 		if ( 'POST' === $method ) {
 			$response = wp_remote_post(
 				esc_url_raw( $endpoint ),
@@ -598,10 +613,10 @@ class Omeda_Client {
 						'Content-Type'    => is_string( $data ) ? 'application/xml' : 'application/json',
 					],
 					'body'    => is_string( $data ) ? $data : wp_json_encode( $data ),
-				] 
+				]
 			);
 		} else {
-			$response = wp_remote_get(
+			$response = wp_remote_get( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_post, WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 				esc_url_raw( $endpoint ),
 				[
 					'headers' => [
@@ -609,7 +624,7 @@ class Omeda_Client {
 						'x-omeda-inputid' => $this->get_input_id(),
 						'Content-Type'    => 'application/json',
 					],
-				] 
+				]
 			);
 		}
 
@@ -630,13 +645,14 @@ class Omeda_Client {
 			return new WP_Error( 'http_error', wp_remote_retrieve_body( $response ) );
 		}
 		$body = wp_remote_retrieve_body( $response );
+		// TODO.
 		if ( is_string( $data ) ) {
 			$xml  = simplexml_load_string( $body );
-			$json = json_encode( $xml );
+			$json = wp_json_encode( $xml );
 			return json_decode( $json, true );
 		}
 		return json_decode( $body, true );
-		// return json_decode( wp_remote_retrieve_body( $response ), true );
+		// return json_decode( wp_remote_retrieve_body( $response ), true );.
 	}
 
 	/**
@@ -691,7 +707,7 @@ class Omeda_Client {
 						'DeleteOptOut'     => 1,
 					],
 				],
-			] 
+			]
 		);
 	}
 
@@ -721,7 +737,7 @@ class Omeda_Client {
 						'DeploymentTypeId' => $request->get_param( 'newsletters' ),
 					],
 				],
-			] 
+			]
 		);
 	}
 
@@ -816,7 +832,7 @@ class Omeda_Client {
 		// This input ID needs to be included when calling
 		// the Store Customer and Order API.
 		add_filter(
-			'nr_modify_omeda_headers',
+			'wp_newsletter_builder_modify_headers',
 			function ( $headers ) {
 				$headers['x-omeda-inputid'] = '7900G2456689A2G';
 				return $headers;
@@ -832,7 +848,7 @@ class Omeda_Client {
 					[ 'EmailAddress' => $email ],
 				],
 			],
-			self::BRAND 
+			self::BRAND
 		);
 	}
 }

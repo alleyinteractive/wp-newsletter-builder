@@ -37,7 +37,7 @@ class Rest_API_Endpoints {
 				'callback'            => [ $this, 'get_lists' ],
 				'permission_callback' => function () {
 					return true;
-					// return current_user_can( 'edit_posts' );
+					// return current_user_can( 'edit_posts' ); TODO.
 				},
 			]
 		);
@@ -92,9 +92,7 @@ class Rest_API_Endpoints {
 	 */
 	public function get_lists(): WP_Error|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			// phpcs:disable
-			 // TODO return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
-			// phpcs:enable
+			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		global $newsletter_builder_email_provider;
 
@@ -200,11 +198,11 @@ class Rest_API_Endpoints {
 	/**
 	 * Subscribes a user to a list.
 	 *
-	 * @param WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array
 	 */
-	public function subscribe( WP_REST_Request $request ): array {
+	public function subscribe( WP_REST_Request $request ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		$email = $request->get_param( 'email' );
 		if ( empty( $email ) ) {
 			return [

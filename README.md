@@ -35,6 +35,29 @@ Activate the plugin in WordPress and use it like so:
 $plugin = WP_Newsletter_Builder\WP_Newsletter_Builder\WP_Newsletter_Builder();
 $plugin->perform_magic();
 ```
+### Enabling an Email Provider
+
+The plugin supports multiple email providers. To enable an email provider, add the following code as a plugin or function in your theme  `wp-newsletter-builder-omeda.php`:
+
+This decision was made so that only developers can switch email providers (but it may be that we want to create a settings page for this in the future.)
+
+```php
+<?php
+/**
+ * Plugin Name: Omeda for WP Newsletter Builder
+ * Description: Plugin to enable Omeda as an email provider for WP Newsletter Builder.
+ * Version: 0.1.0
+ * Author: Alley
+ *
+ * Text Domain: newsletter-testing
+ * Domain Path: /languages/
+ *
+ * @package newsletter-testing
+ */
+add_filter( ‘wp_newsletter_builder_selected_provider’,
+	fn( $provider ) => ‘WP_Newsletter_Builder\Email_Providers\Omeda’
+);
+```
 
 ## Testing
 

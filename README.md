@@ -54,8 +54,8 @@ This decision was made so that only developers can switch email providers (but i
  *
  * @package newsletter-testing
  */
-add_filter( ‘wp_newsletter_builder_selected_provider’,
-	fn( $provider ) => ‘WP_Newsletter_Builder\Email_Providers\Omeda’
+add_filter( 'wp_newsletter_builder_selected_provider',
+	fn( $provider ) => 'WP_Newsletter_Builder\Email_Providers\Omeda'
 );
 ```
 

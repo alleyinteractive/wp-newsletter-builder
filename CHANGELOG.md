@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.5 - 2023-11-20
+
+- Update dependencies, minor bugfixes
+
 ## 0.3.3 - 2023-11-10
 
 - Add URL override attribute and slotfill to post block

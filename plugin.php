@@ -3,11 +3,11 @@
  * Plugin Name: Newsletter Builder
  * Plugin URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Description: Interface to manage email newsletters
- * Version: 0.3.3
+ * Version: 0.3.5
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
- * Requires at least: 5.9
- * Tested up to: 6.2
+ * Requires at least: 6.2
+ * Tested up to: 6.4.1
  *
  * Text Domain: wp-newsletter-builder
  * Domain Path: /languages/

@@ -17,13 +17,13 @@ class Media {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'wp', [ $this, 'disable_lazyload_on_newsletters' ], 8, 1 );
+		add_action( 'wp', [ $this, 'disable_lazyload_on_newsletters' ], 8 );
 	}
 
 	/**
 	 * Disables Jetpack on newsletters.
 	 */
-	public function disable_lazyload_on_newsletters() {
+	public function disable_lazyload_on_newsletters(): void {
 		if ( is_singular( 'nb_newsletter' ) ) {
 			add_filter( 'lazyload_is_enabled', '__return_false' );
 		}

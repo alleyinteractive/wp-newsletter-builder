@@ -2,7 +2,7 @@
 /**
  * The template for displaying Newsletters.
  *
- * @package WP_Newsletter_Builder
+ * @package wp-newsletter-builder
  */
 
 if ( function_exists( 'newrelic_disable_autorum' ) ) {

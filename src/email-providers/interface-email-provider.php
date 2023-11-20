@@ -2,7 +2,7 @@
 /**
  * Interface for email provider.
  *
- * @package WP_Newsletter_Builder
+ * @package wp-newsletter-builder
  */
 
 namespace WP_Newsletter_Builder\Email_Providers;
@@ -49,7 +49,10 @@ interface Email_Provider {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array|false
+	 * @return array{
+	 *   ListID: string,
+	 *   Name: string,
+	 * }|false
 	 */
 	public function get_lists();
 
@@ -78,6 +81,14 @@ interface Email_Provider {
 	 * @return array|false The response from the API.
 	 */
 	public function get_campaign_summary( $campaign_id );
+
+	/**
+	 * Determine if the campaign was created successfully.
+	 *
+	 * @param array $result The response from the creation request.
+	 * @return boolean
+	 */
+	public function campaign_created_successfully( array $result ): bool;
 
 	/**
 	 * Add subscriber to list

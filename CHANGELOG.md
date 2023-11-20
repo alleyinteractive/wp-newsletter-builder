@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.5 - 2023-11-20
+
+- Update dependencies, minor bugfixes
+
 ## 0.3.4 - 2023-11-13
 
 - Allow editing of post block attributes with no block selected. Allow order attribute to be edited.

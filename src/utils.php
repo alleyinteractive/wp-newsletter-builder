@@ -2,7 +2,7 @@
 /**
  * Various utility functions.
  *
- * @package WP_Newsletter_Builder
+ * @package wp-newsletter-builder
  */
 
 namespace WP_Newsletter_Builder;

@@ -2,12 +2,15 @@
 /**
  * Additional REST API Endpoints class file
  *
- * @package WP_Newsletter_Builder
+ * @package wp-newsletter-builder
  */
+
+declare( strict_types=1 );
 
 namespace WP_Newsletter_Builder;
 
-use function WP_Newsletter_Builder\get_byline;
+use WP_Error;
+use WP_REST_Request;
 
 /**
  * Adds additional Endpoints to the REST API.
@@ -25,7 +28,7 @@ class Rest_API_Endpoints {
 	 *
 	 * @return void
 	 */
-	public function register_endpoints() {
+	public function register_endpoints(): void {
 		register_rest_route(
 			'wp-newsletter-builder/v1',
 			'/lists/',
@@ -33,7 +36,8 @@ class Rest_API_Endpoints {
 				'methods'             => 'GET',
 				'callback'            => [ $this, 'get_lists' ],
 				'permission_callback' => function () {
-					return current_user_can( 'edit_posts' );
+					return true;
+					// return current_user_can( 'edit_posts' ); TODO.
 				},
 			]
 		);
@@ -60,7 +64,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'wp-newsletter-builder/v1/',
+			'wp-newsletter-builder/v1',
 			'/status/(?P<post_id>[a-f0-9]+)',
 			[
 				'methods'             => 'GET',
@@ -71,7 +75,7 @@ class Rest_API_Endpoints {
 			]
 		);
 		register_rest_route(
-			'wp-newsletter-builder/v1/',
+			'wp-newsletter-builder/v1',
 			'/subscribe/',
 			[
 				'methods'             => 'POST',
@@ -84,25 +88,25 @@ class Rest_API_Endpoints {
 	/**
 	 * Gets the lists from the Campaign Monitor API.
 	 *
-	 * @return array
+	 * @return WP_Error|array
 	 */
-	public function get_lists() {
+	public function get_lists(): WP_Error|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		global $newsletter_builder_email_provider;
-		$lists = $newsletter_builder_email_provider->get_lists();
-		return $lists;
+
+		return $newsletter_builder_email_provider->get_lists();
 	}
 
 	/**
 	 * Gets the email types from options.
 	 *
-	 * @return array
+	 * @return WP_Error|array
 	 */
-	public function get_email_types() {
+	public function get_email_types(): WP_Error|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
+			return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		$types_class = new Email_Types();
 		$types       = $types_class->get_email_types();
@@ -118,24 +122,25 @@ class Rest_API_Endpoints {
 	/**
 	 * Gets the settings from options.
 	 *
-	 * @return array
+	 * @return WP_Error|array
 	 */
-	public function get_footer_settings() {
+	public function get_footer_settings(): WP_Error|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
+			return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
-		$settings        = new Settings();
-		$footer_settings = $settings->get_footer_settings();
-		return $footer_settings;
+		$settings = new Settings();
+
+		return $settings->get_footer_settings();
 	}
 
 	/**
 	 * Gets the status for a newsletter.
 	 *
-	 * @param \WP_REST_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
+	 *
 	 * @return array
 	 */
-	public function get_status( $request ) {
+	public function get_status( WP_REST_Request $request ): array {
 		$post_id = $request->get_param( 'post_id' );
 		if ( empty( $post_id ) ) {
 			return [];
@@ -193,10 +198,11 @@ class Rest_API_Endpoints {
 	/**
 	 * Subscribes a user to a list.
 	 *
-	 * @param \WP_Rest_Request $request The request object.
+	 * @param WP_REST_Request $request The request object.
+	 *
 	 * @return array
 	 */
-	public function subscribe( $request ) {
+	public function subscribe( WP_REST_Request $request ): array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
 		$email = $request->get_param( 'email' );
 		if ( empty( $email ) ) {
 			return [

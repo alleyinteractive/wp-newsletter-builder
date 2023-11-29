@@ -85,6 +85,7 @@ export default function Edit({
           />
         </>
       ) : (
+        /* @ts-ignore */
         <MediaPlaceholder
           icon="format-image"
           labels={{

@@ -10,13 +10,22 @@
 
 .wp-block-wp-newsletter-builder-post {
   margin: 0 auto;
-  width: 600px;
 
   .newsletter-remove-post {
     margin: 0;
     position: absolute;
     right: 3px;
     top: 3px;
+  }
+
+  &.edit-nb_template {
+    border: 1px dashed #ddd;
+    padding: 0.5rem;
+
+    .block-list-appender {
+      display: block;
+      position: relative;
+    }
   }
 }
 

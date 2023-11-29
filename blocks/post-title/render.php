@@ -9,10 +9,10 @@
  * @package wp-newsletter-builder
  */
 
-$post_id = $block->context['postId'] ?? null;
+$wp_newsletter_builder_block_post = $block->context['postId'] ?? null;
 
-$wp_newsletter_builder_block_post = get_post( $post_id );
-if ( empty( $post_id ) || ! $wp_newsletter_builder_block_post ) {
+$wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post );
+if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
 	return;
 }
 $wp_newsletter_builder_post_title = ! empty( $attributes['overrideTitle'] ) ? $attributes['overrideTitle'] : $wp_newsletter_builder_block_post->post_title;
@@ -20,7 +20,7 @@ $wp_newsletter_builder_post_title = ! empty( $attributes['overrideTitle'] ) ? $a
 $wp_newsletter_builder_smaller_font = $attributes['smallerFont'] ?? false;
 $wp_newsletter_builder_title_class  = $wp_newsletter_builder_smaller_font ? 'post__title--small' : '';
 ?>
-<a <?php echo wp_kses_data( get_block_wrapper_attributes([ 'class' => 'post__title-link' ]) ); ?> href="<?php echo esc_url( get_the_permalink() ); ?>">
+<a <?php echo wp_kses_data( get_block_wrapper_attributes( [ 'class' => 'post__title-link' ] ) ); ?> href="<?php echo esc_url( get_the_permalink() ); ?>">
 	<h2 class="<?php echo esc_attr( $wp_newsletter_builder_title_class ); ?>">
 		<?php if ( ! empty( $wp_newsletter_builder_number ) ) : ?>
 			<span class="newsletter-post__number"><?php echo esc_html( $wp_newsletter_builder_number ); ?>.</span>

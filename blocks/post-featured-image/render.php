@@ -9,15 +9,15 @@
  * @package wp-newsletter-builder
  */
 
-$post_id = $block->context['postId'] ?? null;
+$wp_newsletter_builder_block_post = $block->context['postId'] ?? null;
 
-$wp_newsletter_builder_block_post = get_post( $post_id );
-if ( empty( $post_id ) || ! $wp_newsletter_builder_block_post ) {
+$wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post );
+if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
 	return;
 }
 $wp_newsletter_builder_post_image = ! empty( $attributes['overrideImage'] ) ? $attributes['overrideImage'] : get_post_thumbnail_id( $wp_newsletter_builder_block_post->ID );
 
 ?>
-<a <?php echo wp_kses_data( get_block_wrapper_attributes([ 'class' => 'post__image-link' ]) ); ?> href="<?php echo esc_url( get_the_permalink() ); ?>">
+<a <?php echo wp_kses_data( get_block_wrapper_attributes( [ 'class' => 'post__image-link' ] ) ); ?> href="<?php echo esc_url( get_the_permalink() ); ?>">
 	<?php echo wp_get_attachment_image( $wp_newsletter_builder_post_image, 'full', false, [ 'sizes' => $wp_newsletter_builder_img_sizes ] ); ?>
 </a>

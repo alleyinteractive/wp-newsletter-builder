@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { RichText } from '@wordpress/block-editor';
+import { WP_REST_API_Post } from 'wp-types';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -31,12 +32,6 @@ interface EditProps {
     postId: number;
   };
   setAttributes: (attributes: {}) => void;
-}
-
-interface Post {
-  title: {
-    rendered: string;
-  };
 }
 
 /**
@@ -58,7 +53,7 @@ export default function Edit({
   setAttributes,
 }: EditProps) {
   // @ts-ignore
-  const record: Post = usePostById(postId) ?? null;
+  const record: WP_REST_API_Post = usePostById(postId) ?? null;
 
   let postTitle = record ? record.title.rendered : __('Post Title', 'wp-newsletter-builder');
 

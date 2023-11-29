@@ -17,6 +17,7 @@ import { __ } from '@wordpress/i18n';
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import { WP_REST_API_Post, WP_REST_API_Attachment } from 'wp-types';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -34,13 +35,6 @@ interface EditProps {
     postId: number;
   };
   setAttributes: (attributes: {}) => void;
-}
-
-interface Post {
-  title: {
-    rendered: string;
-  };
-  featured_media: number;
 }
 
 /**
@@ -61,13 +55,13 @@ export default function Edit({
   setAttributes,
 }: EditProps) {
   // @ts-ignore
-  const record: Post = usePostById(postId) ?? null;
+  const record: WP_REST_API_Post = usePostById(postId) ?? null;
   let featuredMediaId = record ? record.featured_media : null;
   const postTitle = record ? record.title.rendered : '';
 
   featuredMediaId = overrideImage || featuredMediaId;
 
-  const media = useMedia(featuredMediaId) ?? null;
+  const media = featuredMediaId ? useMedia(featuredMediaId) as any as WP_REST_API_Attachment : null;
 
   const postImage = media ? media.source_url : '';
 

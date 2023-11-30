@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "wp-newsletter-builder/post-content",
+	"version": "0.1.0",
+	"title": "Newsletter Post Content",
+	"category": "design",
+	"icon": "admin-post",
+	"description": "Displays a post content",
+	"textdomain": "wp-newsletter-builder",
+	"editorScript": "file:index.ts",
+	"editorStyle": "file:index.css",
+	"style": [
+		"file:style-index.css"
+	],
+	"render": "file:render.php",
+	"attributes": {
+		"overrideContent": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"usesContext": ["postId"]
+}

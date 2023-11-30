@@ -9,7 +9,6 @@ import './index.scss';
 interface EditProps {
   attributes: {
     overrideExcerpt?: string;
-    smallerFont?: boolean;
   };
   context: {
     postId: number;

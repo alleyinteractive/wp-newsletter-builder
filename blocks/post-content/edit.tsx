@@ -36,7 +36,11 @@ export default function Edit({
   // @ts-ignore
   const record: WP_REST_API_Post = usePostById(postId) ?? null;
 
-  let postContent = record ? record.content.rendered : __('This block will display the content.', 'wp-newsletter-builder');
+  let postContent = record ? record.content.rendered : __('<p>This block will display the content.</p>', 'wp-newsletter-builder');
+
+  const removeLinks = (html: string) => (
+    html ? html.replace(/<a[^>]*?>(.*?)<\/a>/gi, '$1') : ''
+  );
 
   const paragraphs = postContent.match(/<p(.*?)<\/p>/gi) || [];
   // TODO: Add attribute and slider for number of paragraphs to display.

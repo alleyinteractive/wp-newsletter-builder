@@ -15,12 +15,12 @@ $wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post 
 if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
 	return;
 }
-$wp_newsletter_builder_content    = $wp_newsletter_builder_block_post->post_content;
+$wp_newsletter_builder_content = $wp_newsletter_builder_block_post->post_content;
 preg_match_all( '/<p.*?<\/p>/iU', $wp_newsletter_builder_content, $matches );
-$wp_newsletter_builder_paragraphs   = $matches[0];
-$wp_newsletter_builder_content      = implode( '', array_slice( $wp_newsletter_builder_paragraphs, 0, 2 ) );
-$wp_newsletter_builder_content      = preg_replace( '/<a[^>]*?>(.*?)<\/a>/i', '$1', $wp_newsletter_builder_content );
-$wp_newsletter_builder_content      = ! empty( $attributes['overrideContent'] ) ? $attributes['overrideContent'] : $wp_newsletter_builder_content;
+$wp_newsletter_builder_paragraphs = $matches[0];
+$wp_newsletter_builder_content    = implode( '', array_slice( $wp_newsletter_builder_paragraphs, 0, 2 ) );
+$wp_newsletter_builder_content    = preg_replace( '/<a[^>]*?>(.*?)<\/a>/i', '$1', $wp_newsletter_builder_content );
+$wp_newsletter_builder_content    = ! empty( $attributes['overrideContent'] ) ? $attributes['overrideContent'] : $wp_newsletter_builder_content;
 
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes( [ 'class' => 'post__content' ] ) ); ?>>

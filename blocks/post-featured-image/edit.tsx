@@ -54,7 +54,6 @@ export default function Edit({
         { !record ? (
           <Placeholder
             className="block-editor-media-placeholder"
-            withIllustration={ true }
             style={{ aspectRatio: '16 / 9' }}
           />
         ) : null}

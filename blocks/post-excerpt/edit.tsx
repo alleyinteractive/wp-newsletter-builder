@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
 import { usePostById } from '@alleyinteractive/block-editor-tools';
 import { __ } from '@wordpress/i18n';
-import { RichText } from '@wordpress/block-editor';
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post } from 'wp-types';
 
 import './index.scss';
@@ -43,7 +42,7 @@ export default function Edit({
   postExcerpt = overrideExcerpt || postExcerpt;
 
   return (
-    <div {...useBlockProps({className: 'post__dek' })}>
+    <div {...useBlockProps({ className: 'post__dek' })}>
       <RichText
         value={postExcerpt}
         tagName="p"

@@ -1,8 +1,7 @@
 /* eslint-disable camelcase */
 import { usePostById } from '@alleyinteractive/block-editor-tools';
 import { __ } from '@wordpress/i18n';
-import { RichText } from '@wordpress/block-editor';
-import { useBlockProps } from '@wordpress/block-editor';
+import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post } from 'wp-types';
 
 import './index.scss';
@@ -45,9 +44,8 @@ export default function Edit({
 
   postByline = overrideByline || postByline;
 
-
   return (
-    <p {...useBlockProps({className: 'post__byline' })}>
+    <p {...useBlockProps({ className: 'post__byline' })}>
       <RichText
         value={postByline}
         tagName="span"

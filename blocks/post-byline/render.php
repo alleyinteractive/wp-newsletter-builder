@@ -8,6 +8,7 @@
  *
  * @package wp-newsletter-builder
  */
+
 use function WP_Newsletter_Builder\get_byline;
 
 $wp_newsletter_builder_block_post = $block->context['postId'] ?? null;

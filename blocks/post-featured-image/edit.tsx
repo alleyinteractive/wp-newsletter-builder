@@ -55,6 +55,7 @@ export default function Edit({
           <Placeholder
             className="block-editor-media-placeholder"
             style={{ aspectRatio: '16 / 9' }}
+            withIllustration
           />
         ) : null}
       </div>

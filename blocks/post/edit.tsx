@@ -68,12 +68,21 @@ export default function Edit({
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - 3);
 
+  // TODO: Pass template and allowed blocks from PHP so they can be filtered.
   const MY_TEMPLATE = [
     ['wp-newsletter-builder/post-featured-image', {}],
     ['wp-newsletter-builder/post-title', {}],
     ['wp-newsletter-builder/post-byline', {}],
     ['wp-newsletter-builder/post-excerpt', {}],
     ['wp-newsletter-builder/post-read-more', {}],
+  ];
+  const ALLOWED_BLOCKS = [
+    'wp-newsletter-builder/post-byline',
+    'wp-newsletter-builder/post-content',
+    'wp-newsletter-builder/post-excerpt',
+    'wp-newsletter-builder/post-featured-image',
+    'wp-newsletter-builder/post-read-more',
+    'wp-newsletter-builder/post-title',
   ];
 
   return (
@@ -111,6 +120,8 @@ export default function Edit({
         <InnerBlocks
           // @ts-ignore
           template={MY_TEMPLATE}
+          allowedBlocks={ALLOWED_BLOCKS}
+          templateLock={false}
         />
       ) : null}
       <InspectorControls>

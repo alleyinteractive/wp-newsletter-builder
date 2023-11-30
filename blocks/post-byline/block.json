@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "wp-newsletter-builder/footer",
+	"name": "wp-newsletter-builder/post-byline",
 	"version": "0.1.0",
-	"title": "Newsletter Footer",
+	"title": "Newsletter Post Byline",
 	"category": "design",
-	"icon": "align-wide",
-	"description": "Outputs the company logo, social links, address, and footer links.",
+	"icon": "admin-post",
+	"description": "Displays a post byline",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
 	"editorStyle": "file:index.css",
@@ -15,9 +15,10 @@
 	],
 	"render": "file:render.php",
 	"attributes": {
-		"narrow_separator": {
-			"type": "boolean",
-			"default": false
+		"overrideByline": {
+			"type": "string",
+			"default": ""
 		}
-	}
+	},
+	"usesContext": ["postId"]
 }

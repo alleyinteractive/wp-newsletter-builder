@@ -7,7 +7,7 @@
   "category": "design",
   "icon": "admin-post",
   "description": "Displays a post",
-  "textdomain": "post",
+  "textdomain": "wp-newsletter-builder",
   "editorScript": "file:index.ts",
   "editorStyle": "file:index.css",
   "style": [

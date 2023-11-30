@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { usePostById, useMedia, ImagePicker } from '@alleyinteractive/block-editor-tools';
-import { PanelBody, PanelRow } from '@wordpress/components';
+import { PanelBody, PanelRow, Placeholder } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post, WP_REST_API_Attachment } from 'wp-types';
@@ -48,7 +48,16 @@ export default function Edit({
   return (
     <>
       <div {...useBlockProps({ className: 'image-container' })}>
-        <img src={postImage} alt={postTitle} />
+        {record && postImage !== '' ? (
+          <img src={postImage} alt={postTitle} />
+        ) : null}
+        { !record ? (
+          <Placeholder
+            className="block-editor-media-placeholder"
+            withIllustration={ true }
+            style={{ aspectRatio: '16 / 9' }}
+          />
+        ) : null}
       </div>
       <InspectorControls>
         {postId ? (

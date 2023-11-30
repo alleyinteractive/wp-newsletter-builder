@@ -69,11 +69,11 @@ export default function Edit({
   cutoff.setMonth(cutoff.getMonth() - 3);
 
   const MY_TEMPLATE = [
-    ['core/post-featured-image', {}],
-    ['core/post-title', {}],
-    ['core/post-author', {}],
-    ['core/post-excerpt', {}],
-    ['core/read-more', {}],
+    ['wp-newsletter-builder/post-featured-image', {}],
+    ['wp-newsletter-builder/post-title', {}],
+    ['wp-newsletter-builder/post-byline', {}],
+    ['wp-newsletter-builder/post-excerpt', {}],
+    ['wp-newsletter-builder/post-read-more', {}],
   ];
 
   return (

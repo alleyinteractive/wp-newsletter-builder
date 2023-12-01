@@ -36,7 +36,7 @@ class Block_Modifications {
 			if ( ! empty( $block['attrs']['overrideUrl'] ) ) {
 				add_filter(
 					'post_link',
-					function() use ( $block ) {
+					function () use ( $block ) {
 						return $block['attrs']['overrideUrl'];
 					},
 					10,

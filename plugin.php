@@ -65,6 +65,7 @@ global $newsletter_builder_email_provider;
  */
 function main() {
 	new Ads();
+	new Block_Modifications();
 	new Breaking_Recipients();
 	new Email_Types();
 	new Settings();
@@ -81,22 +82,21 @@ function main() {
 		\add_action(
 			'admin_notices',
 			function () {
-				?>
-				<div class="notice notice-error">
-					<p>
-						<?php
-						printf(
-							// translators: %s is the filter name.
-							esc_html__(
-								'No email provider selected for WP Newsletter Builder. Use the %s filter to specify one.',
-								'wp-newsletter-builder'
-							),
-							'<code>wp_newsletter_builder_selected_provider</code>'
-						);
-						?>
-					</p>
-				</div>
-				<?php
+				wp_admin_notice(
+					// translators: %s is the filter name.
+					sprintf(
+						/* translators: %s is the WordPress filter name */
+						esc_html__(
+							'No email provider selected for WP Newsletter Builder. Use the %s filter to specify one.',
+							'wp-newsletter-builder'
+						),
+						'<code>wp_newsletter_builder_selected_provider</code>'
+					),
+					[
+						'type'        => 'error',
+						'dismissible' => false,
+					]
+				);
 			}
 		);
 

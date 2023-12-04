@@ -6,10 +6,9 @@
 	"title": "Newsletter Post Content",
 	"category": "design",
 	"icon": "admin-post",
-	"description": "Displays a post content",
+	"description": "Displays the contents of a post.",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
-	"editorStyle": "file:index.css",
 	"style": [
 		"file:style-index.css"
 	],

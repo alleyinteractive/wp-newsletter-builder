@@ -4,8 +4,6 @@ import { __ } from '@wordpress/i18n';
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post } from 'wp-types';
 
-import './index.scss';
-
 interface EditProps {
   attributes: {
     overrideContent?: string;
@@ -33,7 +31,7 @@ export default function Edit({
   },
   setAttributes,
 }: EditProps) {
-  // @ts-ignore
+  // @ts-ignore - WP_REST_API_Post is not in CamelCase.
   const record: WP_REST_API_Post = usePostById(postId) ?? null;
 
   let postContent = record ? record.content.rendered : __('<p>This block will display the content.</p>', 'wp-newsletter-builder');

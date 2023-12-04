@@ -2,8 +2,6 @@
 import { __ } from '@wordpress/i18n';
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 
-import './index.scss';
-
 interface EditProps {
   attributes: {
     readMoreText?: string;
@@ -28,8 +26,6 @@ export default function Edit({
   },
   setAttributes,
 }: EditProps) {
-  // @ts-ignore
-
   const buttonText = readMoreText || __('Read More', 'wp-newsletter-builder');
 
   return (

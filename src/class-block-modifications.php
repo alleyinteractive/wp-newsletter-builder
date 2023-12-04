@@ -29,7 +29,10 @@ class Block_Modifications {
 	 */
 	public function pre_render_post_block( $block_content, $block ) {
 		if ( 'wp-newsletter-builder/post' === $block['blockName'] ) {
-			$post_id = $block['attrs']['postId'];
+			$post_id = isset( $block['attrs']['postId'] ) ? $block['attrs']['postId'] : null;
+			if ( empty( $post_id ) ) {
+				return $block_content;
+			}
 			global $post;
 			$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 

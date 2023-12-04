@@ -4,8 +4,6 @@ import { __ } from '@wordpress/i18n';
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post } from 'wp-types';
 
-import './index.scss';
-
 interface EditProps {
   attributes: {
     overrideTitle?: string;

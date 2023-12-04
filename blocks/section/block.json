@@ -7,7 +7,7 @@
 	"category": "design",
 	"icon": "layout",
 	"description": "Section to contain other blocks and allow for choosing multiple posts.",
-	"textdomain": "section",
+	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
 	"editorStyle": "file:index.css",
 	"style": [

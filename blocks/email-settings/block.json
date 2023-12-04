@@ -7,7 +7,7 @@
 	"category": "design",
 	"icon": "email",
 	"description": "Block to set the email subject, preview text, and list.",
-	"textdomain": "email-settings",
+	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
 	"editorStyle": "file:index.css",
 	"style": [

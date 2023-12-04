@@ -20,8 +20,6 @@ registerBlockType(
   /* @ts-expect-error Provided types are inaccurate to the actual plugin API. */
   metadata,
   {
-    apiVersion: 2,
     edit,
-    title: metadata.title,
   },
 );

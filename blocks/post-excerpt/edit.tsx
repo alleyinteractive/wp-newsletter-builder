@@ -6,8 +6,7 @@ import { WP_REST_API_Post } from 'wp-types';
 
 interface EditProps {
   attributes: {
-    overrideTitle?: string;
-    smallerFont?: boolean;
+    overrideExcerpt?: string;
   };
   context: {
     postId: number;
@@ -25,8 +24,7 @@ interface EditProps {
  */
 export default function Edit({
   attributes: {
-    overrideTitle,
-    smallerFont,
+    overrideExcerpt,
   },
   context: {
     postId,
@@ -36,19 +34,18 @@ export default function Edit({
   // @ts-ignore
   const record: WP_REST_API_Post = usePostById(postId) ?? null;
 
-  let postTitle = record ? record.title.rendered : __('Post Title', 'wp-newsletter-builder');
+  let postExcerpt = record ? record.excerpt.rendered : __('This block will display the excerpt.', 'wp-newsletter-builder');
 
-  postTitle = overrideTitle || postTitle;
-
-  const titleClass = smallerFont ? 'post__title--small' : '';
+  postExcerpt = overrideExcerpt || postExcerpt;
 
   return (
-    <h2 {...useBlockProps({ className: titleClass })}>
+    <div {...useBlockProps({ className: 'post__dek' })}>
       <RichText
-        value={postTitle}
-        tagName="span"
-        onChange={(value) => setAttributes({ overrideTitle: value })}
+        value={postExcerpt}
+        tagName="p"
+        multiline={false}
+        onChange={(value) => setAttributes({ overrideExcerpt: value })}
       />
-    </h2>
+    </div>
   );
 }

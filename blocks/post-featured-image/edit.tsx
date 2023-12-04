@@ -5,8 +5,6 @@ import { __ } from '@wordpress/i18n';
 import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { WP_REST_API_Post, WP_REST_API_Attachment } from 'wp-types';
 
-import './index.scss';
-
 interface EditProps {
   attributes: {
     overrideImage?: number;

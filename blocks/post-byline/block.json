@@ -9,7 +9,6 @@
 	"description": "Displays a post byline",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
-	"editorStyle": "file:index.css",
 	"style": [
 		"file:style-index.css"
 	],

@@ -9,7 +9,6 @@
 	"description": "Outputs the company logo, social links, address, and footer links.",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
-	"editorStyle": "file:index.css",
 	"style": [
 		"file:style-index.css"
 	],

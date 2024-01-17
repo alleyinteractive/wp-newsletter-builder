@@ -15,6 +15,7 @@ $wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post 
 if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
 	return;
 }
+$wp_newsletter_builder_img_sizes  = $attributes['imgSizes'] ?? '';
 $wp_newsletter_builder_post_image = ! empty( $attributes['overrideImage'] ) ? $attributes['overrideImage'] : get_post_thumbnail_id( $wp_newsletter_builder_block_post->ID );
 
 ?>

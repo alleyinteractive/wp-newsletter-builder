@@ -30,7 +30,6 @@ registerBlockType(
   /* @ts-expect-error Provided types are inaccurate to the actual plugin API. */
   metadata,
   {
-    apiVersion: 2,
     edit,
     save: () => {
       const blockProps = useBlockProps.save();
@@ -41,6 +40,5 @@ registerBlockType(
         </div>
       );
     },
-    title: metadata.title,
   },
 );

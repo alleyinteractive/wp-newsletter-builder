@@ -6,13 +6,16 @@ import { WP_REST_API_Post } from 'wp-types';
 
 interface EditProps {
   attributes: {
-    overrideTitle?: string;
-    smallerFont?: boolean;
+    overrideByline?: string;
   };
   context: {
     postId: number;
   };
   setAttributes: (attributes: {}) => void;
+}
+
+interface PostWithByline extends WP_REST_API_Post {
+  wp_newsletter_builder_byline: string;
 }
 
 /**
@@ -25,8 +28,7 @@ interface EditProps {
  */
 export default function Edit({
   attributes: {
-    overrideTitle,
-    smallerFont,
+    overrideByline,
   },
   context: {
     postId,
@@ -34,21 +36,20 @@ export default function Edit({
   setAttributes,
 }: EditProps) {
   // @ts-ignore
-  const record: WP_REST_API_Post = usePostById(postId) ?? null;
+  const record: PostWithByline = usePostById(postId) ?? null;
 
-  let postTitle = record ? record.title.rendered : __('Post Title', 'wp-newsletter-builder');
+  let postByline = record ? record.wp_newsletter_builder_byline : __('Post Byline', 'wp-newsletter-builder');
 
-  postTitle = overrideTitle || postTitle;
-
-  const titleClass = smallerFont ? 'post__title--small' : '';
+  postByline = overrideByline || postByline;
 
   return (
-    <h2 {...useBlockProps({ className: titleClass })}>
+    <p {...useBlockProps({ className: 'post__byline' })}>
       <RichText
-        value={postTitle}
+        value={postByline}
         tagName="span"
-        onChange={(value) => setAttributes({ overrideTitle: value })}
+        onChange={(value) => setAttributes({ overrideByline: value })}
+        allowedFormats={[]}
       />
-    </h2>
+    </p>
   );
 }

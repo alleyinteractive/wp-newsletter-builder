@@ -1,12 +1,12 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 2,
-	"name": "wp-newsletter-builder/post-featured-image",
+	"name": "wp-newsletter-builder/post-byline",
 	"version": "0.1.0",
-	"title": "Newsletter Post Featured Image",
+	"title": "Newsletter Post Byline",
 	"category": "design",
 	"icon": "admin-post",
-	"description": "Displays a post featured image",
+	"description": "Displays a post byline",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
 	"style": [
@@ -14,9 +14,9 @@
 	],
 	"render": "file:render.php",
 	"attributes": {
-		"overrideImage": {
-			"type": "number",
-			"default": 0
+		"overrideByline": {
+			"type": "string",
+			"default": ""
 		}
 	},
 	"usesContext": ["postId"]

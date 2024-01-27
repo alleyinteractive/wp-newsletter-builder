@@ -111,7 +111,7 @@
   "devDependencies": {
     "@alleyinteractive/eslint-config": "^0.1.5",
     "@alleyinteractive/stylelint-config": "^0.0.2",
-    "@babel/preset-env": "^7.23.8",
+    "@babel/preset-env": "^7.23.9",
     "@types/wordpress__components": "^23.0.8",
     "@types/wordpress__edit-post": "^7.5.5",
     "@types/wordpress__plugins": "^3.0.3",

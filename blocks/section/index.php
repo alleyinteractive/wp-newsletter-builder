@@ -12,7 +12,7 @@
  *
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
-function wp_newsletter_builder_section_block_init() {
+function wp_newsletter_builder_section_block_init(): void {
 	// Register the block by passing the location of block.json.
 	register_block_type(
 		__DIR__

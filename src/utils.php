@@ -10,7 +10,7 @@ namespace WP_Newsletter_Builder;
 /**
  * Gets the byline for a post.
  *
- * @param WP_Post|int $post The post or post ID.
+ * @param \WP_Post|int $post The post or post ID.
  * @return string
  *
  * @TODO: try to switch this to use get_the_author() instead.
@@ -19,6 +19,12 @@ namespace WP_Newsletter_Builder;
 function get_byline( $post ) {
 	$post   = get_post( $post );
 	$byline = '';
+
+	// Bail early if we don't have a post.
+	if ( ! $post instanceof \WP_Post ) {
+		return $byline;
+	}
+
 	if ( function_exists( '\Byline_Manager\get_the_byline' ) ) {
 		$byline = \Byline_Manager\get_the_byline( $post->ID );
 	} elseif ( function_exists( 'get_coauthors' ) ) {
@@ -50,7 +56,7 @@ function get_byline( $post ) {
 		}
 	} else {
 		$author = get_user_by( 'ID', $post->post_author );
-		if ( ! is_wp_error( $author ) ) {
+		if ( ! empty( $author->display_name ) ) {
 			$byline = sprintf(
 				/* translators: %s is the author name. */
 				__( 'By %s', 'wp-newsletter-builder' ),
@@ -87,5 +93,5 @@ function get_edit_post_type() {
 		return sanitize_key( $_REQUEST['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
-	return null;
+	return '';
 }

@@ -8,9 +8,13 @@
  *
  * @package wp-newsletter-builder
  */
+$post_id = get_the_ID();
+if ( empty( $post_id ) ) {
+	return;
+}
 
-$image_id = get_post_meta( get_the_ID(), 'nb_newsletter_header_img', true );
-if ( empty( $image_id ) ) {
+$image_id = get_post_meta( $post_id, 'nb_newsletter_header_img', true );
+if ( empty( $image_id ) || ! is_int( $image_id ) ) {
 	return;
 }
 // TODO: Add a check to see if the image exists.

@@ -23,8 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Root directory to this plugin.
- *
- * @var string
  */
 define( 'WP_NEWSLETTER_BUILDER_DIR', __DIR__ );
 
@@ -63,7 +61,7 @@ global $newsletter_builder_email_provider;
 /**
  * Instantiate the plugin.
  */
-function main() {
+function main(): void {
 	new Ads();
 	new Block_Modifications();
 	new Breaking_Recipients();
@@ -106,6 +104,8 @@ function main() {
 	$provider = new $selected_email_provider();
 
 	$newsletter_builder_email_provider = new $provider();
-	$newsletter_builder_email_provider->setup();
+	if ( method_exists( $newsletter_builder_email_provider, 'setup' ) ) {
+    $newsletter_builder_email_provider->setup();
+	}
 }
 main();

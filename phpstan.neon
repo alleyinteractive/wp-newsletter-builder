@@ -11,6 +11,9 @@ parameters:
 		- src/
 		- plugin.php
 
+	scanDirectories:
+		- ../wordpress-fieldmanager
+
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #

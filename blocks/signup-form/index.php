@@ -23,10 +23,10 @@ add_action( 'init', 'wp_newsletter_builder_signup_form_block_init' );
 /**
  * Allows the use of the input tag in the newsletter builder block.
  *
- * @param array $tags The allowed tags.
- * @return array
+ * @param array<string, array<string, mixed>> $tags The allowed tags.
+ * @return array<string, array<string, mixed>>
  */
-function wp_newsletter_builder_modify_wpkses_post_allowed_tags( $tags ) {
+function wp_newsletter_builder_modify_wpkses_post_allowed_tags( array $tags ): array {
 	$tags['input'] = [
 		'type'        => true,
 		'name'        => true,
@@ -37,4 +37,4 @@ function wp_newsletter_builder_modify_wpkses_post_allowed_tags( $tags ) {
 	];
 	return $tags;
 }
-add_filter( 'wp_kses_allowed_html', 'wp_newsletter_builder_modify_wpkses_post_allowed_tags', 10, 2 );
+add_filter( 'wp_kses_allowed_html', 'wp_newsletter_builder_modify_wpkses_post_allowed_tags' );

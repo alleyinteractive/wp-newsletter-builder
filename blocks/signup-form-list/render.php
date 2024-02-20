@@ -9,10 +9,10 @@
  * @package wp-newsletter-builder
  */
 
-$wp_newsletter_builder_title       = $attributes['title'];
+$wp_newsletter_builder_title       = $attributes['title'] ?? '';
 $wp_newsletter_builder_frequency   = $attributes['frequency'] ?? '';
 $wp_newsletter_builder_description = $attributes['description'] ?? '';
-$wp_newsletter_builder_list_id     = $attributes['listId'];
+$wp_newsletter_builder_list_id     = $attributes['listId'] ?? '';
 $wp_newsletter_builder_logo_id     = $attributes['logo'] ?? null;
 $wp_newsletter_builder_checked     = $attributes['initialChecked'] ?? false;
 $wp_newsletter_builder_checked_str = $wp_newsletter_builder_checked ? 'checked="checked"' : '';

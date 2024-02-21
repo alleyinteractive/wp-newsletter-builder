@@ -13,6 +13,7 @@ parameters:
 
 	scanDirectories:
 		- ../wordpress-fieldmanager
+		- vendor/campaignmonitor
 
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'

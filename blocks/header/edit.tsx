@@ -50,7 +50,7 @@ export default function Edit() {
     <div {...useBlockProps()}>
       {imageUrl ? (
         <img src={imageUrl} alt={__('Header', 'wp-newsletter-builder')} />
-      ) : null }
+      ) : <div className="wp-block-wp-newsletter-builder-header__placeholder">{__('Newsletter Header', 'wp-newsletter-builder')}</div> }
     </div>
   );
 }

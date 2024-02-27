@@ -15,4 +15,12 @@
   margin-bottom: 20px;
   margin-top: 6px;
   // @TODO: style alt text.
+
+  &__placeholder {
+    align-items: center;
+    aspect-ratio: 16/9;
+    border: 1px dashed #000;
+    display: flex;
+    justify-content: center;
+  }
 }

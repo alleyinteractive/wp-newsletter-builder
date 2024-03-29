@@ -101,13 +101,13 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Creates an email campaign.
 	 *
-	 * @param int    $newsletter_id The id of the nb_newsletter post.
-	 * @param array<string>  $list_ids    The list ids to send the campaign to.
-	 * @param string $campaign_id Optional campaign id to update.
+	 * @param int           $newsletter_id The id of the nb_newsletter post.
+	 * @param array<string> $list_ids    The list ids to send the campaign to.
+	 * @param string        $campaign_id Optional campaign id to update.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null ): array|false {
 		// TODO: Move non-email provider code to the core plugin.
@@ -132,7 +132,7 @@ class Campaign_Monitor implements Email_Provider {
 			$nl_email_type = get_post_meta( $newsletter_id, 'nb_newsletter_email_type', true );
 			$email_types   = get_option( 'nb_email_types' );
 			if ( is_array( $email_types ) ) {
-				$type_key      = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
+				$type_key = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
 				if ( false !== $type_key ) {
 					$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
 				}
@@ -179,7 +179,7 @@ class Campaign_Monitor implements Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function send_campaign( string $campaign_id ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
@@ -210,7 +210,7 @@ class Campaign_Monitor implements Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
@@ -231,10 +231,11 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Determine if the campaign was created successfully.
 	 *
-	 * @param array{
-	 *   response: mixed,
-	 *   http_status_code: int,
-	 * }|false	$result	The response from the creation request.
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
 	 * @return boolean
 	 */
 	public function campaign_created_successfully( array|false $result ): bool {
@@ -244,10 +245,11 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Gets the campaign id from the result.
 	 *
-	 * @param array{
-	 *   response: mixed,
-	 *   http_status_code: int,
-	 * }|false	$result	The response from the creation request.
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
 	 * @return mixed
 	 */
 	public function get_campaign_id_from_create_result( array|false $result ): mixed {
@@ -258,13 +260,13 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Add subscriber to list
 	 *
-	 * @param string $list_id The list id.
-	 * @param string $email The email address.
-	 * @param array<array<string, string>>  $custom_fields The custom fields.
+	 * @param string                       $list_id The list id.
+	 * @param string                       $email The email address.
+	 * @param array<array<string, string>> $custom_fields The custom fields.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
@@ -298,7 +300,7 @@ class Campaign_Monitor implements Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function remove_subscriber( string $list_id, string $email ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );

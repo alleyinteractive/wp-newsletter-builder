@@ -105,7 +105,7 @@ function main(): void {
 
 	$newsletter_builder_email_provider = new $provider();
 	if ( method_exists( $newsletter_builder_email_provider, 'setup' ) ) {
-    $newsletter_builder_email_provider->setup();
+		$newsletter_builder_email_provider->setup();
 	}
 }
 main();

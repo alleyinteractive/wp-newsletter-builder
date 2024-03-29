@@ -22,7 +22,7 @@ register_post_meta_from_defs();
  * @param string[] $object_slugs The post type or taxonomy slugs to register with.
  * @param string   $meta_key     The meta key to register.
  * @param mixed[]  $args         Optional. Additional arguments for register_post_meta or register_term_meta. Defaults to an empty array.
- * @return bool 	 True if the meta key was successfully registered in the global array, false if not.
+ * @return bool      True if the meta key was successfully registered in the global array, false if not.
  */
 function register_meta_helper(
 	string $object_type,

@@ -24,13 +24,20 @@ class Block_Modifications {
 	 * Sets the global post object and overrides for the Newsletter Single Post block.
 	 *
 	 * @param string $block_content The block content.
-	 * @param array  $block The parsed block.
+	 * @param array  $block {
+	 *  @type string $blockName The block name.
+	 *  @type array<mixed> $attrs The block attributes.
+	 *  @type array<mixed> $innerBlocks The inner blocks.
+	 *  @type string $innerHTML The inner HTML.
+	 *  @type array<mixed> $innerContent The inner content.
+	 * } The parsed block.
+	 * @phpstan-param array{blockName: string, attrs: array<mixed>, innerBlocks: array<mixed>, innerHTML: string, innerContent: array<mixed>} $block
 	 * @return string The block content.
 	 */
 	public function pre_render_post_block( $block_content, $block ) {
 		if ( 'wp-newsletter-builder/post' === $block['blockName'] ) {
 			$post_id = isset( $block['attrs']['postId'] ) ? $block['attrs']['postId'] : null;
-			if ( empty( $post_id ) ) {
+			if ( empty( $post_id ) || ( ! is_int( $post_id ) && ! $post_id instanceof \WP_Post ) ) {
 				return $block_content;
 			}
 			global $post;

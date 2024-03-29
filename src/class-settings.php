@@ -32,7 +32,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function maybe_register_settings_page() {
+	public function maybe_register_settings_page(): void {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
 			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'General Settings', 'wp-newsletter-builder' ), __( 'General Settings', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
@@ -44,7 +44,7 @@ class Settings {
 	 *
 	 * @return void
 	 */
-	public function register_fields() {
+	public function register_fields(): void {
 		$settings = new \Fieldmanager_Group(
 			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
@@ -118,15 +118,15 @@ class Settings {
 	/**
 	 * Get the API key and instantiate a client using the API key.
 	 *
-	 * @return \CS_REST_General
+	 * @return \CS_REST_Wrapper_Base|false
 	 */
-	public function get_client() {
+	public function get_client(): \CS_REST_Wrapper_Base|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
-		$wrap = new \CS_REST_General( $auth );
+		$wrap = new \CS_REST_Wrapper_Base( $auth );
 
 		return $wrap;
 	}
@@ -136,11 +136,11 @@ class Settings {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array|false
+	 * @return mixed
 	 */
-	public function get_lists() {
+	public function get_lists(): mixed {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -158,11 +158,18 @@ class Settings {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array|false
+	 * @return array{
+	 *   facebook_url?: string,
+	 *   twitter_url?: string,
+	 *   instagram_url?: string,
+	 *   youtube_url?: string,
+	 *   image?: int,
+	 *   address?: string,
+	 * }|false  The footer settings.
 	 */
-	public function get_footer_settings() {
+	public function get_footer_settings(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['footer_settings'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['footer_settings'] ) || ! is_array( $settings['footer_settings'] ) ) {
 			return false;
 		}
 
@@ -172,11 +179,11 @@ class Settings {
 	/**
 	 * Gets From Names.
 	 *
-	 * @return array|false
+	 * @return array<string>|false
 	 */
-	public function get_from_names() {
+	public function get_from_names(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['from_names'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
 			return false;
 		}
 

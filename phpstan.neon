@@ -12,13 +12,6 @@ parameters:
 		- plugin.php
 
 	scanDirectories:
-		- ../wordpress-fieldmanager
-		- vendor/campaignmonitor
-
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
-#    checkMissingIterableValueType: false
+		- %currentWorkingDirectory%/../wordpress-fieldmanager/
+		- %currentWorkingDirectory%/vendor/campaignmonitor/
+		- %currentWorkingDirectory%/../../../wp-includes/

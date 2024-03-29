@@ -8,18 +8,18 @@
  *
  * @package wp-newsletter-builder
  */
-$post_id = get_the_ID();
-if ( empty( $post_id ) ) {
+$wp_newsletter_builder_block_post_id = get_the_ID();
+if ( empty( $wp_newsletter_builder_block_post_id ) ) {
 	return;
 }
 
-$image_id = get_post_meta( $post_id, 'nb_newsletter_header_img', true );
-if ( empty( $image_id ) || ! is_int( $image_id ) ) {
+$wp_newsletter_builder_block_image_id = get_post_meta( $wp_newsletter_builder_block_post_id, 'nb_newsletter_header_img', true );
+if ( empty( $wp_newsletter_builder_block_image_id ) || ! is_int( $wp_newsletter_builder_block_image_id ) ) {
 	return;
 }
 // TODO: Add a check to see if the image exists.
 // TODO: Get proper alt text.
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?> role="banner" align="center">
-	<?php echo wp_kses_post( wp_get_attachment_image( $image_id, 'full', false ) ); ?>
+	<?php echo wp_kses_post( wp_get_attachment_image( $wp_newsletter_builder_block_image_id, 'full', false ) ); ?>
 </div>

@@ -58,13 +58,13 @@ interface Email_Provider {
 	/**
 	 * Creates an email campaign.
 	 *
-	 * @param int    $newsletter_id The id of the nb_newsletter post.
-	 * @param array<string>  $list_ids    The list ids to send the campaign to.
-	 * @param string $campaign_id Optional campaign id to update.
+	 * @param int           $newsletter_id The id of the nb_newsletter post.
+	 * @param array<string> $list_ids    The list ids to send the campaign to.
+	 * @param string        $campaign_id Optional campaign id to update.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null ): array|false;
 
@@ -75,7 +75,7 @@ interface Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function send_campaign( string $campaign_id ): array|false;
 
@@ -86,17 +86,18 @@ interface Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false;
 
 	/**
 	 * Determine if the campaign was created successfully.
 	 *
-	 * @param array{
-	 *   response: mixed,
-	 *   http_status_code: int,
-	 * }|false	$result	The response from the creation request.
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
 	 * @return boolean
 	 */
 	public function campaign_created_successfully( array|false $result ): bool;
@@ -104,13 +105,13 @@ interface Email_Provider {
 	/**
 	 * Add subscriber to list
 	 *
-	 * @param string $list_id The list id.
-	 * @param string $email The email address.
-	 * @param array<array<string, string>>  $custom_fields The custom fields.
+	 * @param string                       $list_id The list id.
+	 * @param string                       $email The email address.
+	 * @param array<array<string, string>> $custom_fields The custom fields.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false;
 	/**
@@ -121,7 +122,7 @@ interface Email_Provider {
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
-	 * }|false	The response from the API.
+	 * }|false  The response from the API.
 	 */
 	public function remove_subscriber( string $list_id, string $email ): array|false;
 }

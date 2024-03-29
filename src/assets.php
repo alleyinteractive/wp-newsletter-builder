@@ -179,7 +179,7 @@ function get_entry_dir_path( string $dir_entry_name, bool $dir = false ): string
  *
  * @param string $dir_entry_name The entry point directory name.
  *
- * @return array{dependencies?: array<string>, version?: string}	An array of dependencies and version for this asset.
+ * @return array{dependencies?: array<string>, version?: string}    An array of dependencies and version for this asset.
  */
 function get_entry_asset_map( string $dir_entry_name ): array {
 	$base_path = get_entry_dir_path( $dir_entry_name, true );

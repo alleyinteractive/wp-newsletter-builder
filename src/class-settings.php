@@ -46,12 +46,14 @@ class Settings {
 	 */
 	public function register_fields() {
 		$settings = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
 					'from_email'      => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
 					'reply_to_email'  => new \Fieldmanager_TextField( __( 'Reply To Email', 'wp-newsletter-builder' ) ),
 					'from_names'      => new \Fieldmanager_TextField(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'              => __( 'From Names', 'wp-newsletter-builder' ),
 							'limit'              => 0,
@@ -60,38 +62,45 @@ class Settings {
 						]
 					),
 					'footer_settings' => new \Fieldmanager_Group(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'       => __( 'Footer Settings', 'wp-newsletter-builder' ),
 							'collapsed'   => true,
 							'collapsible' => true,
 							'children'    => [
 								'facebook_url'  => new \Fieldmanager_Link(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Facebook URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'twitter_url'   => new \Fieldmanager_Link(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Twitter URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'instagram_url' => new \Fieldmanager_Link(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Instagram URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'youtube_url'   => new \Fieldmanager_Link(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'YouTube URL', 'wp-newsletter-builder' ),
 									]
 								),
 								'image'         => new \Fieldmanager_Media(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label'        => __( 'Footer Image', 'wp-newsletter-builder' ),
 										'preview_size' => 'medium',
 									]
 								),
 								'address'       => new \Fieldmanager_TextField(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Company Address', 'wp-newsletter-builder' ),
 									]

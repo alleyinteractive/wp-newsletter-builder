@@ -46,11 +46,13 @@ class Breaking_Recipients {
 	 */
 	public function register_fields() {
 		$settings = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'           => static::SETTINGS_KEY,
 				'label'          => __( 'List', 'wp-newsletter-builder' ),
 				'children'       => [
 					'list' => new \Fieldmanager_Autocomplete(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'datasource' => new \Fieldmanager_Datasource(
 								[

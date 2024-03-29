@@ -49,6 +49,7 @@ class Email_Types {
 		$plugin_settings = new Settings();
 		$from_names      = $plugin_settings->get_from_names();
 		$settings        = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'           => static::SETTINGS_KEY,
 				'children'       => [
@@ -66,6 +67,7 @@ class Email_Types {
 					},
 					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
 					'image'      => new \Fieldmanager_Media(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'        => __( 'Image', 'wp-newsletter-builder' ),
 							'preview_size' => 'full',
@@ -93,6 +95,7 @@ class Email_Types {
 						]
 					),
 					'safe_rtb'   => new \Fieldmanager_TextArea(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'    => __( 'SafeRTB Ad Tag', 'wp-newsletter-builder' ),
 							'sanitize' => function ( $value ) {
@@ -101,10 +104,12 @@ class Email_Types {
 						],
 					),
 					'ad_tags'    => new \Fieldmanager_Group(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'          => __( 'Tags', 'wp-newsletter-builder' ),
 							'children'       => [
 								'tag_code' => new \Fieldmanager_TextArea(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label'    => __( 'Ad Tag', 'wp-newsletter-builder' ),
 										'sanitize' => function ( $value ) {
@@ -118,20 +123,24 @@ class Email_Types {
 						]
 					),
 					'roadblock'  => new \Fieldmanager_Checkbox(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label' => __( 'Enable Ad Roadblock', 'wp-newsletter-builder' ),
 						]
 					),
 					'key_values' => new \Fieldmanager_Group(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'              => __( 'Key/Value Pairs', 'wp-newsletter-builder' ),
 							'children'           => [
 								'key'   => new \Fieldmanager_TextField(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Key', 'wp-newsletter-builder' ),
 									]
 								),
 								'value' => new \Fieldmanager_TextField(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Value', 'wp-newsletter-builder' ),
 									]

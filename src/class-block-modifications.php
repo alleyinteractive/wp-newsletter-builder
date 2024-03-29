@@ -24,7 +24,7 @@ class Block_Modifications {
 	 * Sets the global post object and overrides for the Newsletter Single Post block.
 	 *
 	 * @param string $block_content The block content.
-	 * @param array  $block {
+	 * @param array  $block {.
 	 *  @type string $blockName The block name.
 	 *  @type array<mixed> $attrs The block attributes.
 	 *  @type array<mixed> $innerBlocks The inner blocks.

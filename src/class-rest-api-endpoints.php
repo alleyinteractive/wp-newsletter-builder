@@ -260,7 +260,7 @@ class Rest_API_Endpoints {
 		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
 			return [
 				'success' => false,
-				'message' => __( 'No email provider selected for WP Newsletter Builder.', 'wp-newsletter-builder' ),
+				'message' => __( 'No email provider selected.', 'wp-newsletter-builder' ),
 			];
 		}
 		foreach ( $list_ids as $list_id ) {

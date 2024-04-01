@@ -29,7 +29,7 @@ class Ads {
 	 * @param string $content The existing content.
 	 * @return string The modified content.
 	 */
-	public function insert_ads( $content ): string {
+	public function insert_ads( string $content ): string {
 		global $post;
 		if ( 'nb_newsletter' !== $post->post_type ) {
 			return $content;
@@ -40,6 +40,9 @@ class Ads {
 		$nb_newsletter_template = get_post_meta( $post->ID, 'nb_newsletter_template', true ) ?? '';
 		if ( is_array( $nb_list_ids ) ) {
 			$nb_list_ids = implode( ',', $nb_list_ids );
+		}
+		if ( ! is_string( $nb_list_ids ) ) {
+			$nb_list_ids = '';
 		}
 
 		$email_types_class = new \WP_Newsletter_Builder\Email_Types();
@@ -70,6 +73,11 @@ class Ads {
 
 		$has_middle_ad = 2 < count( $ad_tags );
 
+		/**
+		 * The parsed blocks.
+		 *
+		 * @var array<array{blockName: string, attrs: array<mixed>, innerBlocks?: array<mixed>, innerHTML?: string, innerContent: array<mixed>}> $blocks
+		 */
 		$blocks = parse_blocks( $content );
 		$rtb    = [
 			'blockName'    => 'wp-newsletter-builder/ad',
@@ -105,7 +113,7 @@ class Ads {
 				'innerContent' => [],
 				'innerHtml'    => '',
 			];
-			if ( isset( $ad2['attrs']['adTag'] ) ) {
+			if ( ! empty( $ad2['attrs']['adTag'] ) ) {
 				$ad2['attrs']['adTag'] = '<hr class="wp-block-separator has-alpha-channel-opacity">' . $ad2['attrs']['adTag'];
 			}
 		}
@@ -131,8 +139,10 @@ class Ads {
 		array_splice( $blocks, 0, 0, [ $rtb, $ad1 ] );
 		if ( 'single-story.html' === $nb_newsletter_template ) {
 			$bottom_ad_location = self::get_bottom_ad_location( $blocks );
-			$separator          = $blocks[ $bottom_ad_location ];
-			array_splice( $blocks, $bottom_ad_location, 0, [ $separator, $has_middle_ad ? $ad3 : $ad2 ] );
+			if ( ! empty( $bottom_ad_location ) ) {
+				$separator = $blocks[ $bottom_ad_location ];
+				array_splice( $blocks, $bottom_ad_location, 0, [ $separator, $has_middle_ad ? $ad3 : $ad2 ] );
+			}
 		} else {
 			$blocks = array_merge( $blocks, [ $has_middle_ad ? $ad3 : $ad2 ] );
 		}
@@ -151,11 +161,21 @@ class Ads {
 	 * Renders our fake block: wp-newsletter-builder/ad.
 	 *
 	 * @param string $content The existing content - should be empty.
-	 * @param array  $block The block data.
+	 * @param array  $block {.
+	 *  @type string $blockName The block name.
+	 *  @type array<mixed> $attrs The block attributes.
+	 *  @type array<mixed> $innerBlocks The inner blocks.
+	 *  @type string $innerHTML The inner HTML.
+	 *  @type array<mixed> $innerContent The inner content.
+	 * } The block data.
+	 * @phpstan-param array{blockName: string, attrs: array<mixed>, innerBlocks: array<mixed>, innerHTML: string, innerContent: array<mixed>} $block
 	 * @return string
 	 */
-	public function render_ad( $content, $block ): string {
+	public function render_ad( string $content, array $block ): string {
 		$ad_tag = $block['attrs']['adTag'];
+		if ( ! is_string( $ad_tag ) ) {
+			return '';
+		}
 		$ad_tag = str_replace( '<$Enc.CampaignID$>', 'enc-campaign-id', $ad_tag );
 		return wp_kses_post( sprintf( '<div class="wp-newsletter-builder__ad">%s</div>', $ad_tag ) );
 	}
@@ -163,10 +183,17 @@ class Ads {
 	/**
 	 * Finds the insertion point for the middle ad.
 	 *
-	 * @param array $blocks The array of blocks.
+	 * @param array $blocks {.
+	 *  @type string $blockName The block name.
+	 *  @type array<mixed> $attrs The block attributes.
+	 *  @type array<mixed> $innerBlocks The inner blocks.
+	 *  @type string $innerHTML The inner HTML.
+	 *  @type array<mixed> $innerContent The inner content.
+	 * }[] The array of blocks.
+	 * @phpstan-param array{blockName: string, attrs: array<mixed>, innerBlocks?: array<mixed>, innerHTML?: string, innerContent: array<mixed>}[] $blocks
 	 * @return integer|null
 	 */
-	public function get_middle_ad_location( $blocks ): ?int {
+	public function get_middle_ad_location( array $blocks ): ?int {
 		foreach ( $blocks as $index => $block ) {
 			if (
 				'wp-newsletter-builder/section' === $block['blockName']
@@ -181,10 +208,17 @@ class Ads {
 	/**
 	 * Finds the insertion point for the bottom ad.
 	 *
-	 * @param array $blocks The array of blocks.
+	 * @param array $blocks {.
+	 *  @type string $blockName The block name.
+	 *  @type array<mixed> $attrs The block attributes.
+	 *  @type array<mixed> $innerBlocks The inner blocks.
+	 *  @type string $innerHTML The inner HTML.
+	 *  @type array<mixed> $innerContent The inner content.
+	 * }[] The array of blocks.
+	 * @phpstan-param array{blockName: string, attrs: array<mixed>, innerBlocks?: array<mixed>, innerHTML?: string, innerContent: array<mixed>}[] $blocks
 	 * @return integer|null
 	 */
-	public function get_bottom_ad_location( $blocks ): ?int {
+	public function get_bottom_ad_location( array $blocks ): ?int {
 		foreach ( $blocks as $index => $block ) {
 			if (
 				'core/separator' === $block['blockName']
@@ -198,11 +232,11 @@ class Ads {
 	/**
 	 * Adds height to the allowed table attributes.
 	 *
-	 * @param array        $allowed_html The existing allowed html.
-	 * @param string|array $context The context.
-	 * @return array
+	 * @param array<string, array<string, boolean>> $allowed_html The existing allowed html.
+	 * @param string                                $context The context.
+	 * @return array<string, array<string, boolean>>
 	 */
-	public function modify_allowed_html( $allowed_html, $context ) {
+	public function modify_allowed_html( array $allowed_html, string $context ): array {
 		if ( 'post' === $context ) {
 			$allowed_html['table']['height']           = true;
 			$allowed_html['img']['cm_dontimportimage'] = true;
@@ -216,7 +250,7 @@ class Ads {
 	 * @param string $content The content.
 	 * @return string
 	 */
-	public function reinsert_variable( $content ) {
+	public function reinsert_variable( string $content ): string {
 		return str_replace( 'enc-campaign-id', '<$Enc.CampaignID$>', $content );
 	}
 
@@ -226,9 +260,9 @@ class Ads {
 	 * @param string $ad_tag The ad tag html code.
 	 * @param string $key_value_string The key value string.
 	 * @param string $list_ids The list ids.
-	 * @return string
+	 * @return mixed
 	 */
-	public function replace_values( $ad_tag, $key_value_string = '', $list_ids = '' ) {
+	public function replace_values( string $ad_tag, string $key_value_string = '', string $list_ids = '' ): mixed {
 		$new_ad_tag = str_replace( '{LIST_ID}', $list_ids, $ad_tag );
 		return preg_replace( '/(src|href)="([^"]*?)"/', "$1=\"$2&$key_value_string\"", $new_ad_tag );
 	}

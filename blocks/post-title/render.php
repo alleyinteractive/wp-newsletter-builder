@@ -22,7 +22,7 @@ $wp_newsletter_builder_title_class  = $wp_newsletter_builder_smaller_font ? 'pos
 
 $wp_newsletter_builder_post_permalink = (string) get_the_permalink();
 ?>
-<a <?php echo wp_kses_data( get_block_wrapper_attributes( [ 'class' => 'post__title-link poop' ] ) ); ?> href="<?php echo esc_url( $wp_newsletter_builder_post_permalink ); ?>">
+<a <?php echo wp_kses_data( get_block_wrapper_attributes( [ 'class' => 'post__title-link' ] ) ); ?> href="<?php echo esc_url( $wp_newsletter_builder_post_permalink ); ?>">
 	<h2 class="<?php echo esc_attr( $wp_newsletter_builder_title_class ); ?>">
 		<?php if ( ! empty( $wp_newsletter_builder_number ) ) : ?>
 			<span class="newsletter-post__number"><?php echo esc_html( $wp_newsletter_builder_number ); ?>.</span>

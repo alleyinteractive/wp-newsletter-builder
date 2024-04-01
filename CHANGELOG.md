@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.6 - 2024-04-01
+
+- Adds phpstan package and fixes phpstan issues
+
 ## 0.3.5 - 2023-11-20
 
 - Update dependencies, minor bugfixes

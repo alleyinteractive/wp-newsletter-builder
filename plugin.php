@@ -104,7 +104,7 @@ function main(): void {
 	$provider = new $selected_email_provider();
 
 	$newsletter_builder_email_provider = new $provider();
-	if ( method_exists( $newsletter_builder_email_provider, 'setup' ) ) {
+	if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
 		$newsletter_builder_email_provider->setup();
 	}
 }

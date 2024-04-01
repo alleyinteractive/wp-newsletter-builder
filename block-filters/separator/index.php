@@ -39,11 +39,11 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_sepa
 /**
  * Add a block separator if needed.
  *
- * @param string    $block_content The current block content.
- * @param \WP_Block $block The parse block object.
+ * @param string $block_content The current block content.
+ * @param array  $block The parsed block object.
  * @return string   $block_content The new block content.
  */
-function add_separator( string $block_content, \WP_Block $block ): string {
+function add_separator( string $block_content, array $block ): string {
 	if ( empty( $block['attrs']['hasSeparator'] ) ) {
 		return $block_content;
 	}

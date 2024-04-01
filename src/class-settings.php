@@ -118,15 +118,15 @@ class Settings {
 	/**
 	 * Get the API key and instantiate a client using the API key.
 	 *
-	 * @return \CS_REST_Wrapper_Base|false
+	 * @return \CS_REST_General|false
 	 */
-	public function get_client(): \CS_REST_Wrapper_Base|false {
+	public function get_client(): \CS_REST_General|false {
 		$settings = get_option( static::SETTINGS_KEY );
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
-		$wrap = new \CS_REST_Wrapper_Base( $auth );
+		$wrap = new \CS_REST_General( $auth );
 
 		return $wrap;
 	}

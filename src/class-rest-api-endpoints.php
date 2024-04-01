@@ -148,11 +148,11 @@ class Rest_API_Endpoints {
 	 *
 	 * @param WP_REST_Request $request The request object.
 	 *
-	 * @return \WP_Error|array{
+	 * @return array{
 	 *   Status?: string,
 	 * }  The newsletter status.
 	 */
-	public function get_status( WP_REST_Request $request ): \WP_Error|array {
+	public function get_status( WP_REST_Request $request ): array {
 		$post_id = $request->get_param( 'post_id' );
 		if ( empty( $post_id ) || ! is_int( $post_id ) ) {
 			return [];

@@ -34,7 +34,7 @@ class Block_Modifications {
 	 * @phpstan-param array{blockName: string, attrs: array<mixed>, innerBlocks: array<mixed>, innerHTML: string, innerContent: array<mixed>} $block
 	 * @return string The block content.
 	 */
-	public function pre_render_post_block( $block_content, $block ) {
+	public function pre_render_post_block( string $block_content, array $block ): string {
 		if ( 'wp-newsletter-builder/post' === $block['blockName'] ) {
 			$post_id = isset( $block['attrs']['postId'] ) ? $block['attrs']['postId'] : null;
 			if ( empty( $post_id ) || ( ! is_int( $post_id ) && ! $post_id instanceof \WP_Post ) ) {

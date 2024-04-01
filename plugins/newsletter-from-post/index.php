@@ -18,7 +18,7 @@ add_action(
  * Registers all slotfill assets so that they can be enqueued through Gutenberg in
  * the corresponding context.
  */
-function register_post_plugin_scripts() {
+function register_post_plugin_scripts(): void {
 	wp_register_script(
 		'plugin-newsletter-from-post',
 		get_entry_asset_url( 'wp-newsletter-builder-from-post' ),
@@ -33,7 +33,7 @@ add_action( 'init', __NAMESPACE__ . '\register_post_plugin_scripts' );
 /**
  * Enqueue block editor assets for this slotfill.
  */
-function action_enqueue_post_sidebar_assets() {
+function action_enqueue_post_sidebar_assets(): void {
 	$post_type = get_edit_post_type();
 	if ( 'post' !== $post_type ) {
 		return;

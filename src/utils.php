@@ -16,7 +16,7 @@ namespace WP_Newsletter_Builder;
  * @TODO: try to switch this to use get_the_author() instead.
  * @TODO: If we don't switch, look into wp_sprintf().
  */
-function get_byline( $post ) {
+function get_byline( \WP_Post|int $post ): string {
 	$post   = get_post( $post );
 	$byline = '';
 
@@ -75,7 +75,7 @@ function get_byline( $post ) {
  *
  * @return string
  */
-function get_edit_post_type() {
+function get_edit_post_type(): string {
 	global $post, $typenow, $current_screen;
 
 	if ( $post && $post->post_type ) {

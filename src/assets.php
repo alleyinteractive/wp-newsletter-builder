@@ -153,8 +153,8 @@ function validate_path( string $path ): bool {
 /**
  * Get the entry points directory path or public URL.
  *
- * @param string  $dir_entry_name The directory name where the entry point was defined.
- * @param boolean $dir            Optional. Whether to return the directory path or the plugin URL path. Defaults to false (returns URL).
+ * @param string $dir_entry_name The directory name where the entry point was defined.
+ * @param bool   $dir            Optional. Whether to return the directory path or the plugin URL path. Defaults to false (returns URL).
  *
  * @return string
  */

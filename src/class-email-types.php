@@ -173,8 +173,8 @@ class Email_Types {
 	/**
 	 * Sort the email types on save so that they are always alphabetical.
 	 *
-	 * @param array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: boolean, key_values?: array<array{key: string, value: string}>}> $new_value The value being saved.
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: boolean, key_values?: array<array{key: string, value: string}>}>
+	 * @param array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}> $new_value The value being saved.
+	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
 	 */
 	public function sort_settings_on_save( array $new_value ): array {
 		usort(
@@ -192,7 +192,7 @@ class Email_Types {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: boolean, key_values?: array<array{key: string, value: string}>}>
+	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
 	 */
 	public function get_email_types(): array {
 		$settings = get_option( static::SETTINGS_KEY );

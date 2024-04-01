@@ -228,7 +228,7 @@ class Rest_API_Endpoints {
 	 * @param WP_REST_Request $request The request object.
 	 *
 	 * @return array{
-	 *   success: boolean,
+	 *   success: bool,
 	 *   message: string,
 	 *   results?: array<string, array{success: bool, message: mixed}>,
 	 * }

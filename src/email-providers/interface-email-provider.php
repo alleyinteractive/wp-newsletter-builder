@@ -98,7 +98,7 @@ interface Email_Provider {
 	 *   @type int $http_status_code The http status code of the API call.
 	 * } The response from the creation request.
 	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
-	 * @return boolean
+	 * @return bool
 	 */
 	public function campaign_created_successfully( array|false $result ): bool;
 

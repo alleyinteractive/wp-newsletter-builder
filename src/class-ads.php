@@ -232,9 +232,9 @@ class Ads {
 	/**
 	 * Adds height to the allowed table attributes.
 	 *
-	 * @param array<string, array<string, boolean>> $allowed_html The existing allowed html.
-	 * @param string                                $context The context.
-	 * @return array<string, array<string, boolean>>
+	 * @param array<string, array<string, bool>> $allowed_html The existing allowed html.
+	 * @param string                             $context The context.
+	 * @return array<string, array<string, bool>>
 	 */
 	public function modify_allowed_html( array $allowed_html, string $context ): array {
 		if ( 'post' === $context ) {

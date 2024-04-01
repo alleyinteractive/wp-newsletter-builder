@@ -2,7 +2,7 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
-## 0.3.6 - 2024-04-01
+## 0.3.7 - 2024-04-01
 
 - Adds phpstan package and fixes phpstan issues
 - Adds code-quality GitHub workflow

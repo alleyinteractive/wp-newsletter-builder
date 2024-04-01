@@ -245,7 +245,7 @@ class Rest_API_Endpoints {
 		if ( empty( $list_ids_param ) || ! is_string( $list_ids_param ) ) {
 			return [
 				'success' => false,
-				'message' => __( 'No lists selected.', 'wp-newsletter-builder' ),
+				'message' => __( 'No lists provided.', 'wp-newsletter-builder' ),
 			];
 		}
 		$list_ids = explode( ',', $list_ids_param );

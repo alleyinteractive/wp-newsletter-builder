@@ -109,7 +109,7 @@ function main(): void {
 	} else {
 		\add_action(
 			'admin_notices',
-			function () {
+			function () use ( $selected_email_provider ) {
 				wp_admin_notice(
 					sprintf(
 						// translators: %s is the email provider class name.

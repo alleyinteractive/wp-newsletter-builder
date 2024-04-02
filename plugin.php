@@ -106,6 +106,26 @@ function main(): void {
 	$newsletter_builder_email_provider = new $provider();
 	if ( $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
 		$newsletter_builder_email_provider->setup();
+	} else {
+		\add_action(
+			'admin_notices',
+			function () {
+				wp_admin_notice(
+					sprintf(
+						// translators: %s is the email provider class name.
+						esc_html__(
+							'The selected email provider %s is not supported.',
+							'wp-newsletter-builder'
+						),
+						$selected_email_provider
+					),
+					[
+						'type'        => 'error',
+						'dismissible' => false,
+					]
+				);
+			}
+		);
 	}
 }
 main();

@@ -113,7 +113,7 @@ class Ads {
 				'innerContent' => [],
 				'innerHtml'    => '',
 			];
-			if ( ! empty( $ad2['attrs']['adTag'] ) ) {
+			if ( ! empty( $ad2['attrs']['adTag'] ) && is_string( $ad2['attrs']['adTag'] ) ) {
 				$ad2['attrs']['adTag'] = '<hr class="wp-block-separator has-alpha-channel-opacity">' . $ad2['attrs']['adTag'];
 			}
 		}
@@ -260,9 +260,9 @@ class Ads {
 	 * @param string $ad_tag The ad tag html code.
 	 * @param string $key_value_string The key value string.
 	 * @param string $list_ids The list ids.
-	 * @return mixed
+	 * @return string|array<string>|null The modified ad tag or null in case of failure.
 	 */
-	public function replace_values( string $ad_tag, string $key_value_string = '', string $list_ids = '' ): mixed {
+	public function replace_values( string $ad_tag, string $key_value_string = '', string $list_ids = '' ): string|array|null {
 		$new_ad_tag = str_replace( '{LIST_ID}', $list_ids, $ad_tag );
 		return preg_replace( '/(src|href)="([^"]*?)"/', "$1=\"$2&$key_value_string\"", $new_ad_tag );
 	}

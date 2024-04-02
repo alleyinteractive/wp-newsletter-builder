@@ -18,7 +18,7 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_bloc
 /**
  * A callback for the wp_enqueue_scripts hook.
  */
-function action_wp_enqueue_scripts() {
+function action_wp_enqueue_scripts(): void {
 	/*
 	|--------------------------------------------------------------------------
 	| Enqueue site assets using the asset/entry helper functions.
@@ -37,7 +37,7 @@ function action_wp_enqueue_scripts() {
 /**
  * A callback for the wp_newsletter_builder_enqueue_styles hook.
  */
-function action_newsletters_enqueue_styles() {
+function action_newsletters_enqueue_styles(): void {
 	$blocks = [
 		'header',
 		'footer',
@@ -53,8 +53,10 @@ function action_newsletters_enqueue_styles() {
 			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
 
 			$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-			$css = str_replace( '../images/', plugins_url( '../build/images/', __FILE__ ), $css );
-			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( ! empty( $css ) ) {
+				$css = str_replace( '../images/', plugins_url( '../build/images/', __FILE__ ), $css );
+				echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
 		}
 	}
 
@@ -63,7 +65,9 @@ function action_newsletters_enqueue_styles() {
 		$entry_base_url = trailingslashit( get_entry_dir_path( 'blocks', true ) ) . 'index.css';
 
 		$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-		echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		if ( ! empty( $css ) ) {
+			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
 	}
 	?>
 	</style>
@@ -73,7 +77,7 @@ function action_newsletters_enqueue_styles() {
 /**
  * A callback for the admin_enqueue_scripts hook.
  */
-function action_admin_enqueue_scripts() {
+function action_admin_enqueue_scripts(): void {
 	/*
 	|--------------------------------------------------------------------------
 	| Enqueue admin assets using the asset/entry helper functions.
@@ -88,7 +92,7 @@ function action_admin_enqueue_scripts() {
 /**
  * A callback for the enqueue_block_editor_assets hook.
  */
-function action_enqueue_block_editor_assets() {
+function action_enqueue_block_editor_assets(): void {
 	/*
 	|--------------------------------------------------------------------------
 	| Enqueue block editor assets using the asset/entry helper functions.
@@ -149,18 +153,18 @@ function validate_path( string $path ): bool {
 /**
  * Get the entry points directory path or public URL.
  *
- * @param string  $dir_entry_name The directory name where the entry point was defined.
- * @param boolean $dir            Optional. Whether to return the directory path or the plugin URL path. Defaults to false (returns URL).
+ * @param string $dir_entry_name The directory name where the entry point was defined.
+ * @param bool   $dir            Optional. Whether to return the directory path or the plugin URL path. Defaults to false (returns URL).
  *
  * @return string
  */
-function get_entry_dir_path( string $dir_entry_name, bool $dir = false ) {
+function get_entry_dir_path( string $dir_entry_name, bool $dir = false ): string {
 	// The relative path from the plugin root.
 	$asset_build_dir = "/build/{$dir_entry_name}/";
 	// Set the absolute file path from the root directory.
 	$asset_dir_path = WP_NEWSLETTER_BUILDER_DIR . $asset_build_dir;
 
-	if ( ! empty( $asset_dir_path ) && validate_path( $asset_dir_path ) ) {
+	if ( validate_path( $asset_dir_path ) ) {
 		// Negotiate the base path.
 		return true === $dir
 			? $asset_dir_path
@@ -175,9 +179,9 @@ function get_entry_dir_path( string $dir_entry_name, bool $dir = false ) {
  *
  * @param string $dir_entry_name The entry point directory name.
  *
- * @return array                 An array of dependencies and version for this asset.
+ * @return array{dependencies?: array<string>, version?: string}    An array of dependencies and version for this asset.
  */
-function get_entry_asset_map( string $dir_entry_name ) {
+function get_entry_asset_map( string $dir_entry_name ): array {
 	$base_path = get_entry_dir_path( $dir_entry_name, true );
 
 	if ( ! empty( $base_path ) ) {
@@ -196,7 +200,7 @@ function get_entry_asset_map( string $dir_entry_name ) {
  *
  * @param string $dir_entry_name The entry point directory name.
  *
- * @return array The asset's dependency array.
+ * @return array<string> The asset's dependency array.
  */
 function get_asset_dependency_array( string $dir_entry_name ): array {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );
@@ -222,7 +226,7 @@ function get_asset_version( string $dir_entry_name ): string {
  * @param string $filename       The asset file name including the file type extension to get the public path for.
  * @return string                The public URL to the asset, empty string otherwise.
  */
-function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ) {
+function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ): string {
 	if ( empty( $filename ) ) {
 		return '';
 	}
@@ -241,10 +245,13 @@ function get_entry_asset_url( string $dir_entry_name, $filename = 'index.js' ) {
 /**
  * Load the php index files from the build directory for blocks, slotfills, and any other scripts with an index.php file.
  */
-function load_scripts() {
-	foreach ( glob( WP_NEWSLETTER_BUILDER_DIR . '/build/**/index.php' ) as $path ) {
-		if ( 0 === validate_file( $path ) && file_exists( $path ) ) {
-			require_once $path;  // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+function load_scripts(): void {
+	$paths = glob( WP_NEWSLETTER_BUILDER_DIR . '/build/**/index.php' );
+	if ( ! empty( $paths ) ) {
+		foreach ( $paths as $path ) {
+			if ( 0 === validate_file( $path ) && file_exists( $path ) ) {
+				require_once $path;  // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+			}
 		}
 	}
 }

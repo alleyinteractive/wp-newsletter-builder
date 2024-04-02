@@ -23,7 +23,7 @@ class WP_Newsletter_Builder {
 		add_filter( 'template_include', [ $this, 'include_template' ] );
 		add_action( 'wp_after_insert_post', [ $this, 'on_newsletter_after_insert_post' ], 10, 4 );
 		add_action( 'wp_after_insert_post', [ $this, 'on_after_insert_post' ] );
-		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ], 10, 2 );
+		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ] );
 		add_filter( 'pre_get_posts', [ $this, 'modify_query' ] );
 		add_action( 'init', [ $this, 'check_for_fieldmanager' ] );
 	}
@@ -143,6 +143,9 @@ class WP_Newsletter_Builder {
 	 */
 	public function on_after_insert_post( int $post_id ): void {
 		$post = get_post( $post_id );
+		if ( ! $post instanceof \WP_Post ) {
+			return;
+		}
 		if ( 'post' !== $post->post_type ) {
 			return;
 		}
@@ -168,7 +171,8 @@ class WP_Newsletter_Builder {
 		$breaking_post_id = wp_insert_post(
 			[
 				'post_title'   => "Breaking News {$post->ID}",
-				'post_content' => get_post_meta( $post->ID, 'nb_breaking_content', true ),
+				// @phpstan-ignore-next-line cast to string is necessary.
+				'post_content' => (string) get_post_meta( $post->ID, 'nb_breaking_content', true ),
 				'post_status'  => 'publish',
 				'post_type'    => 'nb_newsletter',
 				'meta_input'   => [
@@ -182,9 +186,6 @@ class WP_Newsletter_Builder {
 				],
 			]
 		);
-		if ( is_wp_error( $breaking_post_id ) ) {
-			return;
-		}
 
 		$sent_emails = get_post_meta( $post->ID, 'nb_newsletter_sent_breaking_post_id', true ) ?? [];
 		if ( ! is_array( $sent_emails ) ) {
@@ -225,6 +226,9 @@ class WP_Newsletter_Builder {
 			$url
 		);
 		$settings = get_option( 'nb_campaign_monitor_settings' );
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
+			return $url;
+		}
 		if ( ! empty( $settings['dev_settings']['static_preview_url'] ) ) {
 			return $settings['dev_settings']['static_preview_url'];
 		}
@@ -257,14 +261,18 @@ class WP_Newsletter_Builder {
 		}
 
 		global $newsletter_builder_email_provider;
-		$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists );
-		if ( $newsletter_builder_email_provider->campaign_created_successfully( $result ) ) {
-			$campaign_id = $newsletter_builder_email_provider->get_campaign_id_from_create_result( $result );
-			update_post_meta( $post_id, 'nb_newsletter_campaign_id', $campaign_id );
-			$send_result = $newsletter_builder_email_provider->send_campaign( $campaign_id );
-			update_post_meta( $post_id, 'nb_newsletter_send_result', $send_result );
+		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+			$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists );
+			if ( $newsletter_builder_email_provider->campaign_created_successfully( $result ) ) {
+				$campaign_id = $newsletter_builder_email_provider->get_campaign_id_from_create_result( $result );
+				if ( is_string( $campaign_id ) ) {
+					update_post_meta( $post_id, 'nb_newsletter_campaign_id', $campaign_id );
+					$send_result = $newsletter_builder_email_provider->send_campaign( $campaign_id );
+					update_post_meta( $post_id, 'nb_newsletter_send_result', $send_result );
+				}
+			}
+			update_post_meta( $post_id, 'nb_newsletter_campaign_result', $result );
 		}
-		update_post_meta( $post_id, 'nb_newsletter_campaign_result', $result );
 	}
 
 	/**

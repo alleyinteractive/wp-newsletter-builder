@@ -12,7 +12,7 @@
 $wp_newsletter_builder_block_post = $block->context['postId'] ?? null;
 
 $wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post );
-if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
+if ( empty( $wp_newsletter_builder_block_post ) ) {
 	return;
 }
 $wp_newsletter_builder_content = $wp_newsletter_builder_block_post->post_content;

@@ -23,11 +23,11 @@ class Rest_API_Query {
 	/**
 	 * Add date query to reset search query if the after param is set.
 	 *
-	 * @param array            $query_args The existing query args.
-	 * @param \WP_Rest_Request $request The REST request.
-	 * @return array
+	 * @param array<string, mixed> $query_args The existing query args.
+	 * @param \WP_REST_Request     $request The REST request.
+	 * @return array<string, mixed>
 	 */
-	public function add_after_param( $query_args, $request ) {
+	public function add_after_param( array $query_args, \WP_REST_Request $request ): array {
 		if ( ! empty( $request->get_param( 'after' ) ) ) {
 			$query_args['date_query'] = [
 				'after' => $request->get_param( 'after' ),
@@ -39,12 +39,16 @@ class Rest_API_Query {
 	/**
 	 * Checks if the search string is a url and if it is, returns the appropriate post.
 	 *
-	 * @param array            $query_args The existing query args.
-	 * @param \WP_Rest_Request $request The REST request.
-	 * @return array
+	 * @param array<string, mixed> $query_args The existing query args.
+	 * @param \WP_REST_Request     $request The REST request.
+	 * @return array<string, mixed>
 	 */
-	public function check_for_url_match( $query_args, $request ) {
-		$search_url = wp_http_validate_url( $request->get_param( 'search' ) );
+	public function check_for_url_match( array $query_args, \WP_REST_Request $request ): array {
+		$search_param = $request->get_param( 'search' );
+		if ( ! is_string( $search_param ) ) {
+			return $query_args;
+		}
+		$search_url = wp_http_validate_url( $search_param );
 		if ( ! $search_url ) {
 			return $query_args;
 		}
@@ -63,13 +67,13 @@ class Rest_API_Query {
 	/**
 	 * Checks if the search string is a Post ID and if it is, returns the appropriate post.
 	 *
-	 * @param array            $query_args The existing query args.
-	 * @param \WP_Rest_Request $request The REST request.
-	 * @return array
+	 * @param array<string, mixed> $query_args The existing query args.
+	 * @param \WP_REST_Request     $request The REST request.
+	 * @return array<string, mixed>
 	 */
-	public function check_for_post_id_match( $query_args, $request ) {
+	public function check_for_post_id_match( array $query_args, \WP_REST_Request $request ): array {
 		$search_post_id = $request->get_param( 'search' );
-		if ( ! is_numeric( $search_post_id ) ) {
+		if ( ! is_int( $search_post_id ) && ! $search_post_id instanceof \WP_Post ) {
 			return $query_args;
 		}
 		if ( ! get_post( $search_post_id ) ) {

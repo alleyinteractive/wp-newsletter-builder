@@ -9,14 +9,15 @@
  * @package wp-newsletter-builder
  */
 
-$wp_newsletter_builder_heading = $attributes['heading'];
+$wp_newsletter_builder_heading = $attributes['heading'] ?? '';
+$wp_newsletter_builder_content = $content ?? '';
 
 // Check if the content is empty.
-if ( empty( trim( wp_strip_all_tags( $content ) ) ) ) {
+if ( empty( trim( wp_strip_all_tags( $wp_newsletter_builder_content ) ) ) ) {
 	return;
 }
 if ( ! empty( $wp_newsletter_builder_heading ) ) {
 	printf( '<h2 class="wp-newsletter-builder-section__heading">%s</h2>', esc_html( $wp_newsletter_builder_heading ) );
 }
 
-echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo $wp_newsletter_builder_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

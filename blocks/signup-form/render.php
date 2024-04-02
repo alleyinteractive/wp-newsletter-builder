@@ -9,11 +9,12 @@
  * @package wp-newsletter-builder
  */
 
-$wp_newsletter_builder_header_text     = $attributes['headerText'];
+$wp_newsletter_builder_header_text     = $attributes['headerText'] ?? '';
 $wp_newsletter_builder_subheader_text  = $attributes['subheaderText'] ?? '';
 $wp_newsletter_builder_disclaimer_text = $attributes['disclaimerText'] ?? '';
 $wp_newsletter_builder_button_text     = $attributes['buttonText'] ?? __( 'Subscribe', 'wp-newsletter-builder' );
 $wp_newsletter_builder_list_id         = $attributes['listId'] ?? '';
+$wp_newsletter_builder_content         = $content ?? '';
 ?>
 <form <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?> data-component="wp-newsletter-builder-signup">
 	<div class="wp-block-wp-newsletter-builder-signup-form__header container container--entry-content">
@@ -49,7 +50,7 @@ $wp_newsletter_builder_list_id         = $attributes['listId'] ?? '';
 	if ( ! empty( $wp_newsletter_builder_list_id ) ) {
 		printf( '<input type="hidden" name="wp-newsletter-builder-hidden" value="%s" />', esc_attr( $wp_newsletter_builder_list_id ) );
 	} else {
-		echo wp_kses_post( $content );
+		echo wp_kses_post( $wp_newsletter_builder_content );
 	}
 	?>
 </form>

@@ -23,7 +23,7 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @return void
 	 */
-	public function setup() {
+	public function setup(): void {
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
 	}
 
@@ -32,7 +32,7 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @return void
 	 */
-	public function maybe_register_settings_page() {
+	public function maybe_register_settings_page(): void {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
 			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Campaign Monitor Settings', 'wp-newsletter-builder' ), __( 'Campaign Monitor Settings', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
@@ -44,8 +44,9 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @return void
 	 */
-	public function register_fields() {
+	public function register_fields(): void {
 		$settings = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
@@ -62,11 +63,11 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Get the API key and instantiate a client using the API key.
 	 *
-	 * @return \CS_REST_General
+	 * @return \CS_REST_General|false
 	 */
-	public function get_client() {
+	public function get_client(): \CS_REST_General|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -80,11 +81,11 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array|false
+	 * @return mixed
 	 */
-	public function get_lists() {
+	public function get_lists(): mixed {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -100,15 +101,18 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Creates an email campaign.
 	 *
-	 * @param int    $newsletter_id The id of the nb_newsletter post.
-	 * @param array  $list_ids    The list ids to send the campaign to.
-	 * @param string $campaign_id Optional campaign id to update.
-	 * @return array The response from the API.
+	 * @param int           $newsletter_id The id of the nb_newsletter post.
+	 * @param array<string> $list_ids    The list ids to send the campaign to.
+	 * @param string        $campaign_id Optional campaign id to update.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
 	 */
-	public function create_campaign( $newsletter_id, $list_ids, $campaign_id = null ) {
+	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null ): array|false {
 		// TODO: Move non-email provider code to the core plugin.
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -116,7 +120,7 @@ class Campaign_Monitor implements Email_Provider {
 		$wrap = new \CS_REST_Campaigns( $campaign_id, $auth );
 
 		$newsletter = get_post( $newsletter_id );
-		if ( ! $newsletter || is_wp_error( $newsletter ) ) {
+		if ( ! $newsletter instanceof \WP_Post ) {
 			return false;
 		}
 
@@ -127,9 +131,11 @@ class Campaign_Monitor implements Email_Provider {
 		if ( empty( $nl_from_name ) ) {
 			$nl_email_type = get_post_meta( $newsletter_id, 'nb_newsletter_email_type', true );
 			$email_types   = get_option( 'nb_email_types' );
-			$type_key      = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
-			if ( false !== $type_key ) {
-				$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
+			if ( is_array( $email_types ) ) {
+				$type_key = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
+				if ( false !== $type_key ) {
+					$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
+				}
 			}
 		}
 		$url = add_query_arg(
@@ -170,11 +176,14 @@ class Campaign_Monitor implements Email_Provider {
 	 * Sends a campaign.
 	 *
 	 * @param string $campaign_id The campaign id.
-	 * @return array|false The response from the API.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
 	 */
-	public function send_campaign( $campaign_id ) {
+	public function send_campaign( string $campaign_id ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -198,11 +207,14 @@ class Campaign_Monitor implements Email_Provider {
 	 * Gets campaign summary.
 	 *
 	 * @param string $campaign_id The campaign id.
-	 * @return array|false The response from the API.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
 	 */
-	public function get_campaign_summary( $campaign_id ) {
+	public function get_campaign_summary( string $campaign_id ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -219,20 +231,28 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Determine if the campaign was created successfully.
 	 *
-	 * @param array $result The response from the creation request.
-	 * @return boolean
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
+	 * @return bool
 	 */
-	public function campaign_created_successfully( array $result ): bool {
-		return 201 === $result['http_status_code'];
+	public function campaign_created_successfully( array|false $result ): bool {
+		return ! empty( $result['http_status_code'] ) ? 201 === $result['http_status_code'] : false;
 	}
 
 	/**
 	 * Gets the campaign id from the result.
 	 *
-	 * @param array $result The response from the creation request.
-	 * @return string|false
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
+	 * @return mixed
 	 */
-	public function get_campaign_id_from_create_result( array $result ): string|false {
+	public function get_campaign_id_from_create_result( array|false $result ): mixed {
 		return $result['response'] ?? false;
 	}
 
@@ -240,14 +260,17 @@ class Campaign_Monitor implements Email_Provider {
 	/**
 	 * Add subscriber to list
 	 *
-	 * @param string $list_id The list id.
-	 * @param string $email The email address.
-	 * @param array  $custom_fields The custom fields.
-	 * @return array|false
+	 * @param string                       $list_id The list id.
+	 * @param string                       $email The email address.
+	 * @param array<array<string, string>> $custom_fields The custom fields.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
 	 */
-	public function add_subscriber( $list_id, $email, $custom_fields = [] ) {
+	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
@@ -274,11 +297,14 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @param string $list_id The list id.
 	 * @param string $email The email address.
-	 * @return array|false
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
 	 */
-	public function remove_subscriber( $list_id, $email ) {
+	public function remove_subscriber( string $list_id, string $email ): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];

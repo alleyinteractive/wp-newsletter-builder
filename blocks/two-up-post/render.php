@@ -11,4 +11,4 @@
 
 ?>
 <?php
-echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+echo $content ?? ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

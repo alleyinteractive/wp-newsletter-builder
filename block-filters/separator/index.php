@@ -11,7 +11,7 @@ namespace WP_Newsletter_Builder;
  * Registers assets so that they can be enqueued through Gutenberg in
  * the corresponding context.
  */
-function register_separator_scripts() {
+function register_separator_scripts(): void {
 	wp_register_script(
 		'plugin-newsletter-separator',
 		get_entry_asset_url( 'wp-newsletter-builder-separator' ),
@@ -26,7 +26,7 @@ add_action( 'init', __NAMESPACE__ . '\register_separator_scripts' );
 /**
  * Enqueue block editor assets for separator.
  */
-function action_enqueue_separator_assets() {
+function action_enqueue_separator_assets(): void {
 	$post_type = get_edit_post_type();
 	if ( 'nb_newsletter' !== $post_type ) {
 		return;
@@ -39,11 +39,11 @@ add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_sepa
 /**
  * Add a block separator if needed.
  *
- * @param string    $block_content The current block content.
- * @param \WP_Block $block The parse block object.
+ * @param string $block_content The current block content.
+ * @param array  $block The parsed block object.
  * @return string   $block_content The new block content.
  */
-function add_separator( $block_content, $block ) {
+function add_separator( string $block_content, array $block ): string {
 	if ( empty( $block['attrs']['hasSeparator'] ) ) {
 		return $block_content;
 	}

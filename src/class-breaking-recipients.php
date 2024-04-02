@@ -32,7 +32,7 @@ class Breaking_Recipients {
 	 *
 	 * @return void
 	 */
-	public function maybe_register_settings_page() {
+	public function maybe_register_settings_page(): void {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
 			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Breaking Recipients', 'wp-newsletter-builder' ), __( 'Breaking Recipients', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
@@ -44,13 +44,15 @@ class Breaking_Recipients {
 	 *
 	 * @return void
 	 */
-	public function register_fields() {
+	public function register_fields(): void {
 		$settings = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'           => static::SETTINGS_KEY,
 				'label'          => __( 'List', 'wp-newsletter-builder' ),
 				'children'       => [
 					'list' => new \Fieldmanager_Autocomplete(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'datasource' => new \Fieldmanager_Datasource(
 								[
@@ -72,12 +74,12 @@ class Breaking_Recipients {
 	/**
 	 * Gets the Breaking News Recipient lists.
 	 *
-	 * @return array
+	 * @return array<int|string, string>|false
 	 */
-	public function get_breaking_recipients() {
+	public function get_breaking_recipients(): array|false {
 		$options  = $this->get_options();
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return false;
 		}
 		$lists = [];
@@ -90,12 +92,18 @@ class Breaking_Recipients {
 	/**
 	 * Gets the options for the Breaking News Recipient lists.
 	 *
-	 * @return array
+	 * @return array<string, string>
 	 */
-	private function get_options() {
+	private function get_options(): array {
 		global $newsletter_builder_email_provider;
-		$lists   = $newsletter_builder_email_provider->get_lists();
 		$options = [];
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+			return $options;
+		}
+		$lists = $newsletter_builder_email_provider->get_lists();
+		if ( empty( $lists ) || ! is_array( $lists ) ) {
+			return $options;
+		}
 		foreach ( $lists as $list ) {
 			$options[ $list->ListID ] = $list->Name; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}

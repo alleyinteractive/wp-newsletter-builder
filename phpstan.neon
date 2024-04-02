@@ -5,16 +5,15 @@ parameters:
 	# Level 9 is the highest level
 	level: max
 
+	# Disable generics in type hints.
+	checkGenericClassInNonGenericObjectType: false
+
 	paths:
 		- blocks/
 		- entries/
 		- src/
 		- plugin.php
 
-#    ignoreErrors:
-#        - '#PHPDoc tag @var#'
-#
-#    excludePaths:
-#        - ./*/*/FileToBeExcluded.php
-#
-#    checkMissingIterableValueType: false
+	scanDirectories:
+		- %currentWorkingDirectory%/vendor/alleyinteractive/wordpress-fieldmanager/php
+		- %currentWorkingDirectory%/vendor/campaignmonitor/createsend-php/class

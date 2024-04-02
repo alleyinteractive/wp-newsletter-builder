@@ -14,7 +14,7 @@ use function WP_Newsletter_Builder\get_byline;
 $wp_newsletter_builder_block_post = $block->context['postId'] ?? null;
 
 $wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post );
-if ( empty( $wp_newsletter_builder_block_post ) || ! $wp_newsletter_builder_block_post ) {
+if ( empty( $wp_newsletter_builder_block_post ) ) {
 	return;
 }
 $wp_newsletter_builder_byline = ! empty( $attributes['overrideByline'] ) ? $attributes['overrideByline'] : get_byline( $wp_newsletter_builder_block_post );

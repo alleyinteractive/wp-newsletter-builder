@@ -9,11 +9,16 @@
  * @package wp-newsletter-builder
  */
 
-$wp_newsletter_builder_block_post = get_post( $attributes['postId'] );
-if ( empty( $attributes['postId'] ) || ! $wp_newsletter_builder_block_post ) {
+if ( empty( $attributes['postId'] ) ) {
 	return;
 }
+
+$wp_newsletter_builder_block_post = get_post( $attributes['postId'] );
+if ( empty( $wp_newsletter_builder_block_post ) ) {
+	return;
+}
+
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?>>
-	<?php echo wp_kses_post( $content ); ?>
+	<?php echo wp_kses_post( $content ?? '' ); ?>
 </div>

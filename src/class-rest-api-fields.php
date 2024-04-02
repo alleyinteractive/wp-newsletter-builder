@@ -24,7 +24,7 @@ class Rest_API_Fields {
 	/**
 	 * Register the rest field.
 	 */
-	public function register_field() {
+	public function register_field(): void {
 		register_rest_field(
 			'post',
 			'wp_newsletter_builder_byline',
@@ -37,17 +37,20 @@ class Rest_API_Fields {
 	/**
 	 * Calls the get_bylines function with the post id.
 	 *
-	 * @param array $post The post array.
+	 * @param array<string, mixed> $post The post array.
 	 * @return string
 	 */
-	public function call_get_byline( $post ) {
+	public function call_get_byline( array $post ): string {
+		if ( ! is_int( $post['id'] ) && ! $post['id'] instanceof \WP_Post ) {
+			return '';
+		}
 		return get_byline( $post['id'] );
 	}
 
 	/**
 	 * Register the search rest fields.
 	 */
-	public function register_search_fields() {
+	public function register_search_fields(): void {
 		register_rest_field(
 			'search-result',
 			'featured_image',
@@ -67,20 +70,34 @@ class Rest_API_Fields {
 	/**
 	 * Gets the featured image url
 	 *
-	 * @param array $post The array of post data.
+	 * @param array $post {.
+	 *  @type int $id The post id.
+	 *  @type string $title The post title.
+	 *  @type string $url The post url.
+	 *  @type string $type The post type.
+	 *  @type string $subtype The post subtype.
+	 * } The array of post data.
+	 * @phpstan-param array{id: int, title: string, url: string, type: string, subtype: string} $post
 	 * @return string|false
 	 */
-	public function get_featured_image( $post ) {
+	public function get_featured_image( array $post ): string|false {
 		return get_the_post_thumbnail_url( $post['id'], 'small-thumb' );
 	}
 
 	/**
 	 * Gets the post date
 	 *
-	 * @param array $post The array of post data.
-	 * @return string|false
+	 * @param array $post {.
+	 *  @type int $id The post id.
+	 *  @type string $title The post title.
+	 *  @type string $url The post url.
+	 *  @type string $type The post type.
+	 *  @type string $subtype The post subtype.
+	 * } The array of post data.
+	 * @phpstan-param array{id: int, title: string, url: string, type: string, subtype: string} $post
+	 * @return string|int|false
 	 */
-	public function get_post_date( $post ) {
+	public function get_post_date( array $post ): string|int|false {
 		return get_the_date( 'F j, Y', $post['id'] );
 	}
 }

@@ -3,7 +3,7 @@
  * Plugin Name: Newsletter Builder
  * Plugin URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Description: Interface to manage email newsletters
- * Version: 0.3.6
+ * Version: 0.3.7
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 6.2
@@ -23,8 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * Root directory to this plugin.
- *
- * @var string
  */
 define( 'WP_NEWSLETTER_BUILDER_DIR', __DIR__ );
 
@@ -63,7 +61,7 @@ global $newsletter_builder_email_provider;
 /**
  * Instantiate the plugin.
  */
-function main() {
+function main(): void {
 	new Ads();
 	new Block_Modifications();
 	new Breaking_Recipients();
@@ -106,6 +104,28 @@ function main() {
 	$provider = new $selected_email_provider();
 
 	$newsletter_builder_email_provider = new $provider();
-	$newsletter_builder_email_provider->setup();
+	if ( $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+		$newsletter_builder_email_provider->setup();
+	} else {
+		\add_action(
+			'admin_notices',
+			function () use ( $selected_email_provider ) {
+				wp_admin_notice(
+					sprintf(
+						// translators: %s is the email provider class name.
+						esc_html__(
+							'The selected email provider %s is not supported.',
+							'wp-newsletter-builder'
+						),
+						$selected_email_provider
+					),
+					[
+						'type'        => 'error',
+						'dismissible' => false,
+					]
+				);
+			}
+		);
+	}
 }
 main();

@@ -33,7 +33,7 @@ class Email_Types {
 	 *
 	 * @return void
 	 */
-	public function maybe_register_settings_page() {
+	public function maybe_register_settings_page(): void {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
 			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Email Types', 'wp-newsletter-builder' ), __( 'Email Types', 'wp-newsletter-builder' ) );
 			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
@@ -45,10 +45,11 @@ class Email_Types {
 	 *
 	 * @return void
 	 */
-	public function register_fields() {
+	public function register_fields(): void {
 		$plugin_settings = new Settings();
 		$from_names      = $plugin_settings->get_from_names();
 		$settings        = new \Fieldmanager_Group(
+			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'           => static::SETTINGS_KEY,
 				'children'       => [
@@ -56,16 +57,17 @@ class Email_Types {
 						/**
 						 * Ensure that each group has a unique ID.
 						 *
-						 * @param mixed $value          Submitted value.
-						 * @param array $current_value  The current values.
-						 * @return array The sanitized values.
+						 * @param mixed         $value          Submitted value.
+						 * @param array<string> $current_value  The current values.
+						 * @return array<string> The sanitized values.
 						 */
 						public function presave( $value, $current_value = [] ) {
-							return $current_value ?: wp_generate_uuid4();
+							return $current_value ?: [ wp_generate_uuid4() ];
 						}
 					},
 					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
 					'image'      => new \Fieldmanager_Media(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'        => __( 'Image', 'wp-newsletter-builder' ),
 							'preview_size' => 'full',
@@ -93,6 +95,7 @@ class Email_Types {
 						]
 					),
 					'safe_rtb'   => new \Fieldmanager_TextArea(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'    => __( 'SafeRTB Ad Tag', 'wp-newsletter-builder' ),
 							'sanitize' => function ( $value ) {
@@ -101,10 +104,12 @@ class Email_Types {
 						],
 					),
 					'ad_tags'    => new \Fieldmanager_Group(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'          => __( 'Tags', 'wp-newsletter-builder' ),
 							'children'       => [
 								'tag_code' => new \Fieldmanager_TextArea(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label'    => __( 'Ad Tag', 'wp-newsletter-builder' ),
 										'sanitize' => function ( $value ) {
@@ -118,20 +123,24 @@ class Email_Types {
 						]
 					),
 					'roadblock'  => new \Fieldmanager_Checkbox(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label' => __( 'Enable Ad Roadblock', 'wp-newsletter-builder' ),
 						]
 					),
 					'key_values' => new \Fieldmanager_Group(
+						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 						[
 							'label'              => __( 'Key/Value Pairs', 'wp-newsletter-builder' ),
 							'children'           => [
 								'key'   => new \Fieldmanager_TextField(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Key', 'wp-newsletter-builder' ),
 									]
 								),
 								'value' => new \Fieldmanager_TextField(
+									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 									[
 										'label' => __( 'Value', 'wp-newsletter-builder' ),
 									]
@@ -164,10 +173,10 @@ class Email_Types {
 	/**
 	 * Sort the email types on save so that they are always alphabetical.
 	 *
-	 * @param array $new_value The value being saved.
-	 * @return array
+	 * @param array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}> $new_value The value being saved.
+	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
 	 */
-	public function sort_settings_on_save( $new_value ) {
+	public function sort_settings_on_save( array $new_value ): array {
 		usort(
 			$new_value,
 			function ( $a, $b ) {
@@ -183,11 +192,11 @@ class Email_Types {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array
+	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
 	 */
-	public function get_email_types() {
+	public function get_email_types(): array {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];
 		}
 

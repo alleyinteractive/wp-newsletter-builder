@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "alleyinteractive/alley-coding-standards": "^2.0",
+        "alleyinteractive/wordpress-fieldmanager": "^1.6",
         "mantle-framework/testkit": "^0.12",
         "szepeviktor/phpstan-wordpress": "^1.3"
     },
@@ -28,7 +29,8 @@
         "allow-plugins": {
             "alleyinteractive/composer-wordpress-autoloader": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "composer/installers": true
         },
         "sort-packages": true,
         "platform-check": false
@@ -41,7 +43,13 @@
             "autoload-dev": {
                 "WP_Newsletter_Builder\\Tests\\": "tests"
             }
+        },
+        "installer-paths": {
+            "vendor/{$vendor}/{$name}/": ["type:wordpress-plugin"]
         }
+    },
+    "autoload": {
+        "files": ["vendor/alleyinteractive/wordpress-fieldmanager/fieldmanager.php"]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -12,6 +12,6 @@ parameters:
 		- plugin.php
 
 	scanDirectories:
-		- %currentWorkingDirectory%/../wordpress-fieldmanager/
 		- %currentWorkingDirectory%/vendor/campaignmonitor/
+		- %currentWorkingDirectory%/vendor/wordpress-fieldmanager/
 		- %currentWorkingDirectory%/../../../wp-includes/

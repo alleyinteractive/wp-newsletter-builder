@@ -153,7 +153,7 @@ class Rest_API_Endpoints {
 	 * }  The newsletter status.
 	 */
 	public function get_status( WP_REST_Request $request ): array {
-		$post_id = $request->get_param( 'post_id' );
+		$post_id = absint( $request->get_param( 'post_id' ) );
 		if ( empty( $post_id ) || ! is_int( $post_id ) ) {
 			return [];
 		}

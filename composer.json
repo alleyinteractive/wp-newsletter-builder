@@ -48,16 +48,13 @@
             "vendor/{$vendor}/{$name}/": ["type:wordpress-plugin"]
         }
     },
-    "autoload": {
-        "files": ["vendor/alleyinteractive/wordpress-fieldmanager/fieldmanager.php"]
-    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
         "phpcbf": "phpcbf .",
         "phpcs": "phpcs .",
         "phpunit": "phpunit",
-        "phpstan": "phpstan --memory-limit=512M",
+        "phpstan": "phpstan --memory-limit=1024M",
         "test": [
             "@phpcs",
             "@phpunit",

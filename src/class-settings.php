@@ -125,10 +125,8 @@ class Settings {
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
-		$wrap = new \CS_REST_General( $auth );
 
-		return $wrap;
+		return new \CS_REST_General( [ 'api_key' => $settings['api_key'] ] );
 	}
 
 	/**

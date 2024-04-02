@@ -171,7 +171,8 @@ class WP_Newsletter_Builder {
 		$breaking_post_id = wp_insert_post(
 			[
 				'post_title'   => "Breaking News {$post->ID}",
-				'post_content' => get_post_meta( $post->ID, 'nb_breaking_content', true ),
+				// @phpstan-ignore-next-line cast to string is necessary.
+				'post_content' => (string) get_post_meta( $post->ID, 'nb_breaking_content', true ),
 				'post_status'  => 'publish',
 				'post_type'    => 'nb_newsletter',
 				'meta_input'   => [

@@ -8,6 +8,7 @@
 namespace WP_Newsletter_Builder\Email_Providers;
 
 use SendGrid\Mail\Mail;
+use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
 
 /**
  * Sendgrid Client class
@@ -134,6 +135,13 @@ class Sendgrid implements Email_Provider {
 			}
 		}
 		$html_content = $this->get_content( $newsletter_id );
+
+		$cssToInlineStyles = new CssToInlineStyles();
+		$html_content      = $cssToInlineStyles->convert(
+			$html_content,
+			''
+		);
+
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 
@@ -273,6 +281,11 @@ class Sendgrid implements Email_Provider {
 		return true;
 	}
 
+	/**
+	 * Get the senders from the Sendgrid API.
+	 *
+	 * @return array
+	 */
 	private function get_senders(): array {
 		$sendgrid = $this->get_client();
 		$response = $sendgrid->client->marketing()->senders()->get();
@@ -296,6 +309,12 @@ class Sendgrid implements Email_Provider {
 		return $this->get_senders();
 	}
 
+	/**
+	 * Gets the html content for the newsletter.
+	 *
+	 * @param int $post_id The post id.
+	 * @return string
+	 */
 	private function get_content( $post_id ) {
 		global $wp_query;
 		// Back up globals.
@@ -304,11 +323,6 @@ class Sendgrid implements Email_Provider {
 
 		// Switch on themes.
 		add_filter( 'wp_using_themes', '__return_true' );
-
-		// Switch off default template hooks.
-		remove_all_actions( 'template_redirect' );
-		remove_all_actions( 'wp_head' );
-		remove_all_actions( 'wp_footer' );
 
 		// Render anonymously.
 		wp_set_current_user( 0 );

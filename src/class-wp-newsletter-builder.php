@@ -99,11 +99,13 @@ class WP_Newsletter_Builder {
 	 */
 	public function include_template( string $template ): string {
 		global $post;
+		global $wp_query;
+		$query_post = $wp_query->get_queried_object();
 
 		$local_path = WP_NEWSLETTER_BUILDER_DIR . '/single-nb_newsletter.php';
 
 		if (
-			$post instanceof WP_Post
+			( $post instanceof WP_Post || $query_post instanceof WP_Post )
 			&& is_singular( 'nb_newsletter' )
 			&& file_exists( $local_path )
 			&& 0 === validate_file( $local_path )

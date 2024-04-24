@@ -156,7 +156,7 @@ interface Email_Provider {
 	/**
 	 * Gets the suppression lists.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function get_suppression_lists(): array;
+	public function get_suppression_lists(): mixed;
 }

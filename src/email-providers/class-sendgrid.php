@@ -177,9 +177,10 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );;
-		$request_body->send_to->list_ids                    = $list_ids;
-		$request_body->send_to->segment_ids                 = [];
+		$request_body->email_config->suppression_group_id   = get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
+
+		$request_body->send_to->list_ids    = $list_ids;
+		$request_body->send_to->segment_ids = [];
 
 		$sg = $this->get_client();
 		if ( empty( $sg ) ) {
@@ -427,14 +428,17 @@ class Sendgrid implements Email_Provider {
 	/**
 	 * Gets the suppression lists.
 	 *
-	 * @return array
+	 * @return mixed
 	 */
-	public function get_suppression_lists(): array {
+	public function get_suppression_lists(): mixed {
 		$sg = $this->get_client();
+		if ( empty( $sg ) ) {
+			return [];
+		}
 
 		try {
 			$response = $sg->client->asm()->groups()->get();
-			$result     = json_decode( $response->body() );
+			$result   = json_decode( $response->body() );
 		} catch ( \Exception $ex ) {
 			$result = [];
 		}

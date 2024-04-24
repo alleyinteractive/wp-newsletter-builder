@@ -141,8 +141,8 @@ function action_enqueue_block_editor_assets(): void {
 		'wp-newsletter-builder-email-settings-editor-script',
 		'newsletterBuilder',
 		[
-			'fromNames' => $settings->get_from_names(),
-			'templates' => $template_map,
+			'fromNames'            => $settings->get_from_names(),
+			'templates'            => $template_map,
 			'usesSuppressionLists' => $uses_suppression_lists,
 		]
 	);

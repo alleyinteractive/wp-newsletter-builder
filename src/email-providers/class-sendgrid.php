@@ -177,7 +177,7 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = 20937;
+		$request_body->email_config->suppression_group_id   = get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );;
 		$request_body->send_to->list_ids                    = $list_ids;
 		$request_body->send_to->segment_ids                 = [];
 
@@ -413,5 +413,48 @@ class Sendgrid implements Email_Provider {
 		wp_set_current_user( $old_current_user->ID );
 
 		return $content;
+	}
+
+	/**
+	 * Whether or not the provider uses suppression lists.
+	 *
+	 * @return boolean
+	 */
+	public function uses_suppression_lists(): bool {
+		return true;
+	}
+
+	/**
+	 * Gets the suppression lists.
+	 *
+	 * @return array
+	 */
+	public function get_suppression_lists(): array {
+		$sg = $this->get_client();
+
+		try {
+			$response = $sg->client->asm()->groups()->get();
+			$result     = json_decode( $response->body() );
+		} catch ( \Exception $ex ) {
+			$result = [];
+		}
+		if ( ! is_array( $result ) ) {
+			return [];
+		}
+		$lists = [];
+		foreach ( $result as $list ) {
+			$lists[] = [
+				'ListID' => $list->id,
+				'Name'   => $list->name,
+			];
+		}
+		// Sort by the Name field.
+		usort(
+			$lists,
+			function ( $a, $b ) {
+				return strcasecmp( $a['Name'], $b['Name'] );
+			}
+		);
+		return $lists;
 	}
 }

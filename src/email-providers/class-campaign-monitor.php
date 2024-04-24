@@ -314,4 +314,22 @@ class Campaign_Monitor implements Email_Provider {
 	public function provider_manages_from_names(): bool {
 		return false;
 	}
+
+	/**
+	 * Whether or not the provider uses suppression lists.
+	 *
+	 * @return boolean
+	 */
+	public function uses_suppression_lists(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the suppression lists.
+	 *
+	 * @return array
+	 */
+	public function get_suppression_lists(): array {
+		return [];
+	}
 }

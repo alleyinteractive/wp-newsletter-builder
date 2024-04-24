@@ -83,6 +83,18 @@ class Rest_API_Endpoints {
 				'permission_callback' => '__return_true',
 			]
 		);
+		register_rest_route(
+			'wp-newsletter-builder/v1',
+			'/suppression-lists/',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_suppression_lists' ],
+				'permission_callback' => function () {
+					return true;
+					// return current_user_can( 'edit_posts' ); TODO.
+				},
+			]
+		);
 	}
 
 	/**
@@ -282,5 +294,22 @@ class Rest_API_Endpoints {
 			'message' => __( 'Successfully subscribed.', 'wp-newsletter-builder' ),
 			'results' => $list_results,
 		];
+	}
+
+	/**
+	 * Gets the suppression lists from the Email Provider.
+	 *
+	 * @return mixed
+	 */
+	public function get_suppression_lists(): mixed {
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
+		}
+		global $newsletter_builder_email_provider;
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
+			return new \WP_Error( 'no_email_provider_selected', esc_html__( 'No email provider selected for WP Newsletter Builder.', 'wp-newsletter-builder' ), [ 'status' => 400 ] );
+		}
+
+		return $newsletter_builder_email_provider->get_suppression_lists();
 	}
 }

@@ -283,7 +283,7 @@ class WP_Newsletter_Builder {
 			if ( ! is_string( $existing_id ) ) {
 				$existing_id = null;
 			}
-			$result      = $newsletter_builder_email_provider->create_campaign( $post_id, $lists, $existing_id, $nl_from_name );
+			$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists, $existing_id, $nl_from_name );
 			if ( $newsletter_builder_email_provider->campaign_created_successfully( $result ) ) {
 				$campaign_id = $newsletter_builder_email_provider->get_campaign_id_from_create_result( $result );
 				if ( is_string( $campaign_id ) ) {

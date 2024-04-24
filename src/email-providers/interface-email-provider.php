@@ -145,4 +145,18 @@ interface Email_Provider {
 	 * @return boolean
 	 */
 	public function provider_manages_from_names(): bool;
+
+	/**
+	 * Whether or not the provider uses suppression lists.
+	 *
+	 * @return boolean
+	 */
+	public function uses_suppression_lists(): bool;
+
+	/**
+	 * Gets the suppression lists.
+	 *
+	 * @return array
+	 */
+	public function get_suppression_lists(): array;
 }

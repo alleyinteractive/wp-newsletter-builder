@@ -84,7 +84,10 @@ class Sendgrid implements Email_Provider {
 	 * @return mixed
 	 */
 	public function get_lists(): mixed {
-		$sg           = $this->get_client();
+		$sg = $this->get_client();
+		if ( empty( $sg ) ) {
+			return [];
+		}
 		$query_params = json_decode(
 			'{
 			"page_size": 100
@@ -93,10 +96,13 @@ class Sendgrid implements Email_Provider {
 
 		try {
 			$response = $sg->client->marketing()->lists()->get( null, $query_params );
-			$body     = json_decode( $response->body() );
+			$body     = (object) json_decode( $response->body() );
 			$result   = $body->result;
-		} catch ( Exception $ex ) {
+		} catch ( \Exception $ex ) {
 			$result = [];
+		}
+		if ( ! is_array( $result ) ) {
+			return [];
 		}
 		$lists = [];
 		foreach ( $result as $list ) {
@@ -129,10 +135,16 @@ class Sendgrid implements Email_Provider {
 	 */
 	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
 		$sendgrid = $this->get_client();
+		if ( empty( $sendgrid ) ) {
+			return false;
+		}
 		$response = $sendgrid->client->marketing()->senders()->get();
 
 		$body = json_decode( $response->body() );
 
+		if ( ! is_array( $body ) ) {
+			return false;
+		}
 		foreach ( $body as $sender ) {
 			if ( sprintf( '%s <%s>', $sender->from->name, $sender->from->email ) === $from_name ) {
 				$sender_id = $sender->id;
@@ -140,6 +152,9 @@ class Sendgrid implements Email_Provider {
 			}
 		}
 		$html_content = $this->get_content( $newsletter_id );
+		if ( ! $html_content ) {
+			$html_content = '';
+		}
 
 		$css_to_inline_styles = new CssToInlineStyles();
 		$html_content         = $css_to_inline_styles->convert(
@@ -160,13 +175,16 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->ip_pool                = null;
 		$request_body->email_config->plain_content          = $text_content;
 		$request_body->email_config->generate_plain_content = true;
-		$request_body->email_config->sender_id              = $sender_id;
+		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
 		$request_body->email_config->suppression_group_id   = 20937;
 		$request_body->send_to->list_ids                    = $list_ids;
 		$request_body->send_to->segment_ids                 = [];
 
-		$sg       = $this->get_client();
+		$sg = $this->get_client();
+		if ( empty( $sg ) ) {
+			return false;
+		}
 		$response = $sg->client->marketing()->singlesends()->post( $request_body );
 
 		return [
@@ -186,17 +204,20 @@ class Sendgrid implements Email_Provider {
 	 */
 	public function send_campaign( string $campaign_id ): array|false {
 		$sg = $this->get_client();
+		if ( empty( $sg ) ) {
+			return false;
+		}
 
 		try {
+			// @phpstan-ignore-next-line
 			$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->schedule()->put( [ 'send_at' => 'now' ] );
 			return [
 				'response'         => $response->body(),
 				'http_status_code' => $response->statusCode(),
 			];
-		} catch ( Exception $ex ) {
-			return [];
+		} catch ( \Exception $ex ) {
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -211,9 +232,12 @@ class Sendgrid implements Email_Provider {
 	 * @todo: Get recipients, total opened, unique opened.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false {
-		$sg       = $this->get_client();
+		$sg = $this->get_client();
+		if ( empty( $sg ) ) {
+			return false;
+		}
 		$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->get();
-		$body     = json_decode( $response->body() );
+		$body     = (object) json_decode( $response->body() );
 		return [
 			'response'         => [
 				'Status'       => $body->status,
@@ -251,9 +275,12 @@ class Sendgrid implements Email_Provider {
 	 * @return mixed
 	 */
 	public function get_campaign_id_from_create_result( array|false $result ): mixed {
+		if ( empty( $result ) ) {
+			return false;
+		}
 		$response = $result['response'];
-		if ( ! empty( $response ) ) {
-			$body = json_decode( $response );
+		if ( ! empty( $response && is_string( $response ) ) ) {
+			$body = (object) json_decode( $response );
 			return $body->id;
 		}
 		return false;
@@ -272,7 +299,10 @@ class Sendgrid implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
-		$sendgrid               = $this->get_client();
+		$sendgrid = $this->get_client();
+		if ( empty( $sendgrid ) ) {
+			return false;
+		}
 		$request_body           = (object) [];
 		$request_body->list_ids = [ $list_id ];
 		$user_object            = (object) [];
@@ -316,15 +346,21 @@ class Sendgrid implements Email_Provider {
 	/**
 	 * Get the senders from the Sendgrid API.
 	 *
-	 * @return array
+	 * @return array<string>
 	 */
 	private function get_senders(): array {
 		$sendgrid = $this->get_client();
+		if ( empty( $sendgrid ) ) {
+			return [];
+		}
 		$response = $sendgrid->client->marketing()->senders()->get();
 
 		$body = json_decode( $response->body() );
 
 		$senders = [];
+		if ( ! is_array( $body ) ) {
+			return [];
+		}
 		foreach ( $body as $sender ) {
 			$senders[] = sprintf( '%s <%s>', $sender->from->name, $sender->from->email );
 		}
@@ -334,8 +370,8 @@ class Sendgrid implements Email_Provider {
 	/**
 	 * Filters the from names to use Senders from the API.
 	 *
-	 * @param array $from_names The existing from names.
-	 * @return array
+	 * @param array<string> $from_names The existing from names.
+	 * @return array<string>
 	 */
 	public function filter_from_names( array $from_names ): array {
 		return $this->get_senders();
@@ -345,7 +381,7 @@ class Sendgrid implements Email_Provider {
 	 * Gets the html content for the newsletter.
 	 *
 	 * @param int $post_id The post id.
-	 * @return string
+	 * @return string|false
 	 */
 	private function get_content( $post_id ) {
 		global $wp_query;
@@ -368,6 +404,7 @@ class Sendgrid implements Email_Provider {
 
 		// Capture template output for the new query.
 		ob_start();
+		// @phpstan-ignore-next-line
 		include ABSPATH . WPINC . '/template-loader.php';
 		$content = ob_get_clean();
 

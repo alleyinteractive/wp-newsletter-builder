@@ -280,6 +280,9 @@ class WP_Newsletter_Builder {
 		global $newsletter_builder_email_provider;
 		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			$existing_id = get_post_meta( $post_id, 'nb_newsletter_campaign_id', true ) ?? null;
+			if ( ! is_string( $existing_id ) ) {
+				$existing_id = null;
+			}
 			$result      = $newsletter_builder_email_provider->create_campaign( $post_id, $lists, $existing_id, $nl_from_name );
 			if ( $newsletter_builder_email_provider->campaign_created_successfully( $result ) ) {
 				$campaign_id = $newsletter_builder_email_provider->get_campaign_id_from_create_result( $result );

@@ -104,6 +104,18 @@ interface Email_Provider {
 	public function campaign_created_successfully( array|false $result ): bool;
 
 	/**
+	 * Gets the campaign id from the result.
+	 *
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
+	 * @return mixed
+	 */
+	public function get_campaign_id_from_create_result( array|false $result ): mixed;
+
+	/**
 	 * Add subscriber to list
 	 *
 	 * @param string                       $list_id The list id.

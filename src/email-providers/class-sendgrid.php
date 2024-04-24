@@ -203,9 +203,23 @@ class Sendgrid implements Email_Provider {
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
+	 *
+	 * @todo: Get recipients, total opened, unique opened.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false {
-		// TODO.
+		$sg = $this->get_client();
+		$response = $sg->client->marketing()->singlesends()->_($campaign_id)->get();
+		$body     = json_decode( $response->body() );
+		return [
+			'response'         => [
+				'Status' => $body->status,
+				'Name' => $body->name,
+				'Recipients' => 'N/A',
+				'TotalOpened' => 'N/A',
+				'UniqueOpened' => 'N/A',
+			],
+			'http_status_code' => $response->statusCode(),
+		];
 	}
 
 	/**
@@ -254,8 +268,18 @@ class Sendgrid implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
-		// TODO.
+		$sendgrid = $this->get_client();
+		$request_body = (object) [];
+		$request_body->list_ids = [ $list_id ];
+		$user_object = ( object ) [];
+		$user_object->email = $email;
+		$request_body->contacts = [ $user_object ];
+		$response = $sendgrid->client->marketing()->contacts()->put( $request_body );
 
+		return [
+			'response'         => $response->body(),
+			'http_status_code' => $response->statusCode(),
+		];
 	}
 
 	/**

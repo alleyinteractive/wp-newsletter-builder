@@ -194,7 +194,7 @@ class Sendgrid implements Email_Provider {
 				'http_status_code' => $response->statusCode(),
 			];
 		} catch ( Exception $ex ) {
-			echo 'Caught exception: ' . $ex->getMessage();
+			return [];
 		}
 		return false;
 	}
@@ -298,6 +298,10 @@ class Sendgrid implements Email_Provider {
 	 */
 	public function remove_subscriber( string $list_id, string $email ): array|false {
 		// TODO.
+		return [
+			'response'         => (object) [],
+			'http_status_code' => 500,
+		];
 	}
 
 	/**

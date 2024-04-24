@@ -15,7 +15,7 @@ $wp_newsletter_builder_block_post = get_post( $wp_newsletter_builder_block_post 
 if ( empty( $wp_newsletter_builder_block_post ) ) {
 	return;
 }
-$wp_newsletter_builder_read_more_text = $attributes['readMoreText'];
+$wp_newsletter_builder_read_more_text = $attributes['readMoreText'] ?? '';
 if ( empty( $wp_newsletter_builder_read_more_text ) ) {
 	$wp_newsletter_builder_read_more_text = __( 'Read More', 'wp-newsletter-builder' );
 }

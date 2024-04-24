@@ -92,10 +92,10 @@ class Rest_API_Endpoints {
 	 */
 	public function get_lists(): mixed {
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
+			// return new \WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		global $newsletter_builder_email_provider;
-		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			return new \WP_Error( 'no_email_provider_selected', esc_html__( 'No email provider selected for WP Newsletter Builder.', 'wp-newsletter-builder' ), [ 'status' => 400 ] );
 		}
 
@@ -179,7 +179,7 @@ class Rest_API_Endpoints {
 			];
 		}
 		global $newsletter_builder_email_provider;
-		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			return [
 				'Status' => __( 'No email provider selected for WP Newsletter Builder.', 'wp-newsletter-builder' ),
 			];
@@ -257,7 +257,7 @@ class Rest_API_Endpoints {
 		}
 		$list_results = [];
 		global $newsletter_builder_email_provider;
-		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			return [
 				'success' => false,
 				'message' => __( 'No email provider selected.', 'wp-newsletter-builder' ),

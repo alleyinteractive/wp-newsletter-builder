@@ -97,7 +97,7 @@ class Breaking_Recipients {
 	private function get_options(): array {
 		global $newsletter_builder_email_provider;
 		$options = [];
-		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
+		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			return $options;
 		}
 		$lists = $newsletter_builder_email_provider->get_lists();

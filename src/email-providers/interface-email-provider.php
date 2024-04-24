@@ -27,7 +27,7 @@ interface Email_Provider {
 
 	/**
 	 * Registers the submenu settings page for the Email Provider options.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function maybe_register_settings_page(): void;
@@ -42,9 +42,9 @@ interface Email_Provider {
 	/**
 	 * Get the API key and instantiate a client using the API key.
 	 *
-	 * @return \CS_REST_General|false
+	 * @return mixed
 	 */
-	public function get_client(): \CS_REST_General|false;
+	public function get_client(): mixed;
 
 	/**
 	 * Gets the lists for the client.
@@ -61,12 +61,13 @@ interface Email_Provider {
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
 	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null ): array|false;
+	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false;
 
 	/**
 	 * Sends a campaign.
@@ -125,4 +126,11 @@ interface Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function remove_subscriber( string $list_id, string $email ): array|false;
+
+	/**
+	 * Whether the provider manages from names or if the plugin should handle it.
+	 *
+	 * @return boolean
+	 */
+	public function provider_manages_from_names(): bool;
 }

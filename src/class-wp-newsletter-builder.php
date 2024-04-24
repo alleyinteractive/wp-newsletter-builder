@@ -260,9 +260,25 @@ class WP_Newsletter_Builder {
 			return;
 		}
 
+		// Newsletter from name.
+		$nl_from_name = get_post_meta( $post_id, 'nb_newsletter_from_name', true );
+
+		// If newsletter from name is not set try to fill from email type.
+		if ( empty( $nl_from_name ) ) {
+			$nl_email_type = get_post_meta( $post_id, 'nb_newsletter_email_type', true );
+			$email_types   = get_option( 'nb_email_types' );
+			if ( is_array( $email_types ) ) {
+				$type_key = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
+				if ( false !== $type_key ) {
+					$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
+				}
+			}
+		}
+
 		global $newsletter_builder_email_provider;
-		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Campaign_Monitor ) {
-			$result = $newsletter_builder_email_provider->create_campaign( $post_id, $lists );
+		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
+			$existing_id = get_post_meta( $post_id, 'nb_newsletter_campaign_id', true ) ?? null;
+			$result      = $newsletter_builder_email_provider->create_campaign( $post_id, $lists, $existing_id, $nl_from_name );
 			if ( $newsletter_builder_email_provider->campaign_created_successfully( $result ) ) {
 				$campaign_id = $newsletter_builder_email_provider->get_campaign_id_from_create_result( $result );
 				if ( is_string( $campaign_id ) ) {

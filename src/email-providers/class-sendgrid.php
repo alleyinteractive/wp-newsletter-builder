@@ -28,7 +28,7 @@ class Sendgrid implements Email_Provider {
 	 */
 	public function setup(): void {
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
-		add_filter( 'nb_from_names', [ $this, 'filter_from_names' ] );
+		add_filter( 'wp_newsletter_builder_from_names', [ $this, 'filter_from_names' ] );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class Sendgrid implements Email_Provider {
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
-					'api_key'            => new \Fieldmanager_Password( __( 'API Key', 'wp-newsletter-builder' ) ),
+					'api_key' => new \Fieldmanager_Password( __( 'API Key', 'wp-newsletter-builder' ) ),
 				],
 			]
 		);
@@ -84,29 +84,34 @@ class Sendgrid implements Email_Provider {
 	 * @return mixed
 	 */
 	public function get_lists(): mixed {
-		$sg = $this->get_client();
-		$query_params = json_decode('{
+		$sg           = $this->get_client();
+		$query_params = json_decode(
+			'{
 			"page_size": 100
-		}');
+		}'
+		);
 
 		try {
 			$response = $sg->client->marketing()->lists()->get( null, $query_params );
-			$body = json_decode( $response->body() );
-			$result = $body->result;
-		} catch (Exception $ex) {
+			$body     = json_decode( $response->body() );
+			$result   = $body->result;
+		} catch ( Exception $ex ) {
 			$result = [];
 		}
 		$lists = [];
-		foreach ($result as $list) {
+		foreach ( $result as $list ) {
 			$lists[] = [
 				'ListID' => $list->id,
-				'Name' => $list->name,
+				'Name'   => $list->name,
 			];
 		}
 		// Sort by the Name field.
-		usort( $lists, function ( $a, $b ) {
-			return strcasecmp( $a['Name'], $b['Name'] );
-		} );
+		usort(
+			$lists,
+			function ( $a, $b ) {
+				return strcasecmp( $a['Name'], $b['Name'] );
+			}
+		);
 		return $lists;
 	}
 
@@ -129,15 +134,15 @@ class Sendgrid implements Email_Provider {
 		$body = json_decode( $response->body() );
 
 		foreach ( $body as $sender ) {
-			if ( $from_name === sprintf( '%s <%s>', $sender->from->name, $sender->from->email ) ) {
+			if ( sprintf( '%s <%s>', $sender->from->name, $sender->from->email ) === $from_name ) {
 				$sender_id = $sender->id;
 				break;
 			}
 		}
 		$html_content = $this->get_content( $newsletter_id );
 
-		$cssToInlineStyles = new CssToInlineStyles();
-		$html_content      = $cssToInlineStyles->convert(
+		$css_to_inline_styles = new CssToInlineStyles();
+		$html_content         = $css_to_inline_styles->convert(
 			$html_content,
 			''
 		);
@@ -145,11 +150,11 @@ class Sendgrid implements Email_Provider {
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 
-		$request_body                                       = (object) [];
-		$request_body->name                                 = get_the_title( $newsletter_id );
-		$request_body->categories                           = [];
-		$request_body->email_config                         = (object) [];
-		$request_body->send_to                              = (object) [];
+		$request_body               = (object) [];
+		$request_body->name         = get_the_title( $newsletter_id );
+		$request_body->categories   = [];
+		$request_body->email_config = (object) [];
+		$request_body->send_to      = (object) [];
 		// $request_body->email_config->custom_unsubscribe_url = '';
 		$request_body->email_config->html_content           = $html_content;
 		$request_body->email_config->ip_pool                = null;
@@ -165,7 +170,7 @@ class Sendgrid implements Email_Provider {
 		$response = $sg->client->marketing()->singlesends()->post( $request_body );
 
 		return [
-			'response' => $response->body(),
+			'response'         => $response->body(),
 			'http_status_code' => $response->statusCode(),
 		];
 	}
@@ -180,17 +185,16 @@ class Sendgrid implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function send_campaign( string $campaign_id ): array|false {
-		$apiKey = getenv('SENDGRID_API_KEY');
 		$sg = $this->get_client();
 
 		try {
-			$response = $sg->client->marketing()->singlesends()->_($campaign_id)->schedule()->put( [ 'send_at' => 'now' ] );
+			$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->schedule()->put( [ 'send_at' => 'now' ] );
 			return [
 				'response'         => $response->body(),
 				'http_status_code' => $response->statusCode(),
 			];
-		} catch (Exception $ex) {
-			echo 'Caught exception: '.  $ex->getMessage();
+		} catch ( Exception $ex ) {
+			echo 'Caught exception: ' . $ex->getMessage();
 		}
 		return false;
 	}
@@ -207,15 +211,15 @@ class Sendgrid implements Email_Provider {
 	 * @todo: Get recipients, total opened, unique opened.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false {
-		$sg = $this->get_client();
-		$response = $sg->client->marketing()->singlesends()->_($campaign_id)->get();
+		$sg       = $this->get_client();
+		$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->get();
 		$body     = json_decode( $response->body() );
 		return [
 			'response'         => [
-				'Status' => $body->status,
-				'Name' => $body->name,
-				'Recipients' => 'N/A',
-				'TotalOpened' => 'N/A',
+				'Status'       => $body->status,
+				'Name'         => $body->name,
+				'Recipients'   => 'N/A',
+				'TotalOpened'  => 'N/A',
 				'UniqueOpened' => 'N/A',
 			],
 			'http_status_code' => $response->statusCode(),
@@ -268,13 +272,13 @@ class Sendgrid implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
-		$sendgrid = $this->get_client();
-		$request_body = (object) [];
+		$sendgrid               = $this->get_client();
+		$request_body           = (object) [];
 		$request_body->list_ids = [ $list_id ];
-		$user_object = ( object ) [];
-		$user_object->email = $email;
+		$user_object            = (object) [];
+		$user_object->email     = $email;
 		$request_body->contacts = [ $user_object ];
-		$response = $sendgrid->client->marketing()->contacts()->put( $request_body );
+		$response               = $sendgrid->client->marketing()->contacts()->put( $request_body );
 
 		return [
 			'response'         => $response->body(),
@@ -317,7 +321,7 @@ class Sendgrid implements Email_Provider {
 		$body = json_decode( $response->body() );
 
 		$senders = [];
-		foreach ($body as $sender) {
+		foreach ( $body as $sender ) {
 			$senders[] = sprintf( '%s <%s>', $sender->from->name, $sender->from->email );
 		}
 		return $senders;
@@ -352,7 +356,7 @@ class Sendgrid implements Email_Provider {
 		wp_set_current_user( 0 );
 
 		// Set up a new global query for the post.
-		$args = [
+		$args     = [
 			'p'         => $post_id,
 			'post_type' => 'nb_newsletter',
 		];

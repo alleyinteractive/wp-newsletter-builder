@@ -38,7 +38,6 @@ function action_wp_enqueue_scripts(): void {
  * A callback for the wp_newsletter_builder_enqueue_styles hook.
  */
 function action_newsletters_enqueue_styles(): void {
-	error_log( 'running action_newsletters_enqueue_styles' );
 	$blocks = [
 		'header',
 		'footer',

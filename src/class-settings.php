@@ -45,7 +45,7 @@ class Settings {
 	 * @return void
 	 */
 	public function register_fields(): void {
-		$fields   = [
+		$fields = [
 			'name'     => static::SETTINGS_KEY,
 			'children' => [
 				'from_email'      => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
@@ -190,6 +190,6 @@ class Settings {
 			return false;
 		}
 
-		return apply_filters( 'nb_from_names', $settings['from_names'] );
+		return apply_filters( 'wp_newsletter_builder_from_names', $settings['from_names'] );
 	}
 }

@@ -4,13 +4,13 @@ Contributors: alleyinteractive
 
 Tags: alleyinteractive, wp-newsletter-builder
 
-Stable tag: 0.3.6
+Stable tag: 0.3.8
 
-Requires at least: 6.2
+Requires at least: 6.3
 
-Tested up to: 6.4.1
+Tested up to: 6.5.2
 
-Requires PHP: 8.0
+Requires PHP: 8.1
 
 License: GPL v2 or later
 

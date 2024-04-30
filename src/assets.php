@@ -130,12 +130,20 @@ function action_enqueue_block_editor_assets(): void {
 		get_asset_version( 'editor' )
 	);
 	$settings = new Settings();
+	global $newsletter_builder_email_provider;
+	$uses_suppression_lists = false;
+
+	if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
+		$uses_suppression_lists = $newsletter_builder_email_provider->uses_suppression_lists();
+	}
+
 	wp_localize_script(
 		'wp-newsletter-builder-email-settings-editor-script',
 		'newsletterBuilder',
 		[
-			'fromNames' => $settings->get_from_names(),
-			'templates' => $template_map,
+			'fromNames'            => $settings->get_from_names(),
+			'templates'            => $template_map,
+			'usesSuppressionLists' => $uses_suppression_lists,
 		]
 	);
 }

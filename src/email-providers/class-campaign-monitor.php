@@ -50,7 +50,7 @@ class Campaign_Monitor implements Email_Provider {
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [
-					'api_key'            => new \Fieldmanager_TextField( __( 'API Key', 'wp-newsletter-builder' ) ),
+					'api_key'            => new \Fieldmanager_Password( __( 'API Key', 'wp-newsletter-builder' ) ),
 					'client_id'          => new \Fieldmanager_TextField( __( 'Client ID', 'wp-newsletter-builder' ) ),
 					'confirmation_email' => new \Fieldmanager_TextField( __( 'Confirmation Email', 'wp-newsletter-builder' ) ),
 				],
@@ -104,12 +104,13 @@ class Campaign_Monitor implements Email_Provider {
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
 	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null ): array|false {
+	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
 		// TODO: Move non-email provider code to the core plugin.
 		$settings = get_option( static::SETTINGS_KEY );
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
@@ -124,20 +125,6 @@ class Campaign_Monitor implements Email_Provider {
 			return false;
 		}
 
-		// Newsletter from name.
-		$nl_from_name = get_post_meta( $newsletter_id, 'nb_newsletter_from_name', true );
-
-		// If newsletter from name is not set try to fill from email type.
-		if ( empty( $nl_from_name ) ) {
-			$nl_email_type = get_post_meta( $newsletter_id, 'nb_newsletter_email_type', true );
-			$email_types   = get_option( 'nb_email_types' );
-			if ( is_array( $email_types ) ) {
-				$type_key = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
-				if ( false !== $type_key ) {
-					$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
-				}
-			}
-		}
 		$url = add_query_arg(
 			[
 				'post_type' => 'nb_newsletter',
@@ -156,7 +143,7 @@ class Campaign_Monitor implements Email_Provider {
 		$params = [
 			'Subject'    => get_post_meta( $newsletter->ID, 'nb_newsletter_subject', true ),
 			'Name'       => sprintf( '%s - Post %d - %s', $newsletter->post_title, $newsletter->ID, get_post_modified_time( 'Y-m-d H:i:s', false, $newsletter->ID ) ),
-			'FromName'   => $nl_from_name,
+			'FromName'   => $from_name,
 			'FromEmail'  => $settings['from_email'],
 			'ReplyTo'    => $settings['reply_to_email'],
 			'HtmlUrl'    => $url,
@@ -317,5 +304,32 @@ class Campaign_Monitor implements Email_Provider {
 			'response'         => $result->response,
 			'http_status_code' => $result->http_status_code,
 		];
+	}
+
+	/**
+	 * Whether the provider manages from names.
+	 *
+	 * @return boolean
+	 */
+	public function provider_manages_from_names(): bool {
+		return false;
+	}
+
+	/**
+	 * Whether or not the provider uses suppression lists.
+	 *
+	 * @return boolean
+	 */
+	public function uses_suppression_lists(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the suppression lists.
+	 *
+	 * @return mixed
+	 */
+	public function get_suppression_lists(): mixed {
+		return [];
 	}
 }

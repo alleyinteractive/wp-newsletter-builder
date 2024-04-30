@@ -40,6 +40,12 @@
       }
     }
   },
+  "nb_newsletter_suppression_group": {
+    "post_types": [
+      "nb_newsletter"
+    ],
+    "type": "string"
+  },
   "nb_newsletter_header_img": {
     "post_types": [
       "nb_newsletter"

@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import { TextControl, Spinner } from '@wordpress/components';
+import { TextControl, Spinner, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
 import { dispatch } from '@wordpress/data';
@@ -44,6 +44,12 @@ interface Option {
   label: string;
 }
 
+interface Window {
+  newsletterBuilder: {
+    usesSuppressionLists: boolean;
+  };
+}
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -61,7 +67,14 @@ export default function Edit() {
     nb_newsletter_email_type: emailtype,
     nb_newsletter_template: template,
     nb_newsletter_from_name: fromname,
+    nb_newsletter_suppression_group: suppressionGroup,
   } = meta;
+
+  const {
+    newsletterBuilder: {
+      usesSuppressionLists = false,
+    } = {},
+  } = (window as any as Window);
 
   const typeHandler = (newValue: string) => {
     setMeta({ nb_newsletter_email_type: newValue });
@@ -86,6 +99,8 @@ export default function Edit() {
   const [lists, setLists] = useState<ListResult[]>([]);
   const listArray = Array.isArray(list) ? list : [list];
 
+  const [suppressionLists, setSuppressionLists] = useState<ListResult[]>([]);
+
   const setSelectedLists = ((newValue: Array<Option>) => {
     const listIds = newValue.map((item: Option) => item.value);
     setMeta({ nb_newsletter_list: listIds });
@@ -107,6 +122,18 @@ export default function Edit() {
       setLists(response as any as ListResult[]);
     });
   }, [lists]);
+
+  useEffect(() => {
+    if (suppressionLists.length > 0) {
+      return;
+    }
+    apiFetch({ path: '/wp-newsletter-builder/v1/suppression-lists' }).then((response) => {
+      const newLists = response as any as ListResult[];
+      newLists.unshift({ Name: __('Select a suppression list', 'wp-newsletter-builder'), ListID: '' });
+
+      setSuppressionLists(newLists);
+    });
+  }, [suppressionLists]);
 
   return (
     <div {...useBlockProps()}>
@@ -154,6 +181,18 @@ export default function Edit() {
       ) : (
         /* @ts-ignore */
         <Spinner />
+      )}
+      {/* @ts-ignore */}
+      {usesSuppressionLists && suppressionLists.length > 0 ? (
+        <SelectControl
+          label={__('Suppression Group', 'wp-newsletter-builder')}
+          value={suppressionGroup}
+          options={suppressionLists.map((item) => ({ label: item.Name, value: item.ListID }))}
+          onChange={(newValue: string) => setMeta({ nb_newsletter_suppression_group: newValue })}
+        />
+      ) : (
+        /* @ts-ignore */
+        null
       )}
     </div>
   );

@@ -45,73 +45,78 @@ class Settings {
 	 * @return void
 	 */
 	public function register_fields(): void {
-		$settings = new \Fieldmanager_Group(
-			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-			[
-				'name'     => static::SETTINGS_KEY,
-				'children' => [
-					'from_email'      => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
-					'reply_to_email'  => new \Fieldmanager_TextField( __( 'Reply To Email', 'wp-newsletter-builder' ) ),
-					'from_names'      => new \Fieldmanager_TextField(
-						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-						[
-							'label'              => __( 'From Names', 'wp-newsletter-builder' ),
-							'limit'              => 0,
-							'add_more_label'     => __( 'Add From Name', 'wp-newsletter-builder' ),
-							'one_label_per_item' => false,
-						]
-					),
-					'footer_settings' => new \Fieldmanager_Group(
-						// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-						[
-							'label'       => __( 'Footer Settings', 'wp-newsletter-builder' ),
-							'collapsed'   => true,
-							'collapsible' => true,
-							'children'    => [
-								'facebook_url'  => new \Fieldmanager_Link(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label' => __( 'Facebook URL', 'wp-newsletter-builder' ),
-									]
-								),
-								'twitter_url'   => new \Fieldmanager_Link(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label' => __( 'Twitter URL', 'wp-newsletter-builder' ),
-									]
-								),
-								'instagram_url' => new \Fieldmanager_Link(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label' => __( 'Instagram URL', 'wp-newsletter-builder' ),
-									]
-								),
-								'youtube_url'   => new \Fieldmanager_Link(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label' => __( 'YouTube URL', 'wp-newsletter-builder' ),
-									]
-								),
-								'image'         => new \Fieldmanager_Media(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label'        => __( 'Footer Image', 'wp-newsletter-builder' ),
-										'preview_size' => 'medium',
-									]
-								),
-								'address'       => new \Fieldmanager_TextField(
-									// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
-									[
-										'label' => __( 'Company Address', 'wp-newsletter-builder' ),
-									]
-								),
-							],
-						]
-					),
-				],
-			]
-		);
-
+		$fields = [
+			'name'     => static::SETTINGS_KEY,
+			'children' => [
+				'from_email'      => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
+				'reply_to_email'  => new \Fieldmanager_TextField( __( 'Reply To Email', 'wp-newsletter-builder' ) ),
+				'from_names'      => new \Fieldmanager_TextField(
+					// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+					[
+						'label'              => __( 'From Names', 'wp-newsletter-builder' ),
+						'limit'              => 0,
+						'add_more_label'     => __( 'Add From Name', 'wp-newsletter-builder' ),
+						'one_label_per_item' => false,
+					]
+				),
+				'footer_settings' => new \Fieldmanager_Group(
+					// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+					[
+						'label'       => __( 'Footer Settings', 'wp-newsletter-builder' ),
+						'collapsed'   => true,
+						'collapsible' => true,
+						'children'    => [
+							'facebook_url'  => new \Fieldmanager_Link(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label' => __( 'Facebook URL', 'wp-newsletter-builder' ),
+								]
+							),
+							'twitter_url'   => new \Fieldmanager_Link(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label' => __( 'Twitter URL', 'wp-newsletter-builder' ),
+								]
+							),
+							'instagram_url' => new \Fieldmanager_Link(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label' => __( 'Instagram URL', 'wp-newsletter-builder' ),
+								]
+							),
+							'youtube_url'   => new \Fieldmanager_Link(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label' => __( 'YouTube URL', 'wp-newsletter-builder' ),
+								]
+							),
+							'image'         => new \Fieldmanager_Media(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label'        => __( 'Footer Image', 'wp-newsletter-builder' ),
+									'preview_size' => 'medium',
+								]
+							),
+							'address'       => new \Fieldmanager_TextField(
+								// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
+								[
+									'label' => __( 'Company Address', 'wp-newsletter-builder' ),
+								]
+							),
+						],
+					]
+				),
+			],
+		];
+		global $newsletter_builder_email_provider;
+		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
+			if ( $newsletter_builder_email_provider->provider_manages_from_names() ) {
+				unset( $fields['children']['from_email'] );
+				unset( $fields['children']['reply_to_email'] );
+				unset( $fields['children']['from_names'] );
+			}
+		}
+		$settings = new \Fieldmanager_Group( $fields );
 		$settings->activate_submenu_page();
 	}
 
@@ -185,6 +190,6 @@ class Settings {
 			return false;
 		}
 
-		return $settings['from_names'];
+		return apply_filters( 'wp_newsletter_builder_from_names', $settings['from_names'] );
 	}
 }

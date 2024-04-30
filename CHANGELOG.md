@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.8 - 2024-04-29
+
+- Update dependencies, bump PHP version to 8.1
+
 ## 0.3.7 - 2024-04-01
 
 - Adds phpstan package and fixes phpstan issues

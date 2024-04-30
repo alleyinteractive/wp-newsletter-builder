@@ -10,4 +10,4 @@ jobs:
     uses: alleyinteractive/.github/.github/workflows/built-release.yml@main
     with:
       composer_install: true
-      node: 16
+      node: 20

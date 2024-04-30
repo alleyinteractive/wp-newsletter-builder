@@ -6,7 +6,7 @@
  * Version: 0.3.8
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
- * Requires at least: 6.3
+ * Requires at least: 6.2
  * Tested up to: 6.5.2
  *
  * Text Domain: wp-newsletter-builder

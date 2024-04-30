@@ -6,7 +6,7 @@ Tags: alleyinteractive, wp-newsletter-builder
 
 Stable tag: 0.3.6
 
-Requires at least: 6.3
+Requires at least: 6.2
 
 Tested up to: 6.5.2
 

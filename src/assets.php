@@ -137,6 +137,14 @@ function action_enqueue_block_editor_assets(): void {
 		$uses_suppression_lists = $newsletter_builder_email_provider->uses_suppression_lists();
 	}
 
+	/**
+	 * Allow filtering of allowed post types available in the post picker.
+	 * 
+	 * @param array<string> $allowed_post_types The allowed post types. Defaults to `post`.
+	 * @return array<string> The filtered array of allowed post types.
+	 */
+	$allowed_post_types = apply_filters('wp_newsletter_builder_allowed_post_types', ['post'] );
+
 	wp_localize_script(
 		'wp-newsletter-builder-email-settings-editor-script',
 		'newsletterBuilder',
@@ -144,6 +152,7 @@ function action_enqueue_block_editor_assets(): void {
 			'fromNames'            => $settings->get_from_names(),
 			'templates'            => $template_map,
 			'usesSuppressionLists' => $uses_suppression_lists,
+			'allowedPostTypes'     => $allowed_post_types,
 		]
 	);
 }

@@ -64,14 +64,12 @@ The plugin allows filtering of post types available in the Gutenberg post picker
 
 For example, to allow a custom `podcast` post type to appear in the post picker, along with the default `post` post type:
 
-```javascript
-addFilter(
-  'wpNewsletterBuilder.allowedPostTypes',
-  'wp-newsletter-builder/post-picker',
-  (allowedPostTypes: string[]) => {
-    allowedPostTypes.push('podcast');
-    return allowedPostTypes;
-  },
+```php
+add_filter( 'wp_newsletter_builder_allowed_post_types',
+	function( array $allowed_post_types ) {
+    $allowed_post_types[] = 'page';
+    return $allowed_post_types;
+  }
 );
 ```
 

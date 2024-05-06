@@ -12,7 +12,6 @@ import {
   PanelRow,
   TextControl,
 } from '@wordpress/components';
-import { applyFilters } from '@wordpress/hooks';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -38,6 +37,19 @@ interface EditProps {
   },
   setAttributes: (attributes: {}) => void;
 }
+
+// Allow filtering of allowed post types. Defaults to post.
+interface Window {
+  newsletterBuilder: {
+    allowedPostTypes: Array<string>;
+  };
+}
+
+const {
+  newsletterBuilder: {
+    allowedPostTypes = ['post'],
+  } = {},
+} = (window as any as Window);
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -107,7 +119,7 @@ export default function Edit({
           {/* @ts-ignore */}
           <PostPicker
             onUpdate={handleSelect}
-            allowedTypes={applyFilters('wpNewsletterBuilder.allowedPostTypes', ['post']) as string[]} // Allow filtering of allowed post types. Defaults to post.
+            allowedTypes={allowedPostTypes}
             onReset={() => handleSelect(0)}
             params={{ after: cutoff.toISOString(), per_page: 20 }}
             title={__('Please select a post', 'wp-newsletter-builder')}

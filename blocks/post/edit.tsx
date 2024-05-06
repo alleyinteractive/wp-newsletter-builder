@@ -12,6 +12,7 @@ import {
   PanelRow,
   TextControl,
 } from '@wordpress/components';
+import { applyFilters } from '@wordpress/hooks';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -106,7 +107,7 @@ export default function Edit({
           {/* @ts-ignore */}
           <PostPicker
             onUpdate={handleSelect}
-            allowedTypes={['post']}
+            allowedTypes={applyFilters('wpNewsletterBuilder.allowedPostTypes') as string[] ?? ['post']} // Allow filtering of allowed post types.
             onReset={() => handleSelect(0)}
             params={{ after: cutoff.toISOString(), per_page: 20 }}
             title={__('Please select a post', 'wp-newsletter-builder')}

@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.10 - 2024-05-06
+
+- Removes instances of `@phpstan-ignore-next-line the Fieldmanager doc block is incorrect` which are unnecessary now that WordPress Fieldmanager doc blocks have been updated
+
 ## 0.3.9 - 2024-05-06
 
 - Adds `wp_newsletter_builder_allowed_post_types` filter for filtering post types that appear in the post picker

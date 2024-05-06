@@ -46,7 +46,6 @@ class Campaign_Monitor implements Email_Provider {
 	 */
 	public function register_fields(): void {
 		$settings = new \Fieldmanager_Group(
-			// @phpstan-ignore-next-line the Fieldmanager doc block is incorrect.
 			[
 				'name'     => static::SETTINGS_KEY,
 				'children' => [

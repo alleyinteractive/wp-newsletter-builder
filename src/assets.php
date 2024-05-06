@@ -143,7 +143,7 @@ function action_enqueue_block_editor_assets(): void {
 	 * @param array<string> $allowed_post_types The allowed post types. Defaults to `post`.
 	 * @return array<string> The filtered array of allowed post types.
 	 */
-	$allowed_post_types = apply_filters('wp_newsletter_builder_allowed_post_types', ['post'] );
+	$allowed_post_types = apply_filters( 'wp_newsletter_builder_allowed_post_types', [ 'post' ] );
 
 	wp_localize_script(
 		'wp-newsletter-builder-email-settings-editor-script',

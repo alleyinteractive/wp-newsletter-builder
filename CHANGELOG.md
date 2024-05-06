@@ -4,7 +4,7 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 
 ## 0.3.10 - 2024-05-06
 
-- Removes instances of `@phpstan-ignore-next-line the Fieldmanager doc block is incorrect` which are unnecessary now that WordPress Fieldmanager is doc blocks have been updated
+- Removes instances of `@phpstan-ignore-next-line the Fieldmanager doc block is incorrect` which are unnecessary now that WordPress Fieldmanager doc blocks have been updated
 
 ## 0.3.9 - 2024-05-06
 

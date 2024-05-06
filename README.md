@@ -67,7 +67,7 @@ For example, to allow a custom `podcast` post type to appear in the post picker,
 ```php
 add_filter( 'wp_newsletter_builder_allowed_post_types',
 	function( array $allowed_post_types ) {
-    $allowed_post_types[] = 'page';
+    $allowed_post_types[] = 'podcast';
     return $allowed_post_types;
   }
 );

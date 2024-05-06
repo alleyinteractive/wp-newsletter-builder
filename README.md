@@ -58,6 +58,20 @@ add_filter( 'wp_newsletter_builder_selected_provider',
 	fn( $provider ) => 'WP_Newsletter_Builder\Email_Providers\PROVIDER'
 );
 ```
+### Filtering Post Types Available in the Post Picker
+
+The plugin allows filtering of post types available in the Gutenberg post picker. The post picker appears in the `wp-newsletter-builder/post` block as a single post picker and in the `wp-newsletter-builder/section` block as a multiple post picker.
+
+For example, to allow a custom `podcast` post type to appear in the post picker, along with the default `post` post type:
+
+```php
+add_filter( 'wp_newsletter_builder_allowed_post_types',
+	function( array $allowed_post_types ) {
+    $allowed_post_types[] = 'podcast';
+    return $allowed_post_types;
+  }
+);
+```
 
 ## Testing
 

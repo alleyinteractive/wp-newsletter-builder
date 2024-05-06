@@ -107,7 +107,7 @@ export default function Edit({
           {/* @ts-ignore */}
           <PostPicker
             onUpdate={handleSelect}
-            allowedTypes={applyFilters('wpNewsletterBuilder.allowedPostTypes') as string[] ?? ['post']} // Allow filtering of allowed post types.
+            allowedTypes={applyFilters('wpNewsletterBuilder.allowedPostTypes', ['post']) as string[]} // Allow filtering of allowed post types. Defaults to post.
             onReset={() => handleSelect(0)}
             params={{ after: cutoff.toISOString(), per_page: 20 }}
             title={__('Please select a post', 'wp-newsletter-builder')}

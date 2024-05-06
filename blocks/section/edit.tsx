@@ -8,6 +8,7 @@ import { dispatch, select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, PanelRow } from '@wordpress/components';
 import { useEffect } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 
 import MultiplePostPicker from '@/components/multiplePostPicker';
 import PostPickerResult from '@/components/postPickerResult';
@@ -118,7 +119,7 @@ export default function Edit({
           <PanelRow>
             <MultiplePostPicker
               onUpdate={handleSelect}
-              allowedTypes={['post']}
+              allowedTypes={applyFilters('wpNewsletterBuilder.allowedPostTypes', ['post']) as string[]} // Allow filtering of allowed post types. Defaults to post.
               params={{ after: cutoff.toISOString(), per_page: 20 }}
               // @ts-ignore
               searchRender={PostPickerResult}

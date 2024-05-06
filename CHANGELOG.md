@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.9 - 2024-05-06
+
+- Adds `wpNewsletterBuilder.allowedPostTypes` filter for filtering post types that appear in the post picker
+
 ## 0.3.8 - 2024-04-29
 
 - Update dependencies, bump PHP version to 8.1

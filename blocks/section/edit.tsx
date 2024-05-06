@@ -32,6 +32,19 @@ export interface Block {
   }
 }
 
+// Allow filtering of allowed post types. Defaults to post.
+interface Window {
+  newsletterBuilder: {
+    allowedPostTypes: Array<string>;
+  };
+}
+
+const {
+  newsletterBuilder: {
+    allowedPostTypes = ['post'],
+  } = {},
+} = (window as any as Window);
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -118,7 +131,7 @@ export default function Edit({
           <PanelRow>
             <MultiplePostPicker
               onUpdate={handleSelect}
-              allowedTypes={['post']}
+              allowedTypes={allowedPostTypes}
               params={{ after: cutoff.toISOString(), per_page: 20 }}
               // @ts-ignore
               searchRender={PostPickerResult}

@@ -177,9 +177,9 @@ class Settings {
 	 * @return array<string>|false
 	 */
 	public function get_from_names(): array|false {
-		$settings = get_option( static::SETTINGS_KEY );
+		$settings = get_option( static::SETTINGS_KEY, [] );
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
-			return false;
+			$settings['from_names'] = [];
 		}
 
 		return apply_filters( 'wp_newsletter_builder_from_names', $settings['from_names'] );

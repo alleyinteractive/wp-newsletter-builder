@@ -164,11 +164,11 @@ class Sendgrid implements Email_Provider {
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 
-		$request_body               = (object) [];
-		$request_body->name         = get_the_title( $newsletter_id );
-		$request_body->categories   = [];
-		$request_body->email_config = (object) [];
-		$request_body->send_to      = (object) [];
+		$request_body                                       = (object) [];
+		$request_body->name                                 = get_the_title( $newsletter_id );
+		$request_body->categories                           = [];
+		$request_body->email_config                         = (object) [];
+		$request_body->send_to                              = (object) [];
 		$request_body->email_config->html_content           = $html_content;
 		$request_body->email_config->ip_pool                = null;
 		$request_body->email_config->plain_content          = $text_content;

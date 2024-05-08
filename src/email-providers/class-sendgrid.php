@@ -145,7 +145,7 @@ class Sendgrid implements Email_Provider {
 			return false;
 		}
 		foreach ( $body as $sender ) {
-			if ( sprintf( '%s <%s>', $sender->from->name, $sender->from->email ) === $from_name ) {
+			if ( sprintf( '%s (%s)', $sender->from->name, $sender->from->email ) === $from_name ) {
 				$sender_id = $sender->id;
 				break;
 			}
@@ -361,7 +361,7 @@ class Sendgrid implements Email_Provider {
 			return [];
 		}
 		foreach ( $body as $sender ) {
-			$senders[] = sprintf( '%s <%s>', $sender->from->name, $sender->from->email );
+			$senders[] = sprintf( '%s (%s)', $sender->from->name, $sender->from->email );
 		}
 		return $senders;
 	}

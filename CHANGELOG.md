@@ -2,6 +2,13 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.3.11 - 2024-05-09
+
+- Adds a `NewsletterSpinner` wrapper component for the `<Spinner />` component from `@wordpress/components`
+  - [see link to GitHub issue](https://github.com/WordPress/gutenberg/issues/61322)
+- Change `nb_newsletter_template` post meta from type `string` to type `number`
+- Change SendGrid Provider to send `suppression_group_id` and remove sending `custom_unsubscribe_url`
+
 ## 0.3.10 - 2024-05-06
 
 - Removes instances of `@phpstan-ignore-next-line the Fieldmanager doc block is incorrect` which are unnecessary now that WordPress Fieldmanager doc blocks have been updated

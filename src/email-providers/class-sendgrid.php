@@ -145,7 +145,7 @@ class Sendgrid implements Email_Provider {
 			return false;
 		}
 		foreach ( $body as $sender ) {
-			if ( sprintf( '%s <%s>', $sender->from->name, $sender->from->email ) === $from_name ) {
+			if ( sprintf( '%s (%s)', $sender->from->name, $sender->from->email ) === $from_name ) {
 				$sender_id = $sender->id;
 				break;
 			}
@@ -164,19 +164,18 @@ class Sendgrid implements Email_Provider {
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 
-		$request_body               = (object) [];
-		$request_body->name         = get_the_title( $newsletter_id );
-		$request_body->categories   = [];
-		$request_body->email_config = (object) [];
-		$request_body->send_to      = (object) [];
-		// $request_body->email_config->custom_unsubscribe_url = '';
+		$request_body                                       = (object) [];
+		$request_body->name                                 = get_the_title( $newsletter_id );
+		$request_body->categories                           = [];
+		$request_body->email_config                         = (object) [];
+		$request_body->send_to                              = (object) [];
 		$request_body->email_config->html_content           = $html_content;
 		$request_body->email_config->ip_pool                = null;
 		$request_body->email_config->plain_content          = $text_content;
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
+		$request_body->email_config->suppression_group_id   = (int) get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
 
 		$request_body->send_to->list_ids    = $list_ids;
 		$request_body->send_to->segment_ids = [];
@@ -362,7 +361,7 @@ class Sendgrid implements Email_Provider {
 			return [];
 		}
 		foreach ( $body as $sender ) {
-			$senders[] = sprintf( '%s <%s>', $sender->from->name, $sender->from->email );
+			$senders[] = sprintf( '%s (%s)', $sender->from->name, $sender->from->email );
 		}
 		return $senders;
 	}

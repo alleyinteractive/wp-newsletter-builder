@@ -9,7 +9,7 @@
     "post_types": [
       "nb_newsletter"
     ],
-    "type": "string"
+    "type": "number"
   },
   "nb_newsletter_from_name": {
     "post_types": [

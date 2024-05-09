@@ -61,7 +61,7 @@ class Email_Types {
 						 * @return array<string> The sanitized values.
 						 */
 						public function presave( $value, $current_value = [] ) {
-							return $current_value ?: [ wp_generate_uuid4() ];
+							return $current_value ?: wp_generate_uuid4();
 						}
 					},
 					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),

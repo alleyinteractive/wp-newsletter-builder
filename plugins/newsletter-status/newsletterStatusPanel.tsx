@@ -3,7 +3,8 @@ import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { Button, Spinner } from '@wordpress/components';
+import { Button } from '@wordpress/components';
+import NewsletterSpinner from '@/components/newsletterSpinner';
 
 interface Status {
   Bounced?: number;
@@ -99,7 +100,7 @@ export default function NewsletterStatusPanel() {
           </Button>
         </>
       ) : (
-        <Spinner />
+        <NewsletterSpinner />
       )}
     </PluginDocumentSettingPanel>
   );

@@ -6,7 +6,6 @@ import { PluginSidebar } from '@wordpress/edit-post';
 import {
   PanelBody,
   TextareaControl,
-  Spinner,
   CheckboxControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -17,6 +16,7 @@ import { usePostMeta } from '@alleyinteractive/block-editor-tools';
 import { MultiSelect } from 'react-multi-select-component';
 import { parse, serialize } from '@wordpress/blocks';
 
+import NewsletterSpinner from '@/components/newsletterSpinner';
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import SentNewsletter from './sent-newsletter';
 
@@ -191,7 +191,7 @@ function EmailSettings() {
             />
           </label>
         ) : (
-          <Spinner />
+          <NewsletterSpinner />
         )}
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl

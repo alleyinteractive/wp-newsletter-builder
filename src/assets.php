@@ -275,6 +275,13 @@ function load_scripts(): void {
 
 load_scripts();
 
+/**
+ * Remove the editor styles on the post edit screen for nb_newsletter post types.
+ *
+ * @param string $path The path to the file.
+ * @param string $file The file name.
+ * @return string|null The path to the file or null if we're on the post edit screen for a nb_newsletter post type.
+ */
 function remove_editor_styles_on_newsletters( $path, $file ) {
 	// If we're on the post edit screen for a nb_newsletter post type, remove the editor styles.
 	if ( is_admin() && 'nb_newsletter' === get_post_type() && 'theme.json' === $file ) {

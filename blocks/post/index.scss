@@ -13,10 +13,15 @@
   font-family: Georgia, serif;
 
   .newsletter-remove-post {
+    border-radius: 50%;
+    display: flex;
     margin: 0;
     position: absolute;
+    height: 36px;
     right: 3px;
     top: 3px;
+    place-content: center;
+    width: 36px;
     z-index: 1;
   }
 

@@ -5,15 +5,24 @@
  * which defaults to index.js, and thus the file created becomes index.css.
  * This is for styles used only in the editor.
  *
- * Replace them with your own styles or remove the file completely.
  */
 
 .wp-block-wp-newsletter-builder-two-up-post {
-  .block-editor-block-list__layout {
-    display: flex;
+  > .block-editor-inner-blocks {
+    .block-editor-block-list__layout {
+      display: flex;
+    }
+  }
 
-    > div {
-      width: 50%;
+  div[data-title="Newsletter Single Post"] {
+    .block-editor-inner-blocks{
+      display: flex;
+
+      // stylelint-disable selector-max-compound-selectors
+      .block-editor-block-list__layout {
+      display: flex;
+      flex-direction: column;
+      }
     }
   }
 }

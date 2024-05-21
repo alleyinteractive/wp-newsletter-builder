@@ -12,9 +12,12 @@
     width: 320px;
     width: calc(28000% - 167400px);
 
+    .block-editor-rich-text__editable {
+      font-family: Georgia, serif;
+    }
+
     // Some blocks require extra specificity.
     .block-editor-block-list__layout.is-root-container {
-      /* tbd */
       @import '@/scss/core-blocks/heading';
     }
 

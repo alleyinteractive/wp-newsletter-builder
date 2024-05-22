@@ -2,9 +2,6 @@
  * This adds enough specificity to override the core block-library styles while
  * allowing our custom blocks' styles to win.
  */
-html :where(.editor-styles-wrapper) {
-  @import '@/scss/core-blocks/heading';
-}
 
 // Block editor styles.
 .block-editor {
@@ -15,9 +12,13 @@ html :where(.editor-styles-wrapper) {
     width: 320px;
     width: calc(28000% - 167400px);
 
+    .block-editor-rich-text__editable {
+      font-family: Georgia, serif;
+    }
+
     // Some blocks require extra specificity.
     .block-editor-block-list__layout.is-root-container {
-      /* tbd */
+      @import '@/scss/core-blocks/heading';
     }
 
     // Block style imports.
@@ -25,5 +26,6 @@ html :where(.editor-styles-wrapper) {
     @import '@/scss/core-blocks/paragraph';
     @import '@/scss/core-blocks/button';
     @import '@/scss/core-blocks/separator';
+    @import '@/scss/core-blocks/list';
   }
 }

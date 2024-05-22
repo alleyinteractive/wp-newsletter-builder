@@ -9,12 +9,17 @@
 
 .wp-block-wp-newsletter-builder-two-up-post {
   > .block-editor-inner-blocks {
+    max-width: initial;
+    width: 100%;
+
     .block-editor-block-list__layout {
       display: flex;
     }
   }
 
   div[data-title="Newsletter Single Post"] {
+    flex: 1 0 50%;
+
     .block-editor-inner-blocks{
       display: flex;
 

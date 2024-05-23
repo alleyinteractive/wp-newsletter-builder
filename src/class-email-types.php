@@ -92,56 +92,6 @@ class Email_Types {
 							'options' => $from_names,
 						]
 					),
-					'safe_rtb'   => new \Fieldmanager_TextArea(
-						[
-							'label'    => __( 'SafeRTB Ad Tag', 'wp-newsletter-builder' ),
-							'sanitize' => function ( $value ) {
-								return $value;
-							},
-						],
-					),
-					'ad_tags'    => new \Fieldmanager_Group(
-						[
-							'label'          => __( 'Tags', 'wp-newsletter-builder' ),
-							'children'       => [
-								'tag_code' => new \Fieldmanager_TextArea(
-									[
-										'label'    => __( 'Ad Tag', 'wp-newsletter-builder' ),
-										'sanitize' => function ( $value ) {
-											return $value;
-										},
-									],
-								),
-							],
-							'limit'          => 0,
-							'add_more_label' => __( 'Add another tag', 'wp-newsletter-builder' ),
-						]
-					),
-					'roadblock'  => new \Fieldmanager_Checkbox(
-						[
-							'label' => __( 'Enable Ad Roadblock', 'wp-newsletter-builder' ),
-						]
-					),
-					'key_values' => new \Fieldmanager_Group(
-						[
-							'label'              => __( 'Key/Value Pairs', 'wp-newsletter-builder' ),
-							'children'           => [
-								'key'   => new \Fieldmanager_TextField(
-									[
-										'label' => __( 'Key', 'wp-newsletter-builder' ),
-									]
-								),
-								'value' => new \Fieldmanager_TextField(
-									[
-										'label' => __( 'Value', 'wp-newsletter-builder' ),
-									]
-								),
-							],
-							'limit'              => 0,
-							'add_more_label'     => __( 'Add another key/value pair', 'wp-newsletter-builder' ),
-							'one_label_per_item' => false,
-						]
-					),
 				],
 				'limit'          => 0,
 				'add_more_label' => __( 'Add Another Email Type', 'wp-newsletter-builder' ),

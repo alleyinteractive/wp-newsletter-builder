@@ -21,7 +21,6 @@ import {
  */
 import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
 
-import PostPickerResult from '@/components/postPickerResult';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -121,8 +120,6 @@ export default function Edit({
             params={{ per_page: 20 }}
             title={__('Please select a post', 'wp-newsletter-builder')}
             value={postId}
-            // @ts-ignore
-            searchRender={PostPickerResult}
           />
         </div>
       ) : null}

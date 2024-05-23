@@ -52,7 +52,7 @@ class Email_Types {
 			[
 				'name'           => static::SETTINGS_KEY,
 				'children'       => [
-					'uuid4'      => new class() extends \Fieldmanager_Hidden {
+					'uuid4'     => new class() extends \Fieldmanager_Hidden {
 						/**
 						 * Ensure that each group has a unique ID.
 						 *
@@ -64,14 +64,14 @@ class Email_Types {
 							return $current_value ?: wp_generate_uuid4();
 						}
 					},
-					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
-					'image'      => new \Fieldmanager_Media(
+					'label'     => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
+					'image'     => new \Fieldmanager_Media(
 						[
 							'label'        => __( 'Image', 'wp-newsletter-builder' ),
 							'preview_size' => 'full',
 						]
 					),
-					'templates'  => new \Fieldmanager_Checkboxes(
+					'templates' => new \Fieldmanager_Checkboxes(
 						'Checkboxes',
 						[
 							'datasource' => new \Fieldmanager_Datasource_Post(
@@ -86,7 +86,7 @@ class Email_Types {
 							),
 						]
 					),
-					'from_name'  => new \Fieldmanager_Select(
+					'from_name' => new \Fieldmanager_Select(
 						__( 'From Name', 'wp-newsletter-builder' ),
 						[
 							'options' => $from_names,

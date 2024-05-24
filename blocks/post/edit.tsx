@@ -21,7 +21,6 @@ import {
  */
 import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
 
-import PostPickerResult from '@/components/postPickerResult';
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
@@ -78,9 +77,6 @@ export default function Edit({
     [],
   );
 
-  const cutoff = new Date();
-  cutoff.setMonth(cutoff.getMonth() - 3);
-
   // TODO: Pass template and allowed blocks from PHP so they can be filtered.
   const MY_TEMPLATE = [
     ['wp-newsletter-builder/post-featured-image', {}],
@@ -121,11 +117,9 @@ export default function Edit({
             onUpdate={handleSelect}
             allowedTypes={allowedPostTypes}
             onReset={() => handleSelect(0)}
-            params={{ after: cutoff.toISOString(), per_page: 20 }}
+            params={{ per_page: 20 }}
             title={__('Please select a post', 'wp-newsletter-builder')}
             value={postId}
-            // @ts-ignore
-            searchRender={PostPickerResult}
           />
         </div>
       ) : null}

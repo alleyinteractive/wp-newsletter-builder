@@ -52,7 +52,7 @@ class Email_Types {
 			[
 				'name'           => static::SETTINGS_KEY,
 				'children'       => [
-					'uuid4'      => new class() extends \Fieldmanager_Hidden {
+					'uuid4'     => new class() extends \Fieldmanager_Hidden {
 						/**
 						 * Ensure that each group has a unique ID.
 						 *
@@ -64,14 +64,14 @@ class Email_Types {
 							return $current_value ?: wp_generate_uuid4();
 						}
 					},
-					'label'      => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
-					'image'      => new \Fieldmanager_Media(
+					'label'     => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
+					'image'     => new \Fieldmanager_Media(
 						[
 							'label'        => __( 'Image', 'wp-newsletter-builder' ),
 							'preview_size' => 'full',
 						]
 					),
-					'templates'  => new \Fieldmanager_Checkboxes(
+					'templates' => new \Fieldmanager_Checkboxes(
 						'Checkboxes',
 						[
 							'datasource' => new \Fieldmanager_Datasource_Post(
@@ -86,60 +86,10 @@ class Email_Types {
 							),
 						]
 					),
-					'from_name'  => new \Fieldmanager_Select(
+					'from_name' => new \Fieldmanager_Select(
 						__( 'From Name', 'wp-newsletter-builder' ),
 						[
 							'options' => $from_names,
-						]
-					),
-					'safe_rtb'   => new \Fieldmanager_TextArea(
-						[
-							'label'    => __( 'SafeRTB Ad Tag', 'wp-newsletter-builder' ),
-							'sanitize' => function ( $value ) {
-								return $value;
-							},
-						],
-					),
-					'ad_tags'    => new \Fieldmanager_Group(
-						[
-							'label'          => __( 'Tags', 'wp-newsletter-builder' ),
-							'children'       => [
-								'tag_code' => new \Fieldmanager_TextArea(
-									[
-										'label'    => __( 'Ad Tag', 'wp-newsletter-builder' ),
-										'sanitize' => function ( $value ) {
-											return $value;
-										},
-									],
-								),
-							],
-							'limit'          => 0,
-							'add_more_label' => __( 'Add another tag', 'wp-newsletter-builder' ),
-						]
-					),
-					'roadblock'  => new \Fieldmanager_Checkbox(
-						[
-							'label' => __( 'Enable Ad Roadblock', 'wp-newsletter-builder' ),
-						]
-					),
-					'key_values' => new \Fieldmanager_Group(
-						[
-							'label'              => __( 'Key/Value Pairs', 'wp-newsletter-builder' ),
-							'children'           => [
-								'key'   => new \Fieldmanager_TextField(
-									[
-										'label' => __( 'Key', 'wp-newsletter-builder' ),
-									]
-								),
-								'value' => new \Fieldmanager_TextField(
-									[
-										'label' => __( 'Value', 'wp-newsletter-builder' ),
-									]
-								),
-							],
-							'limit'              => 0,
-							'add_more_label'     => __( 'Add another key/value pair', 'wp-newsletter-builder' ),
-							'one_label_per_item' => false,
 						]
 					),
 				],

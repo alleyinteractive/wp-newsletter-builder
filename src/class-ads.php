@@ -17,6 +17,14 @@ class Ads {
 	 * @return void
 	 */
 	public function __construct() {
+		/**
+		 * Filter to enable/disable ads support.
+		 */
+		$support_ads = apply_filters( 'wp_newsletter_builder_enable_ads_support', true );
+		if ( ! $support_ads ) {
+			return;
+		}
+
 		add_filter( 'the_content', [ $this, 'insert_ads' ], 8, 1 );
 		add_filter( 'render_block_wp-newsletter-builder/ad', [ $this, 'render_ad' ], 10, 2 );
 		add_filter( 'wp_kses_allowed_html', [ $this, 'modify_allowed_html' ], 10, 2 );

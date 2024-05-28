@@ -64,7 +64,6 @@ global $newsletter_builder_email_provider;
 function main(): void {
 	new Ads();
 	new Block_Modifications();
-	new Breaking_Recipients();
 	new Email_Types();
 	new Settings();
 	new Media();

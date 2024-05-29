@@ -307,6 +307,7 @@ class WP_Newsletter_Builder {
 		if (
 			$query->is_main_query()
 			&& isset( $query->query_vars['post_type'] )
+			&& ! $query->is_admin
 			&& 'nb_newsletter' === $query->query_vars['post_type']
 		) {
 			$query->query['post_status']      = [ 'publish', 'draft' ];

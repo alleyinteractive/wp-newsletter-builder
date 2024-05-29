@@ -72,7 +72,7 @@ class Email_Types {
 						]
 					),
 					'templates' => new \Fieldmanager_Checkboxes(
-						'Checkboxes',
+						'Templates',
 						[
 							'datasource' => new \Fieldmanager_Datasource_Post(
 								[

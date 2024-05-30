@@ -12,25 +12,28 @@
  */
 
 .wp-block-wp-newsletter-builder-two-up-post {
-  display: flex;
-  flex-direction: row;
   max-width: 600px;
   width: 100%;
-  margin: 20px 0;
+
+  td {
+    vertical-align: top;
+  }
 
   div.wp-block-wp-newsletter-builder-post {
     max-width: 300px;
     padding: 0 10px;
-    width: 50%;
 
     img {
       height: auto;
       max-width: 300px;
       width: 100%;
     }
+  }
 
-    h3 {
-      margin-top: 20px;
+  @media screen and (max-width: 480px) {
+    td {
+      display: block;
+      width: 100%;
     }
   }
 }

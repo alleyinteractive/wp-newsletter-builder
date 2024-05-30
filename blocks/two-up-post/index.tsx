@@ -36,10 +36,14 @@ registerBlockType(
     save: () => {
       const blockProps = useBlockProps.save();
       return (
-        <div {...blockProps}>
-          {/* @ts-ignore */}
-          <InnerBlocks.Content />
-        </div>
+        <table {...blockProps}>
+          <tbody>
+            <tr>
+              {/* @ts-ignore */}
+              <InnerBlocks.Content />
+            </tr>
+          </tbody>
+        </table>
       );
     },
   },

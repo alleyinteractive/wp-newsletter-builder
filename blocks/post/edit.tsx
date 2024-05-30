@@ -124,12 +124,20 @@ export default function Edit({
         </div>
       ) : null}
       { postId || editPostType === 'nb_template' ? (
-        <InnerBlocks
-          // @ts-ignore
-          template={MY_TEMPLATE}
-          allowedBlocks={ALLOWED_BLOCKS}
-          templateLock={false}
-        />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <InnerBlocks
+                  // @ts-ignore
+                  template={MY_TEMPLATE}
+                  allowedBlocks={ALLOWED_BLOCKS}
+                  templateLock={false}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       ) : null}
       <InspectorControls>
         {/* @ts-ignore */}

@@ -23,31 +23,23 @@ import './index.scss';
  * @return {WPElement} Element to render.
  */
 const MY_TEMPLATE = [
-  ['wp-newsletter-builder/post', {
-    showContent: false,
-    showExcerpt: false,
-    showByline: false,
-    showCta: false,
-    order: ['image', 'title', 'excerpt', 'content', 'byline'],
-  }],
-  ['wp-newsletter-builder/post', {
-    showContent: false,
-    showExcerpt: false,
-    showByline: false,
-    showCta: false,
-    order: ['image', 'title', 'excerpt', 'content', 'byline'],
-  }],
+  ['wp-newsletter-builder/post-item', {}],
+  ['wp-newsletter-builder/post-item', {}],
 ];
 
 export default function Edit() {
   return (
-    <div {...useBlockProps()}>
-      <InnerBlocks
-        orientation="horizontal"
-        // @ts-ignore
-        template={MY_TEMPLATE}
-        templateLock="all"
-      />
-    </div>
+    <table {...useBlockProps()}>
+      <tbody>
+        <tr>
+          <InnerBlocks
+            orientation="horizontal"
+            // @ts-ignore
+            template={MY_TEMPLATE}
+            templateLock="all"
+          />
+        </tr>
+      </tbody>
+    </table>
   );
 }

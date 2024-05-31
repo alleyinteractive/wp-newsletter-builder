@@ -9,7 +9,7 @@
  * @package wp-newsletter-builder
  */
 
-$nb_settings         = get_option( 'nb_campaign_monitor_settings' );
+$nb_settings         = get_option( 'nb_settings' );
 $nb_footer_settings  = is_array( $nb_settings ) ? $nb_settings['footer_settings'] : [];
 $nb_facebook_url     = $nb_footer_settings['facebook_url'] ?? '';
 $nb_twitter_url      = $nb_footer_settings['twitter_url'] ?? '';

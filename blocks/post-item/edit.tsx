@@ -12,7 +12,8 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './index.scss';
+// Uncomment the following line if styles are added.
+// import './index.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -23,23 +24,24 @@ import './index.scss';
  * @return {WPElement} Element to render.
  */
 const MY_TEMPLATE = [
-  ['wp-newsletter-builder/post-item', {}],
-  ['wp-newsletter-builder/post-item', {}],
+  ['wp-newsletter-builder/post', {
+    showContent: false,
+    showExcerpt: false,
+    showByline: false,
+    showCta: false,
+    order: ['image', 'title', 'excerpt', 'content', 'byline'],
+  }],
 ];
 
 export default function Edit() {
   return (
-    <table {...useBlockProps()} role="presentation">
-      <tbody>
-        <tr>
-          <InnerBlocks
-            orientation="horizontal"
-            // @ts-ignore
-            template={MY_TEMPLATE}
-            templateLock="all"
-          />
-        </tr>
-      </tbody>
-    </table>
+    <td {...useBlockProps()}>
+      <InnerBlocks
+        orientation="horizontal"
+        // @ts-ignore
+        template={MY_TEMPLATE}
+        templateLock="all"
+      />
+    </td>
   );
 }

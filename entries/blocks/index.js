@@ -5,3 +5,5 @@ import '@/scss/core-blocks/image.scss';
 import '@/scss/core-blocks/paragraph.scss';
 import '@/scss/core-blocks/button.scss';
 import '@/scss/core-blocks/separator.scss';
+import '@/scss/core-blocks/list.scss';
+import '@/scss/core-blocks/typography.scss';

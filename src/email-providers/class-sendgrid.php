@@ -161,6 +161,20 @@ class Sendgrid implements Email_Provider {
 			''
 		);
 
+		/**
+		 * Since CSSToInlineStyles strips out {{}} tags, we are settings up some placeholders that
+		 * can be replaced after the conversion.
+		 *
+		 * @link https://github.com/tijsverkoyen/CssToInlineStyles/issues/163
+		 */
+		if ( str_contains( $html_content, 'href="#unsubscribe"' ) ) {
+			$html_content = str_replace( 'href="#unsubscribe"', 'href="{{unsubscribe}}"', $html_content );
+		}
+
+		if ( str_contains( $html_content, 'href="#unsubscribe_preferences"' ) ) {
+			$html_content = str_replace( 'href="#unsubscribe_preferences"', 'href="{{unsubscribe_preferences}}"', $html_content );
+		}
+
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 

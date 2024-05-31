@@ -29,7 +29,6 @@ const MY_TEMPLATE = [
 
 export default function Edit() {
   return (
-    // Role='presentation' tells AT table is for layout only so table semantics are ignored.
     <table {...useBlockProps()} role="presentation">
       <tbody>
         <tr>

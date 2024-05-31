@@ -34,7 +34,6 @@ registerBlockType(
     save: () => {
       const blockProps = useBlockProps.save();
       return (
-        // Role='presentation' tells AT table is for layout only so table semantics are ignored.
         <table {...blockProps} role="presentation">
           <tbody>
             <tr>

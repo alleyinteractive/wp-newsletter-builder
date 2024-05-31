@@ -162,7 +162,7 @@ class Sendgrid implements Email_Provider {
 		);
 
 		/**
-		 * Since CSSToInlineStyles strips out {{}} tags, we are settings up some placeholders that
+		 * Since CSSToInlineStyles strips out {{}} tags, we are settings up placeholders that
 		 * can be replaced after the conversion.
 		 *
 		 * @link https://github.com/tijsverkoyen/CssToInlineStyles/issues/163

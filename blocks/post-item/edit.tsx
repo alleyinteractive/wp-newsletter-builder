@@ -12,7 +12,8 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './index.scss';
+// Uncomment the following line if styles are added.
+// import './index.scss';
 
 /**
  * The edit function describes the structure of your block in the context of the

@@ -189,7 +189,9 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = (int) get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
+
+		// TODO: A suppression group id or a custom unsubscribe url should be options.
+		$request_body->email_config->custom_unsubscribe_url = home_url() . '/account';
 
 		$request_body->send_to->list_ids    = $list_ids;
 		$request_body->send_to->segment_ids = [];

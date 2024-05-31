@@ -70,8 +70,6 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 	<?php endif; ?>
 
 	<div class="wp-block-wp-newsletter-builder-footer__links">
-		<a href="#unsubscribe"><?php esc_html_e( 'Unsubscribe', 'wp-newsletter-builder' ); ?></a>
-		&nbsp;|&nbsp;
-		<a href="#unsubscribe_preferences"><?php esc_html_e( 'Preferences', 'wp-newsletter-builder' ); ?></a>
+		<a href="#unsubscribe_preferences"><?php esc_html_e( 'Manage Subscription Preferences', 'wp-newsletter-builder' ); ?></a>
 	</div>
 </div>

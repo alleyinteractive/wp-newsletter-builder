@@ -124,9 +124,11 @@ export default function Edit({
         </div>
       ) : null}
       { postId || editPostType === 'nb_template' ? (
-        <table>
+        // Role='presentation' tells AT table is for layout only so table semantics are ignored.
+        <table role="presentation">
           <tbody>
             <tr>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <td>
                 <InnerBlocks
                   // @ts-ignore

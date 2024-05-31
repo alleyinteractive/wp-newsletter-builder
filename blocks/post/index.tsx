@@ -34,10 +34,15 @@ registerBlockType(
     save: () => {
       const blockProps = useBlockProps.save();
       return (
-        <div {...blockProps}>
-          {/* @ts-ignore */}
-          <InnerBlocks.Content />
-        </div>
+        // Role='presentation' tells AT table is for layout only so table semantics are ignored.
+        <table {...blockProps} role="presentation">
+          <tbody>
+            <tr>
+              {/* @ts-ignore */}
+              <InnerBlocks.Content />
+            </tr>
+          </tbody>
+        </table>
       );
     },
   },

@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-newsletter-builder/divider",
+	"version": "0.1.0",
+	"title": "Divider",
+	"category": "design",
+	"icon": "editor-insertmore",
+	"description": "Divider with configurable height",
+	"textdomain": "divider",
+	"editorScript": "file:index.ts",
+	"editorStyle": "file:index.css",
+	"style": [
+		"file:style-index.css"
+	],
+	"render": "file:render.php",
+	"attributes": {
+		"elHeight": {
+			"type": "number",
+			"default": 8
+    }
+	}
+}

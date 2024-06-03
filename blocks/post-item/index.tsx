@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-registration/
  */
 import { registerBlockType } from '@wordpress/blocks';
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -13,7 +13,8 @@ import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-import './style.scss';
+// Uncomment the following line if styles are added.
+// import './style.scss';
 
 /**
  * Internal dependencies
@@ -30,18 +31,15 @@ registerBlockType(
   /* @ts-expect-error Provided types are inaccurate to the actual plugin API. */
   metadata,
   {
+    apiVersion: 2,
     edit,
     save: () => {
       const blockProps = useBlockProps.save();
       return (
-        <table {...blockProps} role="presentation">
-          <tbody>
-            <tr>
-              {/* @ts-ignore */}
-              <InnerBlocks.Content />
-            </tr>
-          </tbody>
-        </table>
+        <td {...blockProps}>
+          {/* @ts-ignore */}
+          <InnerBlocks.Content />
+        </td>
       );
     },
   },

@@ -259,6 +259,7 @@ class WP_Newsletter_Builder {
 			$lists = [ $lists ];
 		}
 		if ( empty( $lists ) ) {
+			error_log( 'No lists selected for newsletter' );
 			return;
 		}
 
@@ -293,6 +294,8 @@ class WP_Newsletter_Builder {
 				}
 			}
 			update_post_meta( $post_id, 'nb_newsletter_campaign_result', $result );
+		} else {
+			error_log( 'No global email provider set' );
 		}
 	}
 

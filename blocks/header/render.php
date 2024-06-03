@@ -13,8 +13,8 @@ if ( empty( $wp_newsletter_builder_block_post_id ) ) {
 	return;
 }
 
-$wp_newsletter_builder_block_image_id = get_post_meta( $wp_newsletter_builder_block_post_id, 'nb_newsletter_header_img', true );
-if ( empty( $wp_newsletter_builder_block_image_id ) || ! is_int( $wp_newsletter_builder_block_image_id ) ) {
+$wp_newsletter_builder_block_image_id = (int) get_post_meta( $wp_newsletter_builder_block_post_id, 'nb_newsletter_header_img', true );
+if ( empty( $wp_newsletter_builder_block_image_id ) ) {
 	return;
 }
 // TODO: Add a check to see if the image exists.

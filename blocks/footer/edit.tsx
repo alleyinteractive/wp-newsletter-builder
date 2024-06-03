@@ -142,11 +142,9 @@ export default function Edit({
           </>
         )}
       <div className="wp-block-wp-newsletter-builder-footer__links">
-        {/* @ts-ignore */}
-        <preferences>{__('Preferences', 'wp-newsletter-builder')}</preferences>
-        {' | '}
-        {/* @ts-ignore */}
-        <unsubscribe>{__('Unsubscribe', 'wp-newsletter-builder')}</unsubscribe>
+        <a href="#unsubscribe_preferences">
+          {__('Manage Subscription Preferences', 'wp-newsletter-builder')}
+        </a>
       </div>
     </div>
   );

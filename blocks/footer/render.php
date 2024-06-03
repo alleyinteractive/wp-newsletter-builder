@@ -9,7 +9,7 @@
  * @package wp-newsletter-builder
  */
 
-$nb_settings         = get_option( 'nb_campaign_monitor_settings' );
+$nb_settings         = get_option( 'nb_settings' );
 $nb_footer_settings  = is_array( $nb_settings ) ? $nb_settings['footer_settings'] : [];
 $nb_facebook_url     = $nb_footer_settings['facebook_url'] ?? '';
 $nb_twitter_url      = $nb_footer_settings['twitter_url'] ?? '';
@@ -70,8 +70,6 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 	<?php endif; ?>
 
 	<div class="wp-block-wp-newsletter-builder-footer__links">
-		<preferences><u><?php esc_html_e( 'Preferences', 'wp-newsletter-builder' ); ?></u></preferences>
-		&nbsp;|&nbsp;
-		<unsubscribe><u><?php esc_html_e( 'Unsubscribe', 'wp-newsletter-builder' ); ?></u></unsubscribe>
+		<a href="#unsubscribe_preferences"><?php esc_html_e( 'Manage Subscription Preferences', 'wp-newsletter-builder' ); ?></a>
 	</div>
 </div>

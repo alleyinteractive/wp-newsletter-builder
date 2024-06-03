@@ -161,6 +161,20 @@ class Sendgrid implements Email_Provider {
 			''
 		);
 
+		/**
+		 * Since CSSToInlineStyles strips out {{}} tags, we are settings up placeholders that
+		 * can be replaced after the conversion.
+		 *
+		 * @link https://github.com/tijsverkoyen/CssToInlineStyles/issues/163
+		 */
+		if ( str_contains( $html_content, 'href="#unsubscribe"' ) ) {
+			$html_content = str_replace( 'href="#unsubscribe"', 'href="{{unsubscribe}}"', $html_content );
+		}
+
+		if ( str_contains( $html_content, 'href="#unsubscribe_preferences"' ) ) {
+			$html_content = str_replace( 'href="#unsubscribe_preferences"', 'href="{{unsubscribe_preferences}}"', $html_content );
+		}
+
 		$text_content = wp_strip_all_tags( $html_content );
 		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 
@@ -175,7 +189,9 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = (int) get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
+
+		// TODO: A suppression group id or a custom unsubscribe url should be options.
+		$request_body->email_config->custom_unsubscribe_url = home_url() . '/account';
 
 		$request_body->send_to->list_ids    = $list_ids;
 		$request_body->send_to->segment_ids = [];

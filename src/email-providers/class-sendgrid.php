@@ -404,9 +404,6 @@ class Sendgrid implements Email_Provider {
 		$old_wp_query     = $wp_query;
 		$old_current_user = wp_get_current_user();
 
-		// Switch on themes.
-		add_filter( 'wp_using_themes', '__return_true' );
-
 		// Render anonymously.
 		wp_set_current_user( 0 );
 
@@ -420,7 +417,7 @@ class Sendgrid implements Email_Provider {
 		// Capture template output for the new query.
 		ob_start();
 		// @phpstan-ignore-next-line
-		include ABSPATH . WPINC . '/template-loader.php';
+		load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
 		$content = ob_get_clean();
 
 		// Restore globals.

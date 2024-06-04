@@ -417,7 +417,7 @@ class Sendgrid implements Email_Provider {
 		// Capture template output for the new query.
 		ob_start();
 		// @phpstan-ignore-next-line
-		include ABSPATH . WPINC . '/template-loader.php';
+		load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
 		$content = ob_get_clean();
 
 		// Restore globals.

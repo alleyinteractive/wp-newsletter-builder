@@ -404,9 +404,6 @@ class Sendgrid implements Email_Provider {
 		$old_wp_query     = $wp_query;
 		$old_current_user = wp_get_current_user();
 
-		// Switch on themes.
-		add_filter( 'wp_using_themes', '__return_true' );
-
 		// Render anonymously.
 		wp_set_current_user( 0 );
 

@@ -179,6 +179,7 @@ class Settings {
 	public function get_from_names(): array|false {
 		$settings = get_option( static::SETTINGS_KEY, [] );
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
+			// @phpstan-ignore-next-line
 			$settings['from_names'] = [];
 		}
 

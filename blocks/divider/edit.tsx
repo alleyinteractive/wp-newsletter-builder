@@ -5,6 +5,7 @@
  */
 import { __ } from '@wordpress/i18n';
 import {
+  ColorPicker,
   PanelBody,
   RangeControl,
 } from '@wordpress/components';
@@ -29,6 +30,7 @@ import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 interface EditProps {
   attributes: {
     elHeight: number;
+    elColor: string;
   },
   setAttributes: (attributes: {}) => void;
 }
@@ -44,13 +46,14 @@ interface EditProps {
 export default function Edit({
   attributes: {
     elHeight = 8,
+    elColor = '#000',
   },
   setAttributes,
 }: EditProps) {
   return (
     <>
       <div {...useBlockProps()}>
-        <div style={{ backgroundColor: '#000', height: `${elHeight}px` }} />
+        <div style={{ backgroundColor: elColor, height: `${elHeight}px` }} />
       </div>
       <InspectorControls>
         {/* @ts-ignore */}
@@ -67,6 +70,11 @@ export default function Edit({
             max={24}
             resetFallbackValue={8}
             allowReset
+          />
+          <h3>{__('Divider color', 'wp-newsletter-builder')}</h3>
+          <ColorPicker
+            color={elColor}
+            onChange={(color) => setAttributes({ elColor: color })}
           />
         </PanelBody>
       </InspectorControls>

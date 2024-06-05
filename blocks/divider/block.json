@@ -18,6 +18,10 @@
 		"elHeight": {
 			"type": "number",
 			"default": 8
-    }
+    },
+		"elColor": {
+			"type": "string",
+			"default": "#000"
+		}
 	}
 }

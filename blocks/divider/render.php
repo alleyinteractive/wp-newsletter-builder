@@ -10,5 +10,6 @@
  */
 
 $wp_newsletter_builder_divider_height = $attributes['elHeight'] ?? null;
+$wp_newsletter_builder_divider_color  = $attributes['elColor'] ?? null; 
 ?>
-<div style="height: <?php echo esc_attr( $wp_newsletter_builder_divider_height ); ?>px;background-color: #000;"></div>
+<div style="height: <?php echo esc_attr( $wp_newsletter_builder_divider_height ); ?>px;background-color: <?php echo esc_attr( $wp_newsletter_builder_divider_color ); ?>;"></div>

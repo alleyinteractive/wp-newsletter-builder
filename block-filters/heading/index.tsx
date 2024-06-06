@@ -1,10 +1,8 @@
-/**
- * WordPress dependencies
- */
 import { addFilter } from '@wordpress/hooks';
 
 /**
- * Adds border support to Column, Heading, and Paragraph blocks.
+ * Modifies supports for Heading block.
+ * https://nickdiego.com/how-to-modify-block-supports-using-client-side-filters/
  *
  * @param {Object} settings - The original block settings.
  * @param {string} name - The name of the block.
@@ -12,37 +10,34 @@ import { addFilter } from '@wordpress/hooks';
  * @returns {Object} The modified block settings with added border support.
  */
 // @ts-ignore
-function addBorderSupport(settings, name) {
+function modifyHeadingSupports(settings, name) {
   // Bail early if the block does not have supports.
   if (!settings?.supports) {
-    console.log('here');
     return settings;
   }
-
-  // Only apply to Column, Heading, and Paragraph blocks.
+  // Only apply to Heading blocks.
   if (
     name === 'core/heading'
-    || name === 'core/paragraph'
   ) {
-    console.log('what about here');
     return {
       ...settings,
       supports: Object.assign(settings.supports, {
-        __experimentalBorder: {
-          color: true,
-          style: true,
-          width: true,
-          radius: true,
-          __experimentalDefaultControls: {
-            color: false,
-            style: false,
-            width: false,
-            radius: false,
-          },
-        },
+        align: [],
+        anchor: false,
         color: {
           background: false,
           text: false,
+        },
+        customClassName: false,
+        spacing: false,
+        typography: {
+          __experimentalFontSize: false,
+          __experimentalLineHeight: false,
+          __experimentalLetterSpacing: true,
+          __experimentalFontFamily: false,
+          __experimentalFontWeight: false,
+          __experimentalFontStyle: false,
+          __experimentalTextTransform: true,
         },
       }),
     };
@@ -53,6 +48,6 @@ function addBorderSupport(settings, name) {
 
 addFilter(
   'blocks.registerBlockType',
-  'modify-block-supports/add-border-support',
-  addBorderSupport,
+  'wp-newsletter-builder/heading',
+  modifyHeadingSupports,
 );

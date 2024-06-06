@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds a separator to a block.
+ * Core heading block modifications.
  *
  * @package wp-newsletter-builder
  */
@@ -24,11 +24,11 @@ function register_heading_scripts(): void {
 add_action( 'init', __NAMESPACE__ . '\register_heading_scripts' );
 
 /**
- * Enqueue block editor assets for separator.
+ * Enqueue block editor assets for heading.
  */
 function action_enqueue_heading_assets(): void {
 	$post_type = get_edit_post_type();
-	if ( 'nb_newsletter' !== $post_type ) {
+	if ( ( 'nb_newsletter' !== $post_type ) && ( 'nb_template' !== $post_type ) ) {
 		return;
 	}
 	wp_enqueue_script( 'plugin-newsletter-heading' );

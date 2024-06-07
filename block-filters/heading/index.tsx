@@ -2,12 +2,11 @@ import { addFilter } from '@wordpress/hooks';
 
 /**
  * Modifies supports for Heading block.
- * https://nickdiego.com/how-to-modify-block-supports-using-client-side-filters/
  *
  * @param {Object} settings - The original block settings.
  * @param {string} name - The name of the block.
  *
- * @returns {Object} The modified block settings with added border support.
+ * @returns {Object} The modified block settings.
  */
 // @ts-ignore
 function modifyHeadingSupports(settings, name) {

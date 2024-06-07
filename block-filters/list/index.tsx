@@ -1,7 +1,7 @@
 import { addFilter } from '@wordpress/hooks';
 
 /**
- * Modifies supports for Paragraph block.
+ * Modifies supports for List block.
  * https://nickdiego.com/how-to-modify-block-supports-using-client-side-filters/
  *
  * @param {Object} settings - The original block settings.
@@ -10,14 +10,15 @@ import { addFilter } from '@wordpress/hooks';
  * @returns {Object} The modified block settings with added border support.
  */
 // @ts-ignore
-function modifyParagraphSupports(settings, name) {
+function modifyListSupports(settings, name) {
   // Bail early if the block does not have supports.
   if (!settings?.supports) {
     return settings;
   }
-  // Only apply to paragraph blocks.
+  // Only apply to list and list item blocks.
   if (
-    name === 'core/paragraph'
+    name === 'core/list'
+    || name === 'core/list-item'
   ) {
     return {
       ...settings,
@@ -48,6 +49,6 @@ function modifyParagraphSupports(settings, name) {
 
 addFilter(
   'blocks.registerBlockType',
-  'wp-newsletter-builder/paragraph',
-  modifyParagraphSupports,
+  'wp-newsletter-builder/list',
+  modifyListSupports,
 );

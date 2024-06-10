@@ -1,4 +1,5 @@
 import { addFilter } from '@wordpress/hooks';
+// import { createHigherOrderComponent } from '@wordpress/compose';
 
 /**
  * Modifies supports for Heading block.
@@ -28,6 +29,7 @@ function modifyHeadingSupports(settings, name) {
           text: false,
         },
         customClassName: false,
+        inserter: false,
         spacing: false,
         typography: {
           __experimentalFontSize: false,
@@ -41,7 +43,6 @@ function modifyHeadingSupports(settings, name) {
       }),
     };
   }
-
   return settings;
 }
 

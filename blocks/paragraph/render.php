@@ -8,7 +8,8 @@
  *
  * @package wp-newsletter-builder
  */
-$wp_newsletter_builder_paragraph_color  = $attributes['elColor'] ?? null;
+
+$wp_newsletter_builder_paragraph_color = $attributes['elColor'] ?? null;
 ?>
 <div style="color: <?php echo esc_attr( $wp_newsletter_builder_paragraph_color ); ?>;" ?>
 	<?php echo wp_kses_post( $content ?? '' ); ?>

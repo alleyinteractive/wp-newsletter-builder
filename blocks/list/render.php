@@ -10,6 +10,7 @@
  */
 $wp_newsletter_builder_list_color = $attributes['elColor'] ?? null;
 ?>
+
 <div style="color: <?php echo esc_attr( $wp_newsletter_builder_list_color ); ?>;" ?>
 	<?php echo wp_kses_post( $content ?? '' ); ?>
 </div>

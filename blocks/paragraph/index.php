@@ -17,6 +17,5 @@ function wp_newsletter_builder_paragraph_block_init() {
 	register_block_type(
 		__DIR__
 	);
-
 }
 add_action( 'init', 'wp_newsletter_builder_paragraph_block_init' );

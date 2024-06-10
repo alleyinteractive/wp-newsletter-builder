@@ -8,6 +8,7 @@
  *
  * @package wp-newsletter-builder
  */
+
 $wp_newsletter_builder_list_color = $attributes['elColor'] ?? null;
 ?>
 

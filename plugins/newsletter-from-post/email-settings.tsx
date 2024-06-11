@@ -9,7 +9,7 @@ import {
   CheckboxControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useMemo, useEffect, useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { usePostMeta } from '@alleyinteractive/block-editor-tools';
@@ -44,6 +44,8 @@ interface Window {
 
 function EmailSettings() {
   const [meta, setMeta] = usePostMeta();
+  const [lists, setLists] = useState<ListResult[]>([]); // eslint-disable-line
+
   const {
     nb_breaking_email_type: type = '',
     nb_breaking_template: template = '',
@@ -79,7 +81,15 @@ function EmailSettings() {
     };
   }, []);
 
-  const [lists, setLists] = useState<ListResult[]>([]); // eslint-disable-line
+  const options = useMemo(() => {
+    if (lists.length > 0) {
+      return [];
+    }
+
+    return lists
+      .map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
+  }, [lists]);
+
   const manualSubject = subject !== '';
   const manualPreview = preview !== '';
 
@@ -96,12 +106,6 @@ function EmailSettings() {
     setMeta({ nb_breaking_list: listIds });
   });
 
-  const listsToOptions = (rawLists: ListResult[]) => {
-    const output = rawLists.map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
-    return output;
-  };
-
-  const options = lists.length > 0 ? listsToOptions(lists) : [];
   const selected = options.filter((item: Option) => listArray.includes(item.value));
 
   useEffect(() => { // eslint-disable-line

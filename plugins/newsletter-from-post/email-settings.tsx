@@ -89,6 +89,8 @@ function EmailSettings() {
     return lists
       .map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
   }, [lists]);
+  const selected = useMemo(() => options
+    .filter((item: Option) => list.includes(item.value)), [list, options]);
 
   const manualSubject = subject !== '';
   const manualPreview = preview !== '';
@@ -105,8 +107,6 @@ function EmailSettings() {
     const listIds = newValue.map((item: Option) => item.value);
     setMeta({ nb_breaking_list: listIds });
   });
-
-  const selected = options.filter((item: Option) => listArray.includes(item.value));
 
   useEffect(() => { // eslint-disable-line
     if (lists.length > 0) {

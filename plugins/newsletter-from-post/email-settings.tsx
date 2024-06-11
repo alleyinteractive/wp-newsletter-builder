@@ -81,7 +81,7 @@ function EmailSettings() {
     };
   }, []);
 
-  const options = useMemo(() => {
+  const emailListOptions = useMemo(() => {
     if (lists.length === 0) {
       return [];
     }
@@ -89,8 +89,8 @@ function EmailSettings() {
     return lists
       .map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
   }, [lists]);
-  const selected = useMemo(() => options
-    .filter((item: Option) => list.includes(item.value)), [list, options]);
+  const selectedEmailList = useMemo(() => emailListOptions
+    .filter((item: Option) => list.includes(item.value)), [list, emailListOptions]);
 
   const manualSubject = subject !== '';
   const manualPreview = preview !== '';
@@ -185,8 +185,8 @@ function EmailSettings() {
             {__('Email List', 'wp-newsletter-builder')}
             <MultiSelect
               labelledBy={__('List', 'wp-newsletter-builder')}
-              value={selected}
-              options={options}
+              value={selectedEmailList}
+              options={emailListOptions}
               onChange={setSelectedLists}
               hasSelectAll={false}
               overrideStrings={{

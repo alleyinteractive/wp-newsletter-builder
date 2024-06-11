@@ -1,5 +1,18 @@
 import { usePostMeta } from '@alleyinteractive/block-editor-tools';
 
+export interface NewsletterMeta {
+  type: string;
+  template: string;
+  fromName: string;
+  subject: string;
+  preview: string;
+  list: string[];
+  image: number;
+  send: boolean;
+  content: string;
+  sentBreakingPostId: number[];
+}
+
 function useNewsletterMeta() {
   const [meta, setMeta] = usePostMeta();
 

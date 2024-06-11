@@ -11,6 +11,7 @@ import { createBlock, parse, serialize } from '@wordpress/blocks';
 import NewsletterSpinner from '@/components/newsletterSpinner';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
+import RequiredFields from '@/plugins/newsletter-from-post/components/required-fields';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import SentNewsletter from './components/sent-newsletter';
@@ -161,24 +162,7 @@ function EmailSettings() {
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
             disabled={disabled}
           />
-          {!meta.type ? (
-            <p style={{ color: 'red' }}>{__('Header Type is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!meta.template ? (
-            <p style={{ color: 'red' }}>{__('Template is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!meta.fromName ? (
-            <p style={{ color: 'red' }}>{__('From Name is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!meta.subject && !postTitle ? (
-            <p style={{ color: 'red' }}>{__('Subject is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!meta.preview && !postExcerpt ? (
-            <p style={{ color: 'red' }}>{__('Preview Text is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {meta.list.length === 0 ? (
-            <p style={{ color: 'red' }}>{__('Email List is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
+          <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
         </div>
       </PanelBody>
       {meta.sentBreakingPostId ? (

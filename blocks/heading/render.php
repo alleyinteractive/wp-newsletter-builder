@@ -9,7 +9,7 @@
  * @package wp-newsletter-builder
  */
 
-$wp_newsletter_builder_heading_color = $attributes['elColor'] ?? null;
+$wp_newsletter_builder_heading_color = $attributes['elColor'] ?? '';
 ?>
 <div style="color: <?php echo esc_attr( $wp_newsletter_builder_heading_color ); ?>;" ?>
 	<?php echo wp_kses_post( $content ?? '' ); ?>

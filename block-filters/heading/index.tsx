@@ -1,5 +1,4 @@
 import { addFilter } from '@wordpress/hooks';
-// import { createHigherOrderComponent } from '@wordpress/compose';
 
 /**
  * Modifies supports for Heading block.

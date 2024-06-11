@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wp-newsletter-builder/paragraph",
+	"version": "0.1.0",
+	"title": "Newsletter Paragraph",
+	"category": "text",
+	"icon": "editor-paragraph",
+	"description": "Paragraph wrapper that provides email-friendly enhancements",
+	"textdomain": "paragraph",
+	"editorScript": "file:index.ts",
+	"editorStyle": "file:index.css",
+	"style": [
+		"file:style-index.css"
+	],
+	"render": "file:render.php",
+	"attributes": {
+		"elColor": {
+			"type": "string",
+			"default": "#000"
+		}
+	}
+}

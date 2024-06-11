@@ -13,7 +13,7 @@ import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
-import SentNewsletter from './sent-newsletter';
+import SentNewsletter from './components/sent-newsletter';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;

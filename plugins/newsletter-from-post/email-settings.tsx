@@ -9,26 +9,15 @@ import {
   CheckboxControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useEffect, useState } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import apiFetch from '@wordpress/api-fetch';
 import { MultiSelect } from 'react-multi-select-component';
 import { parse, serialize } from '@wordpress/blocks';
 import NewsletterSpinner from '@/components/newsletterSpinner';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import useEmailLists, { Option } from '@/hooks/useEmailLists';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import SentNewsletter from './sent-newsletter';
-
-interface ListResult {
-  ListID: string;
-  Name: string;
-}
-
-interface Option {
-  value: string;
-  label: string;
-}
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -44,7 +33,7 @@ interface Window {
 
 function EmailSettings() {
   const { meta, setMeta } = useNewsletterMeta();
-  const [lists, setLists] = useState<ListResult[]>([]); // eslint-disable-line
+  const { emailListOptions, selectedEmailList } = useEmailLists();
 
   const {
     postId,
@@ -68,17 +57,6 @@ function EmailSettings() {
     };
   }, []);
 
-  const emailListOptions = useMemo(() => {
-    if (lists.length === 0) {
-      return [];
-    }
-
-    return lists
-      .map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
-  }, [lists]);
-  const selectedEmailList = useMemo(() => emailListOptions
-    .filter((item: Option) => meta.list.includes(item.value)), [meta.list, emailListOptions]);
-
   const manualSubject = meta.subject !== '';
   const manualPreview = meta.preview !== '';
 
@@ -95,15 +73,6 @@ function EmailSettings() {
     setMeta({ nb_breaking_list: listIds });
   });
 
-  useEffect(() => { // eslint-disable-line
-    if (lists.length > 0) {
-      return;
-    }
-    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
-    });
-  }, [lists]);
-
   const contentHandler = (html: string) => {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
@@ -118,8 +87,6 @@ function EmailSettings() {
     || (meta.subject === '' && postTitle === '')
     || (meta.preview === '' && postExcerpt === '')
     || meta.list.length === 0;
-
-  console.log('rendering', emailListOptions);
 
   return (
     <PluginSidebar
@@ -168,7 +135,7 @@ function EmailSettings() {
             />
           );
         })}
-        {lists.length > 0 ? (
+        {emailListOptions.length > 0 ? (
           <label
             htmlFor="wp-newsletter-builder-list"
           >

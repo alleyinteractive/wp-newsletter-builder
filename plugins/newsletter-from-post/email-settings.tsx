@@ -14,8 +14,8 @@ import { useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { MultiSelect } from 'react-multi-select-component';
 import { parse, serialize } from '@wordpress/blocks';
-import useNewsletterMeta from '@/plugins/newsletter-from-post/useNewsletterMeta';
 import NewsletterSpinner from '@/components/newsletterSpinner';
+import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import SentNewsletter from './sent-newsletter';

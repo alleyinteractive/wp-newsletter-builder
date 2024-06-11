@@ -3,15 +3,11 @@
  */
 
 import { PluginSidebar } from '@wordpress/edit-post';
-import {
-  PanelBody,
-  TextareaControl,
-  CheckboxControl,
-} from '@wordpress/components';
+import { CheckboxControl, PanelBody, TextareaControl, } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import { MultiSelect } from 'react-multi-select-component';
-import { parse, serialize } from '@wordpress/blocks';
+import { createBlock, parse, serialize } from '@wordpress/blocks';
 import NewsletterSpinner from '@/components/newsletterSpinner';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
@@ -76,7 +72,11 @@ function EmailSettings() {
   const contentHandler = (html: string) => {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
-    blocks[postIndex].attributes.postId = postId;
+
+    blocks[postIndex] = createBlock('wp-newsletter-builder/post', {
+      ...blocks[postIndex].attributes,
+      postId,
+    }, blocks[postIndex].innerBlocks);
 
     setMeta({ nb_breaking_content: serialize(blocks) });
   };

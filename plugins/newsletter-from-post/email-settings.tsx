@@ -82,7 +82,7 @@ function EmailSettings() {
   }, []);
 
   const options = useMemo(() => {
-    if (lists.length > 0) {
+    if (lists.length === 0) {
       return [];
     }
 

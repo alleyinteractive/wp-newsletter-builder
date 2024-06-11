@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/section",
+  "version": "0.1.0",
+  "title": "Newsletter Section",
+  "category": "design",
+  "icon": "layout",
+  "description": "Section to contain other blocks and allow for choosing multiple posts.",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "showNumbers": {
+      "type": "boolean",
+      "default": false
+    },
+    "heading": {
+      "type": "string",
+      "default": ""
+    },
+    "adAfter": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -13,8 +13,7 @@ import { InnerBlocks, useBlockProps } from '@wordpress/block-editor';
  *
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
-// Uncomment this line if you want to import a CSS file for this block.
-// import './style.scss';
+import './style.scss';
 
 /**
  * Internal dependencies

@@ -61,7 +61,7 @@ export default function Edit({
           />
         </PanelBody>
       </InspectorControls>
-      <div {...useBlockProps({ className: 'newsletter-list', style: listStyles })}>
+      <div {...useBlockProps({ className: 'wp-block-wp-newsletter-builder-list', style: listStyles })}>
         <InnerBlocks
           // @ts-ignore
           template={TEMPLATE}

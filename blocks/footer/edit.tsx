@@ -95,7 +95,7 @@ export default function Edit({
                   {facebookUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={facebookUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link facebook-icon" href={facebookUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
                         </a>
                       </span>
@@ -103,15 +103,15 @@ export default function Edit({
                   {twitterUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={twitterUrl}>
-                          <img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link twitter-icon" href={twitterUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="X" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
                   {instagramUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={instagramUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link instagram-icon" href={instagramUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
                         </a>
                       </span>
@@ -119,7 +119,7 @@ export default function Edit({
                   {youtubeUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={youtubeUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link youtube-icon" href={youtubeUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
                         </a>
                       </span>

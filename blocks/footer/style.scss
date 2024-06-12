@@ -27,15 +27,33 @@
   }
 
   &__link {
-    background-color: #D62827;
     border-radius: 50%;
-    color: #D62827;
     display: inline-block;
     height: 26px;
     max-height: 26px;
     text-decoration: underline;
     transition: opacity 0.1s ease-in;
     width: 26px;
+  }
+
+  .facebook-icon {
+    background-color: #1877F2;
+    color: #1877F2;
+  }
+
+  .twitter-icon {
+    background-color: #3CA1F2;
+    color: #3CA1F2;
+  }
+
+  .instagram-icon {
+    background-color: #E1306C;
+    color: #E1306C;
+  }
+
+  .youtube-icon {
+    background-color: #FF0000;
+    color: #FF0000;
   }
 }
 

@@ -31,6 +31,9 @@ interface Window {
 function EmailSettings() {
   const { meta, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
+  const manualSubject = meta.subject !== '';
+  const manualPreview = meta.preview !== '';
+  const listArray = Array.isArray(meta.list) ? meta.list : [meta.list];
 
   const {
     postId,
@@ -53,11 +56,6 @@ function EmailSettings() {
       postExcerpt: tempPostExcerpt,
     };
   }, []);
-
-  const manualSubject = meta.subject !== '';
-  const manualPreview = meta.preview !== '';
-
-  const listArray = Array.isArray(meta.list) ? meta.list : [meta.list];
 
   const {
     newsletterBuilder: {
@@ -82,7 +80,7 @@ function EmailSettings() {
     setMeta({ nb_breaking_content: serialize(blocks) });
   };
 
-  const disabled = meta.type === ''
+  const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
     || meta.fromName === ''
     || (meta.subject === '' && postTitle === '')
@@ -158,9 +156,9 @@ function EmailSettings() {
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl
             label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'wp-newsletter-builder') : __('Send Newsletter on Update', 'wp-newsletter-builder')}
-            checked={meta.send && !disabled}
+            checked={meta.send && !areRequiredFieldsSet}
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
-            disabled={disabled}
+            disabled={areRequiredFieldsSet}
           />
           <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
         </div>

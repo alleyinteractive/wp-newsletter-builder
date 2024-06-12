@@ -14,7 +14,7 @@ export interface Option {
 
 function useEmailLists() {
   const { meta } = useNewsletterMeta();
-  const [lists, setLists] = useState<ListResult[]>([]); // eslint-disable-line
+  const [lists, setLists] = useState<ListResult[]>([]);
 
   const emailListOptions = useMemo(() => {
     if (lists.length === 0) {

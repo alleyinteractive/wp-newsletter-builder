@@ -23,9 +23,9 @@ function useNewsletterMeta() {
     nb_breaking_subject: subject = '',
     nb_breaking_preview: preview = '',
     nb_breaking_list: list = [],
-    nb_breaking_header_img: image = 0, // eslint-disable-line
+    nb_breaking_header_img: image = 0,
     nb_breaking_should_send: send = false,
-    nb_breaking_content: content = '', // eslint-disable-line
+    nb_breaking_content: content = '',
     nb_newsletter_sent_breaking_post_id: sentBreakingPostId = [],
   } = meta;
 

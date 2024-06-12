@@ -30,7 +30,7 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
 					<a class="wp-block-wp-newsletter-builder-footer__social-links__link facebook-icon" href="<?php echo esc_url( $nb_facebook_url ); ?>">
 						<img
-							src="<?php echo esc_url( home_url() . '/wp-content/plugins/wp-newsletter-builder/images/facebook.png' ); ?>"
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/facebook.png' ); ?>"
 							alt="Facebook"
 							height="26"
 							width="26"
@@ -42,7 +42,7 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
 					<a class="wp-block-wp-newsletter-builder-footer__social-links__link twitter-icon" href="<?php echo esc_url( $nb_twitter_url ); ?>">
 						<img
-							src="<?php echo esc_url( home_url() . '/wp-content/plugins/wp-newsletter-builder/images/twitter.png' ); ?>"
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/twitter.png' ); ?>"
 							alt="Twitter"
 							height="26"
 							width="26"
@@ -54,7 +54,7 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
 					<a class="wp-block-wp-newsletter-builder-footer__social-links__link instagram-icon" href="<?php echo esc_url( $nb_instagram_url ); ?>">
 						<img
-							src="<?php echo esc_url( home_url() . '/wp-content/plugins/wp-newsletter-builder/images/instagram.png' ); ?>"
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/instagram.png' ); ?>"
 							alt="Instagram"
 							height="26"
 							width="26"
@@ -66,7 +66,7 @@ $nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
 					<a class="wp-block-wp-newsletter-builder-footer__social-links__link youtube-icon" href="<?php echo esc_url( $nb_youtube_url ); ?>">
 						<img
-							src="<?php echo esc_url( home_url() . '/wp-content/plugins/wp-newsletter-builder/images/youtube.png' ); ?>"
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/youtube.png' ); ?>"
 							alt="YouTube"
 							height="26"
 							width="26"

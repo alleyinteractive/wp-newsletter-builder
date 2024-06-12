@@ -3,7 +3,7 @@
  */
 
 import { PluginSidebar } from '@wordpress/edit-post';
-import { CheckboxControl, PanelBody, TextareaControl, } from '@wordpress/components';
+import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useSelect } from '@wordpress/data';
 import { MultiSelect } from 'react-multi-select-component';

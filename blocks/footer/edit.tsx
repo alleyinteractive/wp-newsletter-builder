@@ -4,7 +4,6 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import classNames from 'classnames';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -18,12 +17,6 @@ import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
-
-interface EditProps {
-  attributes: {
-    narrow_separator: boolean,
-  };
-}
 
 interface FooterSettings {
   facebook_url: string,
@@ -42,11 +35,7 @@ interface FooterSettings {
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({
-  attributes: {
-    narrow_separator: narrowSeparator = false,
-  },
-}: EditProps) {
+export default function Edit() {
   const [isLoading, setIsLoading] = useState(false);
   const [footerSettings, setFooterSettings] = useState<FooterSettings>();
 
@@ -79,10 +68,6 @@ export default function Edit({
 
   return (
     <div {...useBlockProps()}>
-      <hr className={
-        classNames('wp-block-separator', 'has-alpha-channel-opacity', { 'is-style-wide': !narrowSeparator })
-      }
-      />
       {isLoading
         ? (
           /* @ts-ignore */

@@ -18,12 +18,8 @@ $nb_youtube_url      = $nb_footer_settings['youtube_url'] ?? '';
 $nb_image_id         = $nb_footer_settings['image'] ?? 0;
 $nb_address          = $nb_footer_settings['address'] ?? '';
 $nb_has_social_links = ! empty( $nb_facebook_url ) || ! empty( $nb_twitter_url ) || ! empty( $nb_instagram_url ) || ! empty( $nb_youtube_url );
-$nb_narrow_separator = ! empty( $attributes['narrow_separator'] );
-$nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?> align="center">
-	<hr class="wp-block-separator has-alpha-channel-opacity <?php echo esc_attr( $nb_separator_class ); ?>" />
-
 	<?php if ( $nb_has_social_links ) : ?>
 		<div class="wp-block-wp-newsletter-builder-footer__social-links">
 			<?php if ( ! empty( $nb_facebook_url ) ) : ?>

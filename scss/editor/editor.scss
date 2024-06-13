@@ -16,6 +16,12 @@
       font-family: Georgia, serif;
     }
 
+    // Reset this style so that the editor matches the email client output.
+    // stylelint-disable-next-line selector-max-compound-selectors
+    :where(body .is-layout-flow) > * {
+      margin-block-start: 0;
+    }
+
     // Some blocks require extra specificity.
     .block-editor-block-list__layout.is-root-container {
       @import '@/scss/core-blocks/heading';

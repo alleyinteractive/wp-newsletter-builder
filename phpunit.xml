@@ -1,0 +1,11 @@
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer">
+  <testsuites>
+    <testsuite name="wp-newsletter-builder">
+      <directory prefix="test-" suffix=".php">./tests/</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

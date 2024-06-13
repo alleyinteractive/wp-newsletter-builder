@@ -58,7 +58,7 @@ class Email_Types {
 						 *
 						 * @param mixed         $value          Submitted value.
 						 * @param array<string> $current_value  The current values.
-						 * @return array<string> The sanitized values.
+						 * @return array<string>|string The sanitized values.
 						 */
 						public function presave( $value, $current_value = [] ) {
 							return $current_value ?: wp_generate_uuid4();

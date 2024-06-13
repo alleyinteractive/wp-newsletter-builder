@@ -47,7 +47,7 @@ export default function Edit({
     narrow_separator: narrowSeparator = false,
   },
 }: EditProps) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [footerSettings, setFooterSettings] = useState<FooterSettings>();
 
   const facebookUrl = footerSettings?.facebook_url ?? '';
@@ -58,14 +58,14 @@ export default function Edit({
   const address = footerSettings?.address ?? '';
 
   useEffect(() => {
-    if (footerSettings) {
-      setIsLoading(false);
-      return;
-    }
-    apiFetch({ path: '/wp-newsletter-builder/v1/footer_settings' }).then((response) => {
-      setFooterSettings(response as any as FooterSettings);
-    });
-  }, [footerSettings]);
+    setIsLoading(true);
+
+    apiFetch({ path: '/wp-newsletter-builder/v1/footer_settings' })
+      .then((response) => {
+        setFooterSettings(response as any as FooterSettings);
+        setIsLoading(false);
+      });
+  }, []);
 
   const {
     media = null,

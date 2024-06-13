@@ -18,39 +18,55 @@ $nb_youtube_url      = $nb_footer_settings['youtube_url'] ?? '';
 $nb_image_id         = $nb_footer_settings['image'] ?? 0;
 $nb_address          = $nb_footer_settings['address'] ?? '';
 $nb_has_social_links = ! empty( $nb_facebook_url ) || ! empty( $nb_twitter_url ) || ! empty( $nb_instagram_url ) || ! empty( $nb_youtube_url );
-$nb_narrow_separator = ! empty( $attributes['narrow_separator'] );
-$nb_separator_class  = $nb_narrow_separator ? '' : 'is-style-wide';
 ?>
 <div <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?> align="center">
-	<hr class="wp-block-separator has-alpha-channel-opacity <?php echo esc_attr( $nb_separator_class ); ?>" />
-
 	<?php if ( $nb_has_social_links ) : ?>
 		<div class="wp-block-wp-newsletter-builder-footer__social-links">
 			<?php if ( ! empty( $nb_facebook_url ) ) : ?>
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_facebook_url ); ?>">
-						<img src="/wp-content/plugins/wp-newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link facebook-icon" href="<?php echo esc_url( $nb_facebook_url ); ?>">
+						<img
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/facebook.png' ); ?>"
+							alt="Facebook"
+							height="26"
+							width="26"
+						/>
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_twitter_url ) ) : ?>
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_twitter_url ); ?>">
-						<img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link twitter-icon" href="<?php echo esc_url( $nb_twitter_url ); ?>">
+						<img
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/twitter.png' ); ?>"
+							alt="Twitter"
+							height="26"
+							width="26"
+						/>
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_instagram_url ) ) : ?>
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_instagram_url ); ?>">
-						<img src="/wp-content/plugins/wp-newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link instagram-icon" href="<?php echo esc_url( $nb_instagram_url ); ?>">
+						<img
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/instagram.png' ); ?>"
+							alt="Instagram"
+							height="26"
+							width="26"
+						/>
 					</a>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $nb_youtube_url ) ) : ?>
 				<span class="wp-block-wp-newsletter-builder-footer__social-links__item">
-					<a class="wp-block-wp-newsletter-builder-footer__social-links__link" href="<?php echo esc_url( $nb_youtube_url ); ?>">
-						<img src="/wp-content/plugins/wp-newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
+					<a class="wp-block-wp-newsletter-builder-footer__social-links__link youtube-icon" href="<?php echo esc_url( $nb_youtube_url ); ?>">
+						<img
+							src="<?php echo esc_url( site_url() . '/wp-content/plugins/wp-newsletter-builder/images/youtube.png' ); ?>"
+							alt="YouTube"
+							height="26"
+							width="26"
+						/>
 					</a>
 				</span>
 			<?php endif; ?>

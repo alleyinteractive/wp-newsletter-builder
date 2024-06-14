@@ -62,7 +62,7 @@
     "post_types": [
       "post"
     ],
-    "type": "string"
+    "type": "number"
   },
   "nb_breaking_from_name": {
     "post_types": [

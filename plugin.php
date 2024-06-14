@@ -49,10 +49,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/src/assets.php';
 require_once __DIR__ . '/src/meta.php';
 require_once __DIR__ . '/src/utils.php';
-require_once __DIR__ . '/block-filters/separator/index.php';
+require_once __DIR__ . '/block-filters/button/index.php';
 require_once __DIR__ . '/block-filters/heading/index.php';
-require_once __DIR__ . '/block-filters/paragraph/index.php';
 require_once __DIR__ . '/block-filters/list/index.php';
+require_once __DIR__ . '/block-filters/paragraph/index.php';
+require_once __DIR__ . '/block-filters/separator/index.php';
 require_once __DIR__ . '/plugins/newsletter-from-post/index.php';
 require_once __DIR__ . '/plugins/newsletter-status/index.php';
 

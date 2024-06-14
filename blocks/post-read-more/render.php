@@ -27,7 +27,7 @@ $wp_newsletter_builder_post_permalink = (string) get_the_permalink();
 		<w:anchorlock/>
 		<center>
 	<![endif]-->
-	<a class="wp-element-button" href="<?php echo esc_url( $wp_newsletter_builder_post_permalink ); ?>">
+	<a class="read-more-button" href="<?php echo esc_url( $wp_newsletter_builder_post_permalink ); ?>">
 		<?php echo esc_html( $wp_newsletter_builder_read_more_text ); ?>
 	</a>
 	<!--[if mso]>

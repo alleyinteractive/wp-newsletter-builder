@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
 import { ColorPicker, PanelBody } from '@wordpress/components';
-import useInnerBlockAttributes from '@/hooks/use-inner-blocks-attributes';
+import useInnerBlockAttributes from '@/hooks/useInnerBlocksAttributes';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.

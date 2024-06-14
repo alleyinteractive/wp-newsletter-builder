@@ -48,10 +48,10 @@ export default function Edit({
   const innerWidth = innerBlockAttributes[0]?.width;
   const buttonStyles = {
     backgroundColor: bgColor,
-    color: textColor,
     borderRadius: radius,
-    width: btnWidth,
+    color: textColor,
     margin: '0 auto',
+    width: btnWidth,
   };
 
   useEffect(() => {

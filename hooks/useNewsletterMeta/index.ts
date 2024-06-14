@@ -2,7 +2,7 @@ import { usePostMeta } from '@alleyinteractive/block-editor-tools';
 
 export interface NewsletterMeta {
   type: string;
-  template: string;
+  template: number;
   fromName: string;
   subject: string;
   preview: string;
@@ -18,7 +18,7 @@ function useNewsletterMeta() {
 
   const {
     nb_breaking_email_type: type = '',
-    nb_breaking_template: template = '',
+    nb_breaking_template: template = 0,
     nb_breaking_from_name: fromName = '',
     nb_breaking_subject: subject = '',
     nb_breaking_preview: preview = '',

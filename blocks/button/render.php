@@ -15,6 +15,6 @@ $wp_newsletter_builder_button_radius   = $attributes['radius'] ?? '';
 $wp_newsletter_builder_button_width    = $attributes['btnWidth'] ?? '';
 ?>
 
-<div style="margin: 0 auto; width: <?php echo esc_attr( $wp_newsletter_builder_button_width ); ?>; color: <?php echo esc_attr( $wp_newsletter_builder_button_color ); ?>; background-color: <?php echo esc_attr( $wp_newsletter_builder_button_bg_color ); ?>; border-radius: <?php echo esc_attr( $wp_newsletter_builder_button_radius ); ?>">	
+<div style="margin: 0 auto; width: <?php echo esc_attr( $wp_newsletter_builder_button_width ); ?>; color: <?php echo esc_attr( $wp_newsletter_builder_button_color ); ?>; background-color: <?php echo esc_attr( $wp_newsletter_builder_button_bg_color ); ?>; border-radius: <?php echo esc_attr( $wp_newsletter_builder_button_radius ); ?>">
 	<?php echo wp_kses_post( $content ?? '' ); ?>
 </div>

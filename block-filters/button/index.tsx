@@ -1,7 +1,7 @@
 import { addFilter } from '@wordpress/hooks';
 
 /**
- * Modifies supports for Heading block.
+ * Modifies supports for Button and Buttons blocks.
  *
  * @param {Object} settings - The original block settings.
  * @param {string} name - The name of the block.

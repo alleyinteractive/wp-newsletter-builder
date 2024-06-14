@@ -23,7 +23,6 @@ import useInnerBlockAttributes from '@/hooks/useInnerBlocksAttributes';
  */
 interface EditProps {
   attributes: {
-    align?: 'center' | 'left' | 'right';
     bgColor?: string;
     btnWidth?: string,
     radius?: string,

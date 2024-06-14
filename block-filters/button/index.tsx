@@ -9,7 +9,7 @@ import { addFilter } from '@wordpress/hooks';
  * @returns {Object} The modified block settings.
  */
 // @ts-ignore
-function modifyHeadingSupports(settings, name) {
+function modifyButtonSupports(settings, name) {
   // Bail early if the block does not have supports.
   if (!settings?.supports) {
     return settings;
@@ -62,6 +62,6 @@ function modifyHeadingSupports(settings, name) {
 
 addFilter(
   'blocks.registerBlockType',
-  'wp-newsletter-builder/heading',
-  modifyHeadingSupports,
+  'wp-newsletter-builder/button',
+  modifyButtonSupports,
 );

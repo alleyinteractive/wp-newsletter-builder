@@ -35,7 +35,7 @@ add_action( 'init', __NAMESPACE__ . '\register_pre_publish_scripts' );
  */
 function action_enqueue_pre_publish_assets(): void {
 	$post_type = get_edit_post_type();
-	if ( 'nb_template' !== $post_type ) {
+	if ( 'nb_newsletter' !== $post_type ) {
 		return;
 	}
 	wp_enqueue_script( 'plugin-pre-publish-checks' );

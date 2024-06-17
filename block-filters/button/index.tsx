@@ -1,4 +1,6 @@
 import { addFilter } from '@wordpress/hooks';
+import domReady from '@wordpress/dom-ready';
+import { unregisterBlockStyle } from '@wordpress/blocks';
 
 /**
  * Modifies supports for Button and Buttons blocks.
@@ -65,3 +67,6 @@ addFilter(
   'wp-newsletter-builder/button',
   modifyButtonSupports,
 );
+
+// @ts-ignore
+domReady(() => { unregisterBlockStyle('core/button', ['fill', 'outline']); });

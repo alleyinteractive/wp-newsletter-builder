@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/two-up-post",
+  "version": "0.1.0",
+  "title": "Two Up Newsletter Post",
+  "category": "design",
+  "icon": "editor-table",
+  "description": "Displays two posts, side by side",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php"
+}

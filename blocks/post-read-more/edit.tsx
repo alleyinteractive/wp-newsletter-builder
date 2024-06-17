@@ -32,7 +32,7 @@ export default function Edit({
     <div {...useBlockProps({ className: 'newsletter-read-more has-text-align-center' })}>
       <RichText
         tagName="span"
-        className="wp-element-button"
+        className="read-more-button"
         value={buttonText}
         onChange={(value) => setAttributes({ readMoreText: value })}
       />

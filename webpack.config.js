@@ -24,11 +24,12 @@ module.exports = (env, { mode }) => ({
           return acc;
         }, {
           // All other custom entry points can be included here.
-          'wp-newsletter-builder-separator/index': './block-filters/separator',
+          'wp-newsletter-builder-button/index': './block-filters/button',
           'wp-newsletter-builder-heading/index': './block-filters/heading',
           'wp-newsletter-builder-image/index': './block-filters/image',
-          'wp-newsletter-builder-paragraph/index': './block-filters/paragraph',
           'wp-newsletter-builder-list/index': './block-filters/list',
+          'wp-newsletter-builder-paragraph/index': './block-filters/paragraph',
+          'wp-newsletter-builder-separator/index': './block-filters/separator',
           'wp-newsletter-builder-from-post/index': './plugins/newsletter-from-post',
           'newsletter-status/index': './plugins/newsletter-status',
         }),

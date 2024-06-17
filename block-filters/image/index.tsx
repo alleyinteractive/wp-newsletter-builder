@@ -30,9 +30,6 @@ function modifyImageSupports(settings, name) {
         align: false,
         alignWide: false,
         customClassName: false,
-        dimensions: {
-          defaultAspectRatios: false,
-        },
         filter: {
           duotone: false,
         },
@@ -47,7 +44,7 @@ function modifyImageSupports(settings, name) {
             width: false,
           },
         },
-        interactivity: false,
+        shadow: false,
       }),
     };
   }

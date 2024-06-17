@@ -22,9 +22,13 @@ function modifyImageSupports(settings, name) {
   ) {
     return {
       ...settings,
+      attributes: Object.assign(settings.attributes, {
+        allowResize: { type: 'boolean', default: false },
+      }),
       supports: Object.assign(settings.supports, {
         anchor: false,
-        align: ['full'],
+        align: false,
+        alignWide: false,
         customClassName: false,
         dimensions: {
           defaultAspectRatios: false,
@@ -43,6 +47,7 @@ function modifyImageSupports(settings, name) {
             width: false,
           },
         },
+        interactivity: false,
       }),
     };
   }

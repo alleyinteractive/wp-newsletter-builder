@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 function PrePublishPanel() {
   // @ts-ignore
   const postTitle = useSelect((select) => select('core/editor').getEditedPostAttribute('title'));
-  const isTitleOk = postTitle.length > 0;
+  const isTitleOk = postTitle.trim().length > 0;
 
   const { lockPostSaving, unlockPostSaving } = useDispatch('core/editor');
   const { createWarningNotice, removeNotice } = useDispatch('core/notices');

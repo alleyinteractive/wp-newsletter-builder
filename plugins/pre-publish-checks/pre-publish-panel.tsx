@@ -23,7 +23,7 @@ function PrePublishPanel() {
 
   return (
     <PluginPrePublishPanel
-      title={__('Required Fields', 'wp-newsletter-builder')}
+      title={__('Newsletter Publish Requirements', 'wp-newsletter-builder')}
       initialOpen
     >
       <p>

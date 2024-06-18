@@ -3,7 +3,7 @@
  * Plugin Name: Newsletter Builder
  * Plugin URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Description: Interface to manage email newsletters
- * Version: 0.3.23
+ * Version: 0.3.24
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 6.2
@@ -51,6 +51,7 @@ require_once __DIR__ . '/src/meta.php';
 require_once __DIR__ . '/src/utils.php';
 require_once __DIR__ . '/block-filters/button/index.php';
 require_once __DIR__ . '/block-filters/heading/index.php';
+require_once __DIR__ . '/block-filters/image/index.php';
 require_once __DIR__ . '/block-filters/list/index.php';
 require_once __DIR__ . '/block-filters/paragraph/index.php';
 require_once __DIR__ . '/block-filters/separator/index.php';

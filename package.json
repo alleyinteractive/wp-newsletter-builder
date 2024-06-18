@@ -28,6 +28,7 @@
     "prestylelint": "check-node-version --package",
     "pretest:watch": "check-node-version --package",
     "pretest": "check-node-version --package",
+    "release": "npx @alleyinteractive/create-release@latest",
     "start": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks",
     "start:hot": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks --hot",
     "stylelint:fix": "stylelint --fix \"**/*.scss\"",
@@ -105,7 +106,7 @@
     "react-dom": "18.3.1",
     "react-easy-sort": "^1.6.0",
     "react-multi-select-component": "^4.3.4",
-    "uuid": "^9.0.1",
+    "uuid": "^10.0.0",
     "wp-types": "^3.65.0"
   },
   "devDependencies": {

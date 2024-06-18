@@ -5,7 +5,7 @@
 	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer">
   <testsuites>
     <testsuite name="wp-newsletter-builder">
-      <directory prefix="test-" suffix=".php">./tests/</directory>
+      <directory suffix="Test.php">./tests/</directory>
     </testsuite>
   </testsuites>
 </phpunit>

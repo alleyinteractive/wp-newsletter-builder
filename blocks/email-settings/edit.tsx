@@ -8,10 +8,14 @@ import { BlockInstance, parse } from '@wordpress/blocks';
 import { useBlockProps } from '@wordpress/block-editor';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
-
 import usePostMeta from '../../hooks/usePostMeta';
 
 import './index.scss';
+
+interface BlockEditor {
+  getBlocksByName: (attribute: string) => string[];
+  getBlocksByClientId: (attribute: string) => BlockInstance[];
+}
 
 interface ListResult {
   ListID: string;
@@ -41,6 +45,14 @@ export default function Edit() {
     nb_newsletter_suppression_group: suppressionGroup,
   } = meta;
 
+  const contentController = useSelect((select) => {
+    const { getBlocksByName, getBlocksByClientId } = select('core/block-editor') as BlockEditor;
+    return {
+      getEmailSettingsBlocks: () => getBlocksByName('wp-newsletter-builder/email-settings'),
+      getBlocksByClientId,
+    };
+  }, []);
+
   const {
     newsletterBuilder: {
       usesSuppressionLists = false,
@@ -64,7 +76,22 @@ export default function Edit() {
   };
 
   const contentHandler = (content: string) => {
-    dispatch('core/block-editor').resetBlocks(parse(content));
+    const emailSettingsBlockIds = contentController.getEmailSettingsBlocks();
+    const emailSettingsBlockInstances = contentController
+      .getBlocksByClientId(emailSettingsBlockIds[0]);
+
+    const parsedContentFromTemplate = parse(content);
+
+    const emailSettingsBlockAlreadyPresent = parsedContentFromTemplate.filter((parsedBlock) => parsedBlock.name === 'wp-newsletter-builder/email-settings');
+
+    let newBlocks: BlockInstance[] = [];
+    if (emailSettingsBlockAlreadyPresent.length === 0) {
+      newBlocks = [...emailSettingsBlockInstances, ...parsedContentFromTemplate];
+    } else {
+      newBlocks = [...parsedContentFromTemplate];
+    }
+
+    dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 
   const [lists, setLists] = useState<ListResult[]>([]);

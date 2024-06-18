@@ -74,17 +74,6 @@ class WP_Newsletter_Builder {
 				'supports'            => [ 'title', 'editor', 'custom-fields' ],
 				'show_in_rest'        => true,
 				'exclude_from_search' => true,
-				'template'            => [
-					[
-						'wp-newsletter-builder/email-settings',
-						[
-							'lock' => [
-								'move'   => true,
-								'remove' => true,
-							],
-						],
-					],
-				],
 				'menu_icon'           => 'dashicons-admin-customizer',
 			],
 		);

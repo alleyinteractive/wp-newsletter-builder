@@ -139,7 +139,7 @@ function action_enqueue_block_editor_assets(): void {
 
 	/**
 	 * Allow filtering of allowed post types available in the post picker.
-	 * 
+	 *
 	 * @param array<string> $allowed_post_types The allowed post types. Defaults to `post`.
 	 * @return array<string> The filtered array of allowed post types.
 	 */
@@ -274,3 +274,20 @@ function load_scripts(): void {
 }
 
 load_scripts();
+
+/**
+ * Remove the editor styles on the post edit screen for nb_newsletter post types.
+ *
+ * @param string $path The path to the file.
+ * @param string $file The file name.
+ * @return string|null The path to the file or null if we're on the post edit screen for a nb_newsletter post type.
+ */
+function remove_editor_styles_on_newsletters( $path, $file ) {
+	// If we're on the post edit screen for a nb_newsletter post type, remove the editor styles.
+	if ( is_admin() && 'nb_newsletter' === get_post_type() && 'theme.json' === $file ) {
+		return null;
+	}
+	return $path;
+}
+
+add_filter( 'theme_file_path', __NAMESPACE__ . '\remove_editor_styles_on_newsletters', 10, 2 );

@@ -1,37 +1,16 @@
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
+import { MultiSelect } from 'react-multi-select-component';
 import { __ } from '@wordpress/i18n';
 import { TextControl, Spinner, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
-import { dispatch } from '@wordpress/data';
-import { parse } from '@wordpress/blocks';
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
+import { dispatch, useSelect } from '@wordpress/data';
+import { BlockInstance, parse } from '@wordpress/blocks';
 import { useBlockProps } from '@wordpress/block-editor';
-
-// import { usePostMeta } from '@alleyinteractive/block-editor-tools';
-
-import { MultiSelect } from 'react-multi-select-component';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 
 import usePostMeta from '../../hooks/usePostMeta';
 
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
 import './index.scss';
 
 interface ListResult {
@@ -50,14 +29,6 @@ interface Window {
   };
 }
 
-/**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
- * @return {WPElement} Element to render.
- */
 export default function Edit() {
   const [meta, setMeta] = usePostMeta();
   const {

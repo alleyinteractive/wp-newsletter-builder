@@ -1,11 +1,19 @@
+<?xml version="1.0"?>
 <phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	bootstrap="tests/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
 	printerClass="NunoMaduro\Collision\Adapters\Phpunit\Printer">
   <testsuites>
     <testsuite name="wp-newsletter-builder">
       <directory suffix="Test.php">./tests/</directory>
     </testsuite>
   </testsuites>
+  <source>
+    <include>
+      <directory suffix=".php">inc</directory>
+    </include>
+  </source>
 </phpunit>

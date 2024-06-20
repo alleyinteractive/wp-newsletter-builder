@@ -39,7 +39,6 @@ function action_wp_enqueue_scripts(): void {
  * A callback for the wp_newsletter_builder_enqueue_styles hook.
  */
 function action_newsletters_enqueue_styles(): void {
-	global $wp_query;
 	$blocks = [
 		'button',
 		'divider',
@@ -55,7 +54,7 @@ function action_newsletters_enqueue_styles(): void {
 	?>
 	<style type="text/css">
 	<?php
-	$template_id = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
+	$template_id = get_post_meta( get_queried_object_id(), 'nb_newsletter_template', true );
 	$font = get_post_meta( $template_id, 'nb_template_font', true );
 	foreach ( $blocks as $block ) {
 		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
@@ -76,9 +75,6 @@ function action_newsletters_enqueue_styles(): void {
 
 		$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 		if ( ! empty( $css ) ) {
-			error_log('you are here');
-			error_log( $wp_query->queried_object_id );
-			error_log( $template_id );
 			$css = str_replace( 'var(--test)', $font, $css );
 			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
@@ -153,7 +149,7 @@ function action_enqueue_block_editor_assets(): void {
 
 	/**
 	 * Allow filtering of allowed post types available in the post picker.
-	 * 
+	 *
 	 * @param array<string> $allowed_post_types The allowed post types. Defaults to `post`.
 	 * @return array<string> The filtered array of allowed post types.
 	 */

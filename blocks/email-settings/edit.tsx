@@ -82,7 +82,8 @@ export default function Edit() {
 
     const parsedContentFromTemplate = parse(content);
 
-    const emailSettingsBlockAlreadyPresent = parsedContentFromTemplate.filter((parsedBlock) => parsedBlock.name === 'wp-newsletter-builder/email-settings');
+    const emailSettingsBlockAlreadyPresent = parsedContentFromTemplate
+      .filter((parsedBlock) => parsedBlock.name === 'wp-newsletter-builder/email-settings');
 
     let newBlocks: BlockInstance[] = [];
     if (emailSettingsBlockAlreadyPresent.length === 0) {

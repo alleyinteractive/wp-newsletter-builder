@@ -1,6 +1,6 @@
 <?php
 /**
- * Adds the pre publish panel to the newsletter template.
+ * Adds the pre publish panel to the newsletter post type.
  *
  * This file will be copied to the assets build directory.
  *

@@ -1,14 +1,14 @@
+<?xml version="1.0"?>
 <phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   bootstrap="tests/bootstrap.php"
   backupGlobals="false"
   colors="true"
-  convertErrorsToExceptions="true"
-  convertNoticesToExceptions="true"
-  convertWarningsToExceptions="true"
->
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+  cacheDirectory=".phpunit.cache">
   <testsuites>
     <testsuite name="wp-newsletter-builder">
-      <directory prefix="test-" suffix=".php">tests</directory>
+      <directory suffix="Test.php">tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

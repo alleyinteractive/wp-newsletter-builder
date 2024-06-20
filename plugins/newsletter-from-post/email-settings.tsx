@@ -14,7 +14,6 @@ import useEmailLists, { Option } from '@/hooks/useEmailLists';
 import RequiredFields from '@/plugins/newsletter-from-post/components/required-fields';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
-import SentNewsletter from './components/sent-newsletter';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -163,16 +162,6 @@ function EmailSettings() {
           <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
         </div>
       </PanelBody>
-      {meta.sentBreakingPostId ? (
-        <PanelBody
-          initialOpen={false}
-          title={__('Sent Newsletters', 'wp-newsletter-builder')}
-        >
-          {meta.sentBreakingPostId.map((id: number) => (
-            <SentNewsletter postId={id} key={id} />
-          ))}
-        </PanelBody>
-      ) : null}
     </PluginSidebar>
   );
 }

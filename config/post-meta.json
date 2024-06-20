@@ -127,5 +127,11 @@
         "type": "number"
       }
     }
+  },
+  "nb_template_font": {
+    "post_types": [
+      "nb_template"
+    ],
+    "type": "string"
   }
 }

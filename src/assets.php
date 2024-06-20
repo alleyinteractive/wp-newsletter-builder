@@ -14,6 +14,7 @@ add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\action_wp_enqueue_scripts' )
 add_action( 'wp_newsletter_builder_enqueue_styles', __NAMESPACE__ . '\action_newsletters_enqueue_styles' );
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\action_admin_enqueue_scripts' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
+add_action( 'admin_head', __NAMESPACE__ . '\set_template_values' );
 
 /**
  * A callback for the wp_enqueue_scripts hook.
@@ -38,16 +39,24 @@ function action_wp_enqueue_scripts(): void {
  * A callback for the wp_newsletter_builder_enqueue_styles hook.
  */
 function action_newsletters_enqueue_styles(): void {
+	global $wp_query;
 	$blocks = [
-		'header',
+		'button',
+		'divider',
 		'footer',
+		'header',
+		'heading',
+		'list',
+		'paragraph',
 		'post',
-		'two-up-post',
 		'section',
+		'two-up-post',
 	];
 	?>
 	<style type="text/css">
 	<?php
+	$template_id = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
+	$font = get_post_meta( $template_id, 'nb_template_font', true );
 	foreach ( $blocks as $block ) {
 		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
 			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
@@ -55,6 +64,7 @@ function action_newsletters_enqueue_styles(): void {
 			$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 			if ( ! empty( $css ) ) {
 				$css = str_replace( '../images/', plugins_url( '../build/images/', __FILE__ ), $css );
+				$css = str_replace( 'var(--test)', $font, $css );
 				echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
@@ -66,6 +76,10 @@ function action_newsletters_enqueue_styles(): void {
 
 		$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 		if ( ! empty( $css ) ) {
+			error_log('you are here');
+			error_log( $wp_query->queried_object_id );
+			error_log( $template_id );
+			$css = str_replace( 'var(--test)', $font, $css );
 			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
@@ -274,3 +288,16 @@ function load_scripts(): void {
 }
 
 load_scripts();
+
+/**
+ * Set the template values for the editor.
+ */
+function set_template_values(): void {
+	$current_screen = get_current_screen();
+	if ( ( 'post' !== $current_screen->base ) || ( 'nb_newsletter' !== $current_screen->post_type ) ) {
+		return;
+	}
+	$template_id = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
+	$font = get_post_meta( $template_id, 'nb_template_font', true );
+	echo("<style>:root {--test: {$font};}</style>");
+}

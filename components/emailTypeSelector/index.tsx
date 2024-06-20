@@ -128,7 +128,10 @@ function EmailTypeSelector({
     apiFetch({
       path: `/wp/v2/nb_template/${value}?context=edit`,
     }).then((response) => {
-      const { content } = response as WP_REST_API_Post; // eslint-disable-line camelcase
+      const { content, meta } = response as WP_REST_API_Post; // eslint-disable-line camelcase
+      // @ts-ignore
+      const { nb_template_font } = meta; // eslint-disable-line
+      document?.documentElement?.style?.setProperty('--test', nb_template_font);
       contentHandler(content.raw as string);
     });
   };

@@ -1,3 +1,4 @@
 a, em, s, strong, sup, sub {
-  font-family: Georgia, serif;
+  // font-family: Georgia, serif;
+  font-family: var(--test);
 }

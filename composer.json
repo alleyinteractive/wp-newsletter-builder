@@ -25,6 +25,8 @@
         "alleyinteractive/alley-coding-standards": "^2.0",
         "alleyinteractive/wordpress-fieldmanager": "^1.6",
         "mantle-framework/testkit": "1.0.7",
+        "nunomaduro/collision": "^6",
+        "phpunit/phpunit": "^9",
         "szepeviktor/phpstan-wordpress": "^1.3"
     },
     "config": {

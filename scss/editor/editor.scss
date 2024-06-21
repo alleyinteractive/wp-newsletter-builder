@@ -12,9 +12,9 @@
     width: 320px;
     width: calc(28000% - 167400px);
 
-    // .block-editor-rich-text__editable {
-    //   font-family: Georgia, serif;
-    // }
+    .wp-block-post-content.wp-block-post-content {
+      background-color: var(--template-bg-color);
+    }
 
     // Reset this style so that the editor matches the email client output.
     // stylelint-disable-next-line selector-max-compound-selectors

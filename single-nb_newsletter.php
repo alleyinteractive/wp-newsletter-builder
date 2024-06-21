@@ -9,7 +9,7 @@ if ( function_exists( 'newrelic_disable_autorum' ) ) {
 	newrelic_disable_autorum();
 }
 
-$wp_newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_preview', true );
+$wp_newsletter_builder_preview = get_post_meta( get_queried_object_id(), 'nb_newsletter_preview', true );
 ?>
 <!doctype html>
 
@@ -35,8 +35,12 @@ $wp_newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_pre
 <!--[if !mso]><!-->
 <body class="main">
 <!--<![endif]-->
-	<?php if ( ! empty( $wp_newsletter_builder_preview ) ) : ?>
-		<div style="display:none;"><?php echo esc_html( $wp_newsletter_builder_preview ); ?></div>
+	<?php
+	/**
+	 * TODO: Add in a way to allow for custom preview markup as each provider has different requirements.
+	 */
+	if ( ! empty( $wp_newsletter_builder_preview ) ) : ?>
+		<span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><?php echo esc_html( $wp_newsletter_builder_preview ); ?></span>
 	<?php endif; ?>
 	<table class="wrapper" cellpadding="0" cellspacing="0" role="presentation">
 		<tbody>

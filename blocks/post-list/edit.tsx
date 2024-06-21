@@ -4,7 +4,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-// import { PostPicker } from '@alleyinteractive/block-editor-tools';
+import { TermSelector } from '@alleyinteractive/block-editor-tools';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -12,7 +12,12 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
+import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
+import {
+  PanelBody,
+  PanelRow,
+  RangeControl,
+} from '@wordpress/components';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -30,23 +35,53 @@ import './index.scss';
  *
  * @return {WPElement} Element to render.
  */
-// Allow filtering of allowed post types. Defaults to post.
-// interface Window {
-//   newsletterBuilder: {
-//     allowedPostTypes: Array<string>;
-//   };
-// }
-
-// const {
-//   newsletterBuilder: {
-//     allowedPostTypes = ['post'],
-//   } = {},
-// } = (window as any as Window);
 
 export default function Edit() {
   return (
-    <p {...useBlockProps()}>
-      { __('Block Title - hello from the editor!', 'wp-newsletter-builder') }
-    </p>
+    <>
+      <InspectorControls>
+        <PanelBody title={__('Post List Settings', 'wp-newsletter-builder')}>
+          <PanelRow>
+            <RangeControl
+              label={__('Number of posts', 'wp-newsletter-builder')}
+              // value={postCount}
+              // onChange={(newValue: number) => {
+              //   providePostListAttributes({ postCount: newValue });
+              // }}
+              min={1}
+              max={10}
+            />
+          </PanelRow>
+          <PanelRow>
+            <h3>{__('Term Picker', 'wp-newsletter-builder')}</h3>
+            <TermSelector
+              className=""
+              emptyLabel={__('No term found', 'lede')}
+              label={__('Search for a term', 'lede')}
+              maxPages={5}
+              maxSelections={1}
+              multiple={false}
+              placeholder={__('Search for a term', 'wp-newsletter-builder')}
+              subTypes={[]}
+              // selected={(termId && termTitle) ? [{ id: termId, title: termTitle }] : []}
+              threshold={3}
+              // onSelect={(selectedTerms: any) => {
+              //   const selectedTerm = selectedTerms[0];
+
+              //   providePostListAttributes({
+              //     termId: selectedTerm.id.toString(), // WPgraphQL expects termId to be a string
+              //     taxonomy: selectedTerm.type,
+              //     termTitle: selectedTerm.title,
+              //     title: selectedTerm.title,
+              //   });
+              // }}
+            />
+          </PanelRow>
+        </PanelBody>
+      </InspectorControls>
+      <p {...useBlockProps()}>
+        { __('Block Title - hello from the editor!', 'wp-newsletter-builder') }
+      </p>
+    </>
   );
 }

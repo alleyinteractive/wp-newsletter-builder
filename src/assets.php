@@ -40,13 +40,8 @@ function action_wp_enqueue_scripts(): void {
  */
 function action_newsletters_enqueue_styles(): void {
 	$blocks = [
-		'button',
-		'divider',
 		'footer',
 		'header',
-		'heading',
-		'list',
-		'paragraph',
 		'post',
 		'section',
 		'two-up-post',
@@ -300,5 +295,10 @@ function set_template_values(): void {
 	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
 	$font        = get_post_meta( $template_id, 'nb_template_font', true );
 	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
-	echo( "<style>:root {--template-font-family: {$font}; --template-bg-color: {$bg_color}; --template-link-color: {$link_color};}</style>" ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	printf(
+		'<style>:root {--template-font-family: %s; --template-bg-color: %s; --template-link-color: %s;}</style>',
+		$font,
+		$bg_color,
+		$link_color,
+	);
 }

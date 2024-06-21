@@ -57,11 +57,8 @@ require_once __DIR__ . '/block-filters/paragraph/index.php';
 require_once __DIR__ . '/block-filters/separator/index.php';
 require_once __DIR__ . '/plugins/newsletter-from-post/index.php';
 require_once __DIR__ . '/plugins/newsletter-status/index.php';
-<<<<<<< HEAD
 require_once __DIR__ . '/plugins/newsletter-template-styles/index.php';
-=======
 require_once __DIR__ . '/plugins/pre-publish-checks/index.php';
->>>>>>> develop
 
 /* class files get loaded by the autoloader */
 

@@ -1,3 +1,7 @@
 a, em, s, strong, sup, sub {
-  font-family: Georgia, serif;
+  font-family: var(--template-font-family);
+}
+
+a {
+  color: var(--template-link-color);
 }

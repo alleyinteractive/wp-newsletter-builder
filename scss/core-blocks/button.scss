@@ -1,4 +1,5 @@
 .wp-block-button {
+  font-family: var(--template-font-family);
   margin: 0 auto;
   padding: 10px 14px;
   text-align: center;
@@ -40,6 +41,7 @@
   background-color: #0279af;
   border-radius: 4px;
   color: #fff;
+  font-family: var(--template-font-family);
   font-size: 14px;
   line-height: 24px;
   padding: 10px 14px;

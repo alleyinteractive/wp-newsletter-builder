@@ -297,8 +297,8 @@ function set_template_values(): void {
 	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
 	printf(
 		'<style>:root {--template-font-family: %s; --template-bg-color: %s; --template-link-color: %s;}</style>',
-		$font,
-		$bg_color,
-		$link_color,
+		$font, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$bg_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$link_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 }

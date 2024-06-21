@@ -1,22 +1,22 @@
 /**
  * EmailSettings component
  */
-
-import { useCallback, useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import { createBlock, parse, serialize } from '@wordpress/blocks';
+import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { PluginSidebar } from '@wordpress/edit-post';
+import { useCallback, useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { MultiSelect } from 'react-multi-select-component';
 // eslint-disable-next-line camelcase
 import { WP_REST_API_Post } from 'wp-types';
-import { PluginSidebar } from '@wordpress/edit-post';
-import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-import { MultiSelect } from 'react-multi-select-component';
-import { createBlock, parse, serialize } from '@wordpress/blocks';
-import NewsletterSpinner from '@/components/newsletterSpinner';
-import useNewsletterMeta from '@/hooks/useNewsletterMeta';
-import useEmailLists, { Option } from '@/hooks/useEmailLists';
-import RequiredFields from '@/plugins/newsletter-from-post/components/required-fields';
 
+import NewsletterSpinner from '@/components/newsletterSpinner';
+import useEmailLists, { Option } from '@/hooks/useEmailLists';
+import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+
+import RequiredFields from './components/required-fields';
 import EmailTypeSelector from '../../components/emailTypeSelector';
 
 interface CoreEditor {

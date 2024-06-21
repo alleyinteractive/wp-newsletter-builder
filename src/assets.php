@@ -55,7 +55,9 @@ function action_newsletters_enqueue_styles(): void {
 	<style type="text/css">
 	<?php
 	$template_id = get_post_meta( get_queried_object_id(), 'nb_newsletter_template', true );
-	$font = get_post_meta( $template_id, 'nb_template_font', true );
+	$font        = get_post_meta( $template_id, 'nb_template_font', true );
+	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
+	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
 	foreach ( $blocks as $block ) {
 		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
 			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
@@ -63,7 +65,6 @@ function action_newsletters_enqueue_styles(): void {
 			$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 			if ( ! empty( $css ) ) {
 				$css = str_replace( '../images/', plugins_url( '../build/images/', __FILE__ ), $css );
-				$css = str_replace( 'var(--test)', $font, $css );
 				echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
@@ -75,7 +76,9 @@ function action_newsletters_enqueue_styles(): void {
 
 		$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
 		if ( ! empty( $css ) ) {
-			$css = str_replace( 'var(--test)', $font, $css );
+			$css = str_replace( 'var(--template-font-family)', $font, $css );
+			$css = str_replace( 'var(--template-bg-color)', $bg_color, $css );
+			$css = str_replace( 'var(--template-link-color)', $link_color, $css );
 			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
@@ -294,6 +297,8 @@ function set_template_values(): void {
 		return;
 	}
 	$template_id = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
-	$font = get_post_meta( $template_id, 'nb_template_font', true );
-	echo("<style>:root {--test: {$font};}</style>");
+	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
+	$font        = get_post_meta( $template_id, 'nb_template_font', true );
+	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
+	echo( "<style>:root {--template-font-family: {$font}; --template-bg-color: {$bg_color}; --template-link-color: {$link_color};}</style>" ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }

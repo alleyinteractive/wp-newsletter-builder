@@ -1,8 +1,8 @@
 import { registerPlugin } from '@wordpress/plugins';
 
-import NewsletterTemplateStylesPanel from './newsletterStylePanel';
+import NewsletterTemplateStylesPanel from './newsletterStylesPanel';
 
-registerPlugin('newsletter-status', {
+registerPlugin('newsletter-template-styles', {
   render: NewsletterTemplateStylesPanel,
   icon: 'dashicons-art',
 });

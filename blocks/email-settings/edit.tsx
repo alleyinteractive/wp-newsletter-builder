@@ -1,38 +1,21 @@
-/**
- * Retrieves the translation of text.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
- */
+import { MultiSelect } from 'react-multi-select-component';
 import { __ } from '@wordpress/i18n';
 import { TextControl, Spinner, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect, useState } from '@wordpress/element';
-import { dispatch } from '@wordpress/data';
-import { parse } from '@wordpress/blocks';
-
-/**
- * React hook that is used to mark the block wrapper element.
- * It provides all the necessary props like the class name.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
- */
+import { dispatch, useSelect } from '@wordpress/data';
+import { BlockInstance, parse } from '@wordpress/blocks';
 import { useBlockProps } from '@wordpress/block-editor';
 
-// import { usePostMeta } from '@alleyinteractive/block-editor-tools';
-
-import { MultiSelect } from 'react-multi-select-component';
-
 import EmailTypeSelector from '../../components/emailTypeSelector';
-
 import usePostMeta from '../../hooks/usePostMeta';
 
-/**
- * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
- * Those files can contain any CSS code that gets applied to the editor.
- *
- * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
- */
 import './index.scss';
+
+interface BlockEditor {
+  getBlocksByName: (attribute: string) => string[];
+  getBlocksByClientId: (attribute: string) => BlockInstance[];
+}
 
 interface ListResult {
   ListID: string;
@@ -50,14 +33,6 @@ interface Window {
   };
 }
 
-/**
- * The edit function describes the structure of your block in the context of the
- * editor. This represents what the editor will render when the block is used.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
- *
- * @return {WPElement} Element to render.
- */
 export default function Edit() {
   const [meta, setMeta] = usePostMeta();
   const {
@@ -69,6 +44,14 @@ export default function Edit() {
     nb_newsletter_from_name: fromname,
     nb_newsletter_suppression_group: suppressionGroup,
   } = meta;
+
+  const contentController = useSelect((select) => {
+    const { getBlocksByName, getBlocksByClientId } = select('core/block-editor') as BlockEditor;
+    return {
+      getEmailSettingsBlocks: () => getBlocksByName('wp-newsletter-builder/email-settings'),
+      getBlocksByClientId,
+    };
+  }, []);
 
   const {
     newsletterBuilder: {
@@ -93,7 +76,23 @@ export default function Edit() {
   };
 
   const contentHandler = (content: string) => {
-    dispatch('core/block-editor').resetBlocks(parse(content));
+    const emailSettingsBlockIds = contentController.getEmailSettingsBlocks();
+    const emailSettingsBlockInstances = contentController
+      .getBlocksByClientId(emailSettingsBlockIds[0]);
+
+    const parsedContentFromTemplate = parse(content);
+
+    const emailSettingsBlockAlreadyPresent = parsedContentFromTemplate
+      .filter((parsedBlock) => parsedBlock.name === 'wp-newsletter-builder/email-settings');
+
+    let newBlocks: BlockInstance[] = [];
+    if (emailSettingsBlockAlreadyPresent.length === 0) {
+      newBlocks = [...emailSettingsBlockInstances, ...parsedContentFromTemplate];
+    } else {
+      newBlocks = [...parsedContentFromTemplate];
+    }
+
+    dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 
   const [lists, setLists] = useState<ListResult[]>([]);

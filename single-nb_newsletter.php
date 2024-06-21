@@ -41,7 +41,12 @@ $wp_newsletter_builder_preview = get_post_meta( get_queried_object_id(), 'nb_new
 	 */
 	if ( ! empty( $wp_newsletter_builder_preview ) ) :
 		?>
-		<span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"><?php echo esc_html( $wp_newsletter_builder_preview ); ?></span>
+		<span
+			class="preheader"
+			style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;"
+		>
+			<?php echo esc_html( $wp_newsletter_builder_preview ); ?>
+		</span>
 		<?php
 	endif;
 	?>

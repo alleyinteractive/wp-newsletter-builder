@@ -83,6 +83,7 @@ $plugin_url = plugins_url( 'wp-newsletter-builder' );
 
 	<?php if ( ! empty( $nb_address ) ) : ?>
 		<div class="wp-block-wp-newsletter-builder-footer__address">
+			<span><?php esc_html_e( 'Our mailing address is:', 'wp-newsletter-builder' ); ?></span>
 			<?php echo esc_html( $nb_address ); ?>
 		</div>
 	<?php endif; ?>

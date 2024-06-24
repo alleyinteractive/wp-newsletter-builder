@@ -91,6 +91,9 @@ function EmailSettings() {
     || (meta.preview === '' && postExcerpt === '')
     || meta.list.length === 0;
 
+  /**
+   * Update the template content when the template is changed.
+   */
   useEffect(() => {
     if (!meta.template || fetched) {
       return;

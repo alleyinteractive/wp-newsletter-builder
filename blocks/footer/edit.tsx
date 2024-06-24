@@ -120,6 +120,7 @@ export default function Edit() {
             {address
               ? (
                 <div className="wp-block-wp-newsletter-builder-footer__address">
+                  <span>{__('Our mailing address is:', 'wp-newsletter-builder')}</span>
                   {address}
                 </div>
               )

@@ -291,10 +291,13 @@ function set_template_values(): void {
 	if ( ( 'post' !== $current_screen->base ) || ( 'nb_newsletter' !== $current_screen->post_type ) ) {
 		return;
 	}
-	$template_id = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
-	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
-	$font        = get_post_meta( $template_id, 'nb_template_font', true );
-	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
+	$template_id     = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
+	$bg_color_meta   = get_post_meta( $template_id, 'nb_template_bg_color', true );
+	$font_meta       = get_post_meta( $template_id, 'nb_template_font', true );
+	$link_color_meta = get_post_meta( $template_id, 'nb_template_link_color', true );
+	$bg_color        = ! empty( $bg_color_meta ) ? $bg_color_meta : '#fefefe';
+	$font            = ! empty( $font_meta ) ? $font_meta : 'Arial, sans-serif';
+	$link_color      = ! empty( $link_color_meta ) ? $link_color_meta : '#0073aa';
 	printf(
 		'<style>:root {--template-font-family: %s; --template-bg-color: %s; --template-link-color: %s;}</style>',
 		$font, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

@@ -164,7 +164,7 @@ class Campaign_Monitor implements Email_Provider {
 	 * @param string $campaign_id The campaign id.
 	 * @return array{
 	 *   response: mixed,
-	 *   http_status_code: int,
+	 *   success: boolean,
 	 * }|false  The response from the API.
 	 */
 	public function send_campaign( string $campaign_id ): array|false {
@@ -184,8 +184,8 @@ class Campaign_Monitor implements Email_Provider {
 		);
 
 		return [
-			'response'         => $result->response,
-			'http_status_code' => $result->http_status_code,
+			'response' => $result->response,
+			'success'  => 200 === $result->http_status_code,
 		];
 	}
 

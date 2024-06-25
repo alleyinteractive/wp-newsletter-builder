@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 
-interface Status {
+interface Stats {
   Bounced?: number;
   Clicks?: number;
   Forwards?: number;
@@ -20,27 +20,27 @@ interface Status {
 }
 
 function useNewsletterStats(newsletterId: string) {
-  const [status, setStatus] = useState<Status>({});
+  const [stats, setStats] = useState<Stats>({});
   const [fetching, setFetching] = useState(false);
 
-  const fetchStatus = useCallback(async () => {
+  const fetchStats = useCallback(async () => {
     setFetching(true);
     const res = await apiFetch({
       path: `/wp-newsletter-builder/v1/status/${newsletterId}`,
     });
-    setStatus(res as Status);
+    setStats(res as Stats);
     setFetching(false);
   }, [newsletterId]);
 
   useEffect(() => {
-    fetchStatus();
-  }, [fetchStatus]);
+    fetchStats();
+  }, [fetchStats]);
 
   return {
-    validStatus: status.Status && status.Name,
-    status,
+    validStats: stats.Status && stats.Name,
+    stats,
     fetching,
-    fetchStatus,
+    fetchStats,
   };
 }
 

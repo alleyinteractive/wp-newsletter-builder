@@ -10,10 +10,10 @@ export default function NewsletterStatusPanel() {
   // @ts-ignore
   const postId = select('core/editor').getCurrentPostId();
   const {
-    status,
+    stats,
     fetching,
-    fetchStatus,
-    validStatus,
+    fetchStats,
+    validStats,
   } = useNewsletterStatus(postId);
 
   const {
@@ -22,9 +22,9 @@ export default function NewsletterStatusPanel() {
     Recipients = '',
     TotalOpened = '',
     UniqueOpened = '',
-  } = status;
+  } = stats;
 
-  if (!validStatus && !fetching) {
+  if (!validStats && !fetching) {
     return (
       <PluginDocumentSettingPanel
         name="rubric-selection"
@@ -34,7 +34,7 @@ export default function NewsletterStatusPanel() {
           {__('Newsletter status not available. Try clicking the Refresh button.', 'wp-newsletter-builder')}
         </p>
         <Button
-          onClick={fetchStatus}
+          onClick={fetchStats}
           variant="secondary"
           disabled={fetching}
         >
@@ -49,7 +49,7 @@ export default function NewsletterStatusPanel() {
       name="rubric-selection"
       title={__('Newsletter Status', 'wp-newsletter-builder')}
     >
-      {validStatus ? (
+      {validStats ? (
         <>
           <dl>
             <dt>
@@ -84,7 +84,7 @@ export default function NewsletterStatusPanel() {
             </dd>
           </dl>
           <Button
-            onClick={fetchStatus}
+            onClick={fetchStats}
             variant="secondary"
             disabled={fetching}
           >

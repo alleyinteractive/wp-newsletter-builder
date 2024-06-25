@@ -19,7 +19,7 @@ interface Status {
   WorldviewURL?: string;
 }
 
-function useNewsletterStatus(newsletterId: string) {
+function useNewsletterStats(newsletterId: string) {
   const [status, setStatus] = useState<Status>({});
   const [fetching, setFetching] = useState(false);
 
@@ -44,4 +44,4 @@ function useNewsletterStatus(newsletterId: string) {
   };
 }
 
-export default useNewsletterStatus;
+export default useNewsletterStats;

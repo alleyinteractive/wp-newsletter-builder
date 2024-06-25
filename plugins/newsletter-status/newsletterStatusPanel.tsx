@@ -4,7 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
 import { Button } from '@wordpress/components';
 import NewsletterSpinner from '@/components/newsletterSpinner';
-import useNewsletterStatus from '@/hooks/useNewsletterStatus';
+import useNewsletterStatus from '@/hooks/useNewsletterStats';
 
 export default function NewsletterStatusPanel() {
   // @ts-ignore

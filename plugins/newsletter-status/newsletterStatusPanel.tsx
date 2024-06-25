@@ -1,63 +1,55 @@
-import React, { useCallback, useEffect, useState } from '@wordpress/element';
+import React from '@wordpress/element';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { __ } from '@wordpress/i18n';
 import { select } from '@wordpress/data';
-import apiFetch from '@wordpress/api-fetch';
 import { Button } from '@wordpress/components';
 import NewsletterSpinner from '@/components/newsletterSpinner';
-
-interface Status {
-  Bounced?: number;
-  Clicks?: number;
-  Forwards?: number;
-  Likes?: number;
-  Mentions?: number;
-  Name?: string;
-  Recipients?: number;
-  SpamComplaints?: number;
-  Status?: string;
-  TotalOpened?: number;
-  UniqueOpened?: number;
-  Unsubscribed?: number;
-  WebVersionTextURL?: string;
-  WebVersionURL?: string;
-  WorldviewURL?: string;
-}
+import useNewsletterStatus from '@/hooks/useNewsletterStats';
 
 export default function NewsletterStatusPanel() {
   // @ts-ignore
   const postId = select('core/editor').getCurrentPostId();
-
-  const [status, setStatus] = useState<Status>({});
-  const [fetching, setFetching] = useState(false);
-
-  const fetchStatus = useCallback(async () => {
-    setFetching(true);
-    const res = await apiFetch({
-      path: `/wp-newsletter-builder/v1/status/${postId}`,
-    });
-    setStatus(res as Status);
-    setFetching(false);
-  }, [postId]);
-
-  useEffect(() => {
-    fetchStatus();
-  }, [fetchStatus]);
+  const {
+    stats,
+    fetching,
+    fetchStats,
+    validStats,
+  } = useNewsletterStatus(postId);
 
   const {
     Status: statusString = '',
     Name = '',
-    Recipients = null,
-    TotalOpened = null,
-    UniqueOpened = null,
-  } = status;
+    Recipients = '',
+    TotalOpened = '',
+    UniqueOpened = '',
+  } = stats;
+
+  if (!validStats && !fetching) {
+    return (
+      <PluginDocumentSettingPanel
+        name="rubric-selection"
+        title={__('Newsletter Stats', 'wp-newsletter-builder')}
+      >
+        <p>
+          {__('Newsletter stats not available. Try clicking the Refresh button.', 'wp-newsletter-builder')}
+        </p>
+        <Button
+          onClick={fetchStats}
+          variant="secondary"
+          disabled={fetching}
+        >
+          {__('Refresh', 'wp-newsletter-builder')}
+        </Button>
+      </PluginDocumentSettingPanel>
+    );
+  }
 
   return (
     <PluginDocumentSettingPanel
       name="rubric-selection"
-      title={__('Newsletter Status', 'wp-newsletter-builder')}
+      title={__('Newsletter Stats', 'wp-newsletter-builder')}
     >
-      {status ? (
+      {validStats ? (
         <>
           <dl>
             <dt>
@@ -92,7 +84,7 @@ export default function NewsletterStatusPanel() {
             </dd>
           </dl>
           <Button
-            onClick={fetchStatus}
+            onClick={fetchStats}
             variant="secondary"
             disabled={fetching}
           >

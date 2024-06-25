@@ -47,10 +47,30 @@ export default function NewsletterStatusPanel() {
   const {
     Status: statusString = '',
     Name = '',
-    Recipients = null,
-    TotalOpened = null,
-    UniqueOpened = null,
+    Recipients = '',
+    TotalOpened = '',
+    UniqueOpened = '',
   } = status;
+
+  if (!statusString || !Name) {
+    return (
+      <PluginDocumentSettingPanel
+        name="rubric-selection"
+        title={__('Newsletter Status', 'wp-newsletter-builder')}
+      >
+        <p>
+          {__('Newsletter status not available. Try clicking the Refresh button.', 'wp-newsletter-builder')}
+        </p>
+        <Button
+          onClick={fetchStatus}
+          variant="secondary"
+          disabled={fetching}
+        >
+          {__('Refresh', 'wp-newsletter-builder')}
+        </Button>
+      </PluginDocumentSettingPanel>
+    );
+  }
 
   return (
     <PluginDocumentSettingPanel

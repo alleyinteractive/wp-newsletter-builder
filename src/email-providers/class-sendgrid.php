@@ -249,7 +249,7 @@ class Sendgrid implements Email_Provider {
 		if ( empty( $sg ) ) {
 			return false;
 		}
-		$campaign_response = $sg->client->marketing()->singlesends()->_( 'asdf' )->get();
+		$campaign_response = $sg->client->marketing()->singlesends()->_( $campaign_id )->get();
 		$stats_response    = $sg->client->marketing()->stats()->singlesends()->_( $campaign_id )->get();
 
 		if ( 200 !== $stats_response->statusCode() || 200 !== $campaign_response->statusCode() ) {

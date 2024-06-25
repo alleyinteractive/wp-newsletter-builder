@@ -190,6 +190,7 @@ class Rest_API_Endpoints {
 				'Status' => __( 'Not sent', 'wp-newsletter-builder' ),
 			];
 		}
+
 		global $newsletter_builder_email_provider;
 		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 			return [
@@ -197,11 +198,12 @@ class Rest_API_Endpoints {
 			];
 		}
 		$status = $newsletter_builder_email_provider->get_campaign_summary( $campaign_id );
-		if ( ! empty( $status ) && is_array( $status['response'] ) && 200 === $status['http_status_code'] ) {
+		if ( ! empty( $status ) && is_array( $status['response'] ) && $status['success'] ) {
 			$status['response']['Status'] = __( 'Sent' ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			wp_cache_set( $cache_key, $status['response'], '', 5 * MINUTE_IN_SECONDS );
 			return $status['response'];
 		}
+
 		$send_result = get_post_meta( $post_id, 'nb_newsletter_send_result', true );
 		if ( ! empty( $send_result ) && is_array( $send_result ) ) {
 			if ( is_string( $send_result['response'] ) && ( 200 > $send_result['http_status_code'] || 300 <= $send_result['http_status_code'] ) ) {

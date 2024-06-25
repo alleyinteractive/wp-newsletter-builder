@@ -28,10 +28,10 @@ export default function NewsletterStatusPanel() {
     return (
       <PluginDocumentSettingPanel
         name="rubric-selection"
-        title={__('Newsletter Status', 'wp-newsletter-builder')}
+        title={__('Newsletter Stats', 'wp-newsletter-builder')}
       >
         <p>
-          {__('Newsletter status not available. Try clicking the Refresh button.', 'wp-newsletter-builder')}
+          {__('Newsletter stats not available. Try clicking the Refresh button.', 'wp-newsletter-builder')}
         </p>
         <Button
           onClick={fetchStats}
@@ -47,7 +47,7 @@ export default function NewsletterStatusPanel() {
   return (
     <PluginDocumentSettingPanel
       name="rubric-selection"
-      title={__('Newsletter Status', 'wp-newsletter-builder')}
+      title={__('Newsletter Stats', 'wp-newsletter-builder')}
     >
       {validStats ? (
         <>

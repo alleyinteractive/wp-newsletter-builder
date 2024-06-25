@@ -257,17 +257,17 @@ class Sendgrid implements Email_Provider {
 		}
 
 		$campaign_body = (object) json_decode( $campaign_response->body() );
-		$stats_body = (object) json_decode( $stats_response->body() );
+		$stats_body    = (object) json_decode( $stats_response->body() );
 
 		return [
-			'response'         => [
+			'response' => [
 				'Status'       => $campaign_body?->status ?? '',
 				'Name'         => $campaign_body?->name ?? '',
 				'Recipients'   => $stats_body->results[0]?->stats?->delivered ?? '',
 				'TotalOpened'  => $stats_body->results[0]?->stats?->opens ?? '',
 				'UniqueOpened' => $stats_body->results[0]?->stats?->unique_opens ?? '',
 			],
-			'success'          => true,
+			'success'  => true,
 		];
 	}
 

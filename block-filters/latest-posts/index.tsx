@@ -33,7 +33,6 @@ function modifyLatestPostsSupports(settings, name) {
           text: false,
         },
         customClassName: false,
-        // inserter: false,
         spacing: false,
         typography: {
           __experimentalFontSize: false,

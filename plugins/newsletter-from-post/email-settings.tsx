@@ -33,7 +33,7 @@ interface Window {
 
 function EmailSettings() {
   const [fetched, setFetched] = useState(false);
-  const { meta, setMeta } = useNewsletterMeta();
+  const { meta, resetMeta, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
   const manualPreview = meta.preview !== '';
@@ -76,13 +76,18 @@ function EmailSettings() {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
 
+    if (postIndex === -1) {
+      resetMeta();
+      return;
+    }
+
     blocks[postIndex] = createBlock('wp-newsletter-builder/post', {
       ...blocks[postIndex].attributes,
       postId,
     }, blocks[postIndex].innerBlocks);
 
     setMeta({ nb_breaking_content: serialize(blocks) });
-  }, [postId, setMeta]);
+  }, [postId, resetMeta, setMeta]);
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''

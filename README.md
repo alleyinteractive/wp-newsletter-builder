@@ -4,7 +4,7 @@ Contributors: alleyinteractive
 
 Tags: alleyinteractive, wp-newsletter-builder
 
-Stable tag: 0.3.29
+Stable tag: 0.3.30
 
 Requires at least: 6.2
 

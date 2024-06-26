@@ -7,3 +7,4 @@ import '@/scss/core-blocks/button.scss';
 import '@/scss/core-blocks/separator.scss';
 import '@/scss/core-blocks/list.scss';
 import '@/scss/core-blocks/typography.scss';
+import '@/scss/core-blocks/latest-posts.scss';

@@ -25,6 +25,7 @@ function modifyLatestPostsSupports(settings, name) {
           default: 20,
         },
       }),
+      category: 'wp-newsletter-builder-newsletter',
       supports: Object.assign(settings.supports, {
         align: [],
         anchor: false,

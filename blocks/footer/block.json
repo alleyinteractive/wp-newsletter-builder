@@ -4,7 +4,7 @@
 	"name": "wp-newsletter-builder/footer",
 	"version": "0.1.0",
 	"title": "Newsletter Footer",
-	"category": "design",
+	"category": "wp-newsletter-builder-newsletter",
 	"icon": "align-wide",
 	"description": "Outputs the company logo, social links, address, and footer links.",
 	"textdomain": "wp-newsletter-builder",

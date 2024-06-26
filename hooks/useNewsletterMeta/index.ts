@@ -32,10 +32,7 @@ function useNewsletterMeta() {
 
   const resetMeta = useCallback(() => {
     setMeta({
-      nb_breaking_email_type: '',
       nb_breaking_template: 0,
-      nb_breaking_from_name: '',
-      nb_breaking_header_img: 0,
       nb_breaking_content: '',
       nb_breaking_subject: '',
       nb_breaking_preview: '',

@@ -16,8 +16,9 @@ import NewsletterSpinner from '@/components/newsletterSpinner';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 
-import RequiredFields from './components/required-fields';
 import EmailTypeSelector from '../../components/emailTypeSelector';
+import InvalidTemplate from './components/invalid-template';
+import RequiredFields from './components/required-fields';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -33,6 +34,7 @@ interface Window {
 
 function EmailSettings() {
   const [fetched, setFetched] = useState(false);
+  const [invalidTemplate, setInvalidTemplate] = useState(false);
   const { meta, resetMeta, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
@@ -78,6 +80,7 @@ function EmailSettings() {
 
     if (postIndex === -1) {
       resetMeta();
+      setInvalidTemplate(true);
       return;
     }
 
@@ -86,6 +89,7 @@ function EmailSettings() {
       postId,
     }, blocks[postIndex].innerBlocks);
 
+    setInvalidTemplate(false);
     setMeta({ nb_breaking_content: serialize(blocks) });
   }, [postId, resetMeta, setMeta]);
 
@@ -186,7 +190,11 @@ function EmailSettings() {
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
             disabled={areRequiredFieldsSet}
           />
+        </div>
+        <div>
+          <h2 className="components-panel__body-title">{__('Newsletter Validation', 'wp-newsletter-builder')}</h2>
           <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
+          <InvalidTemplate invalid={invalidTemplate} />
         </div>
       </PanelBody>
     </PluginSidebar>

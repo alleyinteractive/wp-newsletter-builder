@@ -1,20 +1,23 @@
 /**
  * EmailSettings component
  */
-
-import { PluginSidebar } from '@wordpress/edit-post';
-import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
-import { MultiSelect } from 'react-multi-select-component';
+import apiFetch from '@wordpress/api-fetch';
 import { createBlock, parse, serialize } from '@wordpress/blocks';
-import NewsletterSpinner from '@/components/newsletterSpinner';
-import useNewsletterMeta from '@/hooks/useNewsletterMeta';
-import useEmailLists, { Option } from '@/hooks/useEmailLists';
-import RequiredFields from '@/plugins/newsletter-from-post/components/required-fields';
+import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { PluginSidebar } from '@wordpress/edit-post';
+import { useCallback, useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import { MultiSelect } from 'react-multi-select-component';
+// eslint-disable-next-line camelcase
+import { WP_REST_API_Post } from 'wp-types';
 
+import NewsletterSpinner from '@/components/newsletterSpinner';
+import useEmailLists, { Option } from '@/hooks/useEmailLists';
+import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+
+import RequiredFields from './components/required-fields';
 import EmailTypeSelector from '../../components/emailTypeSelector';
-import SentNewsletter from './components/sent-newsletter';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -29,6 +32,7 @@ interface Window {
 }
 
 function EmailSettings() {
+  const [fetched, setFetched] = useState(false);
   const { meta, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
@@ -68,7 +72,7 @@ function EmailSettings() {
     setMeta({ nb_breaking_list: listIds });
   });
 
-  const contentHandler = (html: string) => {
+  const contentHandler = useCallback((html: string) => {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
 
@@ -78,7 +82,7 @@ function EmailSettings() {
     }, blocks[postIndex].innerBlocks);
 
     setMeta({ nb_breaking_content: serialize(blocks) });
-  };
+  }, [postId, setMeta]);
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
@@ -86,6 +90,23 @@ function EmailSettings() {
     || (meta.subject === '' && postTitle === '')
     || (meta.preview === '' && postExcerpt === '')
     || meta.list.length === 0;
+
+  /**
+   * Update the template content when the template is changed.
+   */
+  useEffect(() => {
+    if (!meta.template || fetched) {
+      return;
+    }
+
+    apiFetch({
+      path: `/wp/v2/nb_template/${meta.template}?context=edit`,
+    }).then((response) => {
+      const { content } = response as WP_REST_API_Post; // eslint-disable-line camelcase
+      setFetched(true);
+      contentHandler(content.raw as string);
+    });
+  }, [contentHandler, fetched, meta.template]);
 
   return (
     <PluginSidebar
@@ -163,16 +184,6 @@ function EmailSettings() {
           <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
         </div>
       </PanelBody>
-      {meta.sentBreakingPostId ? (
-        <PanelBody
-          initialOpen={false}
-          title={__('Sent Newsletters', 'wp-newsletter-builder')}
-        >
-          {meta.sentBreakingPostId.map((id: number) => (
-            <SentNewsletter postId={id} key={id} />
-          ))}
-        </PanelBody>
-      ) : null}
     </PluginSidebar>
   );
 }

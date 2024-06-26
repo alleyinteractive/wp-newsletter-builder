@@ -86,7 +86,7 @@ interface Email_Provider {
 	 * @param string $campaign_id The campaign id.
 	 * @return array{
 	 *   response: mixed,
-	 *   http_status_code: int,
+	 *   success: boolean,
 	 * }|false  The response from the API.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false;

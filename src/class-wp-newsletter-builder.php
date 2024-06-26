@@ -161,7 +161,7 @@ class WP_Newsletter_Builder {
 		// Publish the post, which should kick off the other transition listener to send the email.
 		$breaking_post_id = wp_insert_post(
 			[
-				'post_title'   => "Breaking News {$post->ID}",
+				'post_title'   => "Breaking News: {$post->post_title}",
 				// @phpstan-ignore-next-line cast to string is necessary.
 				'post_content' => (string) get_post_meta( $post->ID, 'nb_breaking_content', true ),
 				'post_status'  => 'publish',

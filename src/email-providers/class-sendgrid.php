@@ -241,27 +241,33 @@ class Sendgrid implements Email_Provider {
 	 * @param string $campaign_id The campaign id.
 	 * @return array{
 	 *   response: mixed,
-	 *   http_status_code: int,
+	 *   success: boolean,
 	 * }|false  The response from the API.
-	 *
-	 * @todo: Get recipients, total opened, unique opened.
 	 */
 	public function get_campaign_summary( string $campaign_id ): array|false {
 		$sg = $this->get_client();
 		if ( empty( $sg ) ) {
 			return false;
 		}
-		$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->get();
-		$body     = (object) json_decode( $response->body() );
+		$campaign_response = $sg->client->marketing()->singlesends()->_( $campaign_id )->get();
+		$stats_response    = $sg->client->marketing()->stats()->singlesends()->_( $campaign_id )->get();
+
+		if ( 200 !== $stats_response->statusCode() || 200 !== $campaign_response->statusCode() ) {
+			return false;
+		}
+
+		$campaign_body = (object) json_decode( $campaign_response->body() );
+		$stats_body    = (object) json_decode( $stats_response->body() );
+
 		return [
-			'response'         => [
-				'Status'       => $body->status,
-				'Name'         => $body->name,
-				'Recipients'   => 'N/A',
-				'TotalOpened'  => 'N/A',
-				'UniqueOpened' => 'N/A',
+			'response' => [
+				'Status'       => $campaign_body?->status ?? '',
+				'Name'         => $campaign_body?->name ?? '',
+				'Recipients'   => $stats_body->results[0]?->stats?->delivered ?? '',
+				'TotalOpened'  => $stats_body->results[0]?->stats?->opens ?? '',
+				'UniqueOpened' => $stats_body->results[0]?->stats?->unique_opens ?? '',
 			],
-			'http_status_code' => $response->statusCode(),
+			'success'  => true,
 		];
 	}
 
@@ -416,7 +422,6 @@ class Sendgrid implements Email_Provider {
 
 		// Capture template output for the new query.
 		ob_start();
-		// @phpstan-ignore-next-line
 		load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
 		$content = ob_get_clean();
 

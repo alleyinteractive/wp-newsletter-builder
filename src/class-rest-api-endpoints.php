@@ -144,6 +144,7 @@ class Rest_API_Endpoints {
 	 *   youtube_url?: string,
 	 *   image?: int,
 	 *   address?: string,
+	 *   address_2?: string,
 	 * }
 	 */
 	public function get_footer_settings(): WP_Error|false|array {

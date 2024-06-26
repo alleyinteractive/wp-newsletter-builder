@@ -129,7 +129,12 @@ function EmailSettings() {
       >
         <EmailTypeSelector
           contentHandler={contentHandler}
-          typeHandler={(newType) => { setMeta({ nb_breaking_email_type: newType }); }}
+          typeHandler={
+            (newType) => {
+              setMeta({ nb_breaking_email_type: newType });
+              setInvalidTemplate(false);
+            }
+          }
           imageHandler={(newImage) => { setMeta({ nb_breaking_header_img: newImage }); }}
           typeValue={meta.type}
           templateHandler={(newTemplate) => { setMeta({ nb_breaking_template: newTemplate }); }}

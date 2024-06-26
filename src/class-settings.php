@@ -95,7 +95,7 @@ class Settings {
 									'label' => __( 'Company Address Line 1', 'wp-newsletter-builder' ),
 								]
 							),
-							'address_2'       => new \Fieldmanager_TextField(
+							'address_2'     => new \Fieldmanager_TextField(
 								[
 									'label' => __( 'Company Address Line 2', 'wp-newsletter-builder' ),
 								]

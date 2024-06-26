@@ -66,10 +66,20 @@
 .wp-block-wp-newsletter-builder-footer__address {
   margin-top: 20px;
 
-  span {
+  > span {
     display: block;
     font-weight: 700;
     text-align: center;
+  }
+
+  address {
+    display: block;
+    font-style: normal;
+    text-align: center;
+
+    > span {
+      display: block;
+    };
   }
 }
 

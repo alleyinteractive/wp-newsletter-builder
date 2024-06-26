@@ -35,7 +35,7 @@ interface Window {
 function EmailSettings() {
   const [fetched, setFetched] = useState(false);
   const [invalidTemplate, setInvalidTemplate] = useState(false);
-  const { meta, resetMeta, setMeta } = useNewsletterMeta();
+  const { meta, resetTemplate, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
   const manualPreview = meta.preview !== '';
@@ -79,7 +79,7 @@ function EmailSettings() {
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
 
     if (postIndex === -1) {
-      resetMeta();
+      resetTemplate();
       setInvalidTemplate(true);
       return;
     }
@@ -91,7 +91,7 @@ function EmailSettings() {
 
     setInvalidTemplate(false);
     setMeta({ nb_breaking_content: serialize(blocks) });
-  }, [postId, resetMeta, setMeta]);
+  }, [postId, resetTemplate, setMeta]);
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''

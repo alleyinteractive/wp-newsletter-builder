@@ -30,7 +30,7 @@ function useNewsletterMeta() {
     nb_newsletter_sent_breaking_post_id: sentBreakingPostId = [],
   } = meta;
 
-  const resetMeta = useCallback(() => {
+  const resetTemplate = useCallback(() => {
     setMeta({
       nb_breaking_template: 0,
       nb_breaking_content: '',
@@ -54,7 +54,7 @@ function useNewsletterMeta() {
       content,
       sentBreakingPostId,
     },
-    resetMeta,
+    resetTemplate,
     setMeta,
   };
 }

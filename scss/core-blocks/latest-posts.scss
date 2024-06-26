@@ -5,6 +5,14 @@
   padding: 0;
   width: 100%;
 
+  a {
+    color: currentColor;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-decoration: none;
+  }
+
   li {
     border-bottom: 1px solid #ccc;
     box-sizing: border-box;
@@ -82,7 +90,7 @@
     }
 
     img {
-      max-width: none;
+      max-width: 100%;
       width: 100%;
     }
   }

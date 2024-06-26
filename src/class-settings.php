@@ -92,7 +92,12 @@ class Settings {
 							),
 							'address'       => new \Fieldmanager_TextField(
 								[
-									'label' => __( 'Company Address', 'wp-newsletter-builder' ),
+									'label' => __( 'Company Address Line 1', 'wp-newsletter-builder' ),
+								]
+							),
+							'address_2'     => new \Fieldmanager_TextField(
+								[
+									'label' => __( 'Company Address Line 2', 'wp-newsletter-builder' ),
 								]
 							),
 						],
@@ -160,6 +165,7 @@ class Settings {
 	 *   youtube_url?: string,
 	 *   image?: int,
 	 *   address?: string,
+	 *   address_2?: string,
 	 * }|false  The footer settings.
 	 */
 	public function get_footer_settings(): array|false {

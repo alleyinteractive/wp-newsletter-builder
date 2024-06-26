@@ -25,6 +25,7 @@ interface FooterSettings {
   youtube_url: string,
   image: number,
   address: string,
+  address_2: string,
 }
 
 /**
@@ -45,6 +46,7 @@ export default function Edit() {
   const youtubeUrl = footerSettings?.youtube_url ?? '';
   const imageId = footerSettings?.image ?? 0;
   const address = footerSettings?.address ?? '';
+  const address2 = footerSettings?.address_2 ?? '';
 
   useEffect(() => {
     setIsLoading(true);
@@ -121,7 +123,10 @@ export default function Edit() {
               ? (
                 <div className="wp-block-wp-newsletter-builder-footer__address">
                   <span>{__('Our mailing address is:', 'wp-newsletter-builder')}</span>
-                  {address}
+                  <address>
+                    <span>{address}</span>
+                    {address2 ? (<span>{address2}</span>) : null}
+                  </address>
                 </div>
               )
               : null}

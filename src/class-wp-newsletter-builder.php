@@ -26,6 +26,7 @@ class WP_Newsletter_Builder {
 		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ] );
 		add_filter( 'pre_get_posts', [ $this, 'modify_query' ] );
 		add_action( 'init', [ $this, 'check_for_fieldmanager' ] );
+		add_filter( 'block_categories_all', [$this, 'add_newsletter_block_category'], 10, 2 );
 	}
 
 	/**
@@ -336,5 +337,20 @@ class WP_Newsletter_Builder {
 		if ( ! defined( 'FM_VERSION' ) ) {
 			add_action( 'admin_notices', [ $this, 'fieldmanager_not_found_error' ] );
 		}
+	}
+
+	/**
+	 * Adds a new Newsletter block category.
+	 *
+	 * @param array $block_categories Array of categories for block types.
+	 */
+	public function add_newsletter_block_category( $categories ) {
+		
+		$categories[] = array(
+			'slug' => 'wp-newsletter-builder-newsletter',
+			'title' => 'Newsletter',
+		);
+
+		return $categories;
 	}
 }

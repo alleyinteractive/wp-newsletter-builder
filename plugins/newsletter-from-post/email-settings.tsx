@@ -16,8 +16,9 @@ import NewsletterSpinner from '@/components/newsletterSpinner';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
 
-import RequiredFields from './components/required-fields';
 import EmailTypeSelector from '../../components/emailTypeSelector';
+import InvalidTemplate from './components/invalid-template';
+import RequiredFields from './components/required-fields';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -33,7 +34,8 @@ interface Window {
 
 function EmailSettings() {
   const [fetched, setFetched] = useState(false);
-  const { meta, setMeta } = useNewsletterMeta();
+  const [invalidTemplate, setInvalidTemplate] = useState(false);
+  const { meta, resetTemplate, setMeta } = useNewsletterMeta();
   const { emailListOptions, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
   const manualPreview = meta.preview !== '';
@@ -76,13 +78,20 @@ function EmailSettings() {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
 
+    if (postIndex === -1) {
+      resetTemplate();
+      setInvalidTemplate(true);
+      return;
+    }
+
     blocks[postIndex] = createBlock('wp-newsletter-builder/post', {
       ...blocks[postIndex].attributes,
       postId,
     }, blocks[postIndex].innerBlocks);
 
+    setInvalidTemplate(false);
     setMeta({ nb_breaking_content: serialize(blocks) });
-  }, [postId, setMeta]);
+  }, [postId, resetTemplate, setMeta]);
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
@@ -120,7 +129,12 @@ function EmailSettings() {
       >
         <EmailTypeSelector
           contentHandler={contentHandler}
-          typeHandler={(newType) => { setMeta({ nb_breaking_email_type: newType }); }}
+          typeHandler={
+            (newType) => {
+              setMeta({ nb_breaking_email_type: newType });
+              setInvalidTemplate(false);
+            }
+          }
           imageHandler={(newImage) => { setMeta({ nb_breaking_header_img: newImage }); }}
           typeValue={meta.type}
           templateHandler={(newTemplate) => { setMeta({ nb_breaking_template: newTemplate }); }}
@@ -181,7 +195,11 @@ function EmailSettings() {
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
             disabled={areRequiredFieldsSet}
           />
+        </div>
+        <div>
+          <h2 className="components-panel__body-title">{__('Newsletter Validation', 'wp-newsletter-builder')}</h2>
           <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
+          <InvalidTemplate invalid={invalidTemplate} />
         </div>
       </PanelBody>
     </PluginSidebar>

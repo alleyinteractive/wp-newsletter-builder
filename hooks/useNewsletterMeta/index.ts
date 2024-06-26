@@ -1,4 +1,5 @@
 import { usePostMeta } from '@alleyinteractive/block-editor-tools';
+import { useCallback } from '@wordpress/element';
 
 export interface NewsletterMeta {
   type: string;
@@ -29,6 +30,17 @@ function useNewsletterMeta() {
     nb_newsletter_sent_breaking_post_id: sentBreakingPostId = [],
   } = meta;
 
+  const resetTemplate = useCallback(() => {
+    setMeta({
+      nb_breaking_template: 0,
+      nb_breaking_content: '',
+      nb_breaking_subject: '',
+      nb_breaking_preview: '',
+      nb_breaking_list: [],
+      nb_breaking_should_send: false,
+    });
+  }, [setMeta]);
+
   return {
     meta: {
       type,
@@ -42,6 +54,7 @@ function useNewsletterMeta() {
       content,
       sentBreakingPostId,
     },
+    resetTemplate,
     setMeta,
   };
 }

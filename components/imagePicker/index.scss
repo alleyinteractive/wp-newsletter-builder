@@ -1,0 +1,11 @@
+.image-picker {
+	&__button-group {
+		display: flex;
+		gap: 5px;
+		margin-bottom: 5px;
+	}
+
+	&__preview {
+		max-height: 200px;
+	}
+}

@@ -24,11 +24,17 @@ function modifyLatestPostsSupports(settings, name) {
         excerptLength: {
           default: 20,
         },
+        displayFeaturedImage: {
+          default: true,
+        },
         featuredImageAlign: {
           default: 'left',
         },
         featuredImageSizeSlug: {
           default: 'medium',
+        },
+        addLinkToFeaturedImage: {
+          default: true,
         },
       }),
       supports: Object.assign(settings.supports, {

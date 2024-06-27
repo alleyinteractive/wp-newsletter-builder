@@ -89,11 +89,24 @@
     li {
       display: block;
       width: 100%;
+
+      div {
+        display: block;
+        float: none;
+      }
     }
 
-    img {
-      max-width: 300px;
-      width: 300px;
+    .wp-block-latest-posts__featured-image.alignleft,
+    .wp-block-latest-posts__featured-image.alignright {
+      display: block;
+      float: none;
+      width: 100%;
+
+      img {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+      }
     }
   }
 }

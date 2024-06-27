@@ -20,23 +20,6 @@ function modifyLatestPostsSupports(settings, name) {
   ) {
     return {
       ...settings,
-      attributes: Object.assign(settings.attributes, {
-        excerptLength: {
-          default: 20,
-        },
-        displayFeaturedImage: {
-          default: true,
-        },
-        featuredImageAlign: {
-          default: 'left',
-        },
-        featuredImageSizeSlug: {
-          default: 'medium',
-        },
-        addLinkToFeaturedImage: {
-          default: true,
-        },
-      }),
       supports: Object.assign(settings.supports, {
         align: [],
         anchor: false,

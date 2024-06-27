@@ -24,6 +24,12 @@ function modifyLatestPostsSupports(settings, name) {
         excerptLength: {
           default: 20,
         },
+        featuredImageAlign: {
+          default: 'left',
+        },
+        featuredImageSizeSlug: {
+          default: 'medium',
+        },
       }),
       supports: Object.assign(settings.supports, {
         align: [],

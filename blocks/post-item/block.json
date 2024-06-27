@@ -13,5 +13,8 @@
 	"style": [
 		"file:style-index.css"
 	],
+	"supports": {
+		"inserter": false
+	},
 	"render": "file:render.php"
 }

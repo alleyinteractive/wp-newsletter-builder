@@ -4,7 +4,7 @@
   "name": "wp-newsletter-builder/post",
   "version": "0.1.0",
   "title": "Newsletter Single Post",
-  "category": "design",
+  "category": "wp-newsletter-builder-newsletter",
   "icon": "admin-post",
   "description": "Displays a post",
   "textdomain": "wp-newsletter-builder",

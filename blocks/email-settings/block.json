@@ -4,7 +4,7 @@
 	"name": "wp-newsletter-builder/email-settings",
 	"version": "0.1.0",
 	"title": "Email Settings",
-	"category": "design",
+	"category": "wp-newsletter-builder-newsletter",
 	"icon": "email",
 	"description": "Block to set the email subject, preview text, and list.",
 	"textdomain": "wp-newsletter-builder",
@@ -13,5 +13,8 @@
 	"style": [
 		"file:style-index.css"
 	],
+	"supports": {
+		"inserter": false
+	},
 	"render": "file:render.php"
 }

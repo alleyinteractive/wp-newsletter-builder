@@ -4,7 +4,7 @@
 	"name": "wp-newsletter-builder/header",
 	"version": "0.1.0",
 	"title": "Newsletter Header",
-	"category": "design",
+	"category": "wp-newsletter-builder-newsletter",
 	"icon": "format-image",
 	"description": "Displays the header image for a newsletter",
 	"textdomain": "wp-newsletter-builder",

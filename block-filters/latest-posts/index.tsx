@@ -20,11 +20,6 @@ function modifyLatestPostsSupports(settings, name) {
   ) {
     return {
       ...settings,
-      attributes: Object.assign(settings.attributes, {
-        excerptLength: {
-          default: 20,
-        },
-      }),
       category: 'wp-newsletter-builder-newsletter',
       supports: Object.assign(settings.supports, {
         align: [],

@@ -12,10 +12,6 @@
  */
 
 .wp-block-wp-newsletter-builder-post {
-  > * {
-    margin: 15px 0;
-  }
-
   .post__image-link {
     display: block;
   }
@@ -36,9 +32,10 @@
     }
   }
 
+  .post__byline.wp-block-wp-newsletter-builder-post-byline,
   .post__byline {
     font-size: 16px;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
     text-align: center;
   }
 

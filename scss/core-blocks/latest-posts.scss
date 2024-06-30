@@ -10,6 +10,7 @@
     display: block;
     font-weight: bold;
     margin-bottom: 8px;
+    margin-top: 16px;
     text-decoration: none;
   }
 
@@ -19,16 +20,13 @@
     clear: both;
     display: table-row;
     width: 100%;
-
-    > * {
-      margin-bottom: 16px;
-      margin-top: 16px;
-    }
   }
 
   img {
-    max-width: 250px;
-    width: 250px;
+    display: block;
+    margin-bottom: 16px;
+    max-width: 150px;
+    width: 150px;
   }
 
   .wp-block-latest-posts__post-title {
@@ -41,6 +39,11 @@
 
   .wp-block-latest-posts__featured-image {
     display: table-cell;
+    margin-top: 16px;
+
+    > a {
+      margin-top: 0;
+    }
 
     &.aligncenter {
       display: block;
@@ -60,12 +63,16 @@
 
     &.alignleft {
       float: left;
+      margin-bottom: 8px;
       margin-right: 16px;
+      padding-bottom: 32px;
     }
 
     &.alignright {
       float: right;
+      margin-bottom: 8px;
       margin-left: 16px;
+      padding-bottom: 32px;
     }
   }
 
@@ -77,8 +84,8 @@
 
   .wp-block-latest-posts__post-excerpt {
     font-size: 14px;
-    margin-bottom: 8px;
-    margin-top: 8px;
+    margin-bottom: 16px;
+    margin-top: 16px;
 
     > a {
       display: none;

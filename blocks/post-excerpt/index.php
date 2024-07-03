@@ -13,6 +13,9 @@
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function wp_newsletter_builder_post_excerpt_block_init(): void {
+	if ( ! apply_filters( 'wp_newsletter_builder_register_block', true, 'post-excerpt' ) ) {
+		return;
+	}
 	// Register the block by passing the location of block.json.
 	register_block_type(
 		__DIR__

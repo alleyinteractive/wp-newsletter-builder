@@ -18,6 +18,7 @@ class Block_Modifications {
 	 */
 	public function __construct() {
 		add_filter( 'pre_render_block', [ $this, 'pre_render_post_block' ], 10, 2 );
+		add_filter( 'wp_newsletter_builder_register_block', [ $this, 'filter_wp_newsletter_builder_register_block' ], 10, 2 );
 	}
 
 	/**
@@ -56,4 +57,13 @@ class Block_Modifications {
 		}
 		return $block_content;
 	}
+
+	public function filter_wp_newsletter_builder_register_block( bool $register, string $block_name ): bool {
+		$post_type = $_GET['post'] ? get_post_type( $_GET['post'] ) : $_GET['post_type'] ?? 'post';
+		if ( 'nb_newsletter' !== $post_type && 'nb_template' !== $post_type) {
+			return false;
+		}
+		return $register;
+	}
+
 }

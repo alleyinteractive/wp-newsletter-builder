@@ -65,12 +65,21 @@ class Block_Modifications {
 	 * @return boolean
 	 */
 	public function filter_wp_newsletter_builder_register_block( bool $register ): bool {
-		$post_type = isset( $_GET['post'] ) ? get_post_type( intval( $_GET['post'] ) ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		global $pagenow;
+
+		$post_id = get_the_ID();
+		if ( empty( $post_id ) ) {
+			$post_id = isset( $_GET['post'] ) ? intval( $_GET['post'] ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		}
+		$post_type = isset( $_GET['post'] ) ? get_post_type( $post_id ) : null; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( empty( $post_type ) && isset( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			$post_type = sanitize_text_field( $_GET['post_type'] ) ?? 'post'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
-		if ( empty( $post_type ) ) {
+		if ( 'post-new.php' === $pagenow && empty( $post_type ) ) {
 			$post_type = 'post';
+		}
+		if ( empty( $post_type ) ) {
+			return $register;
 		}
 		if ( 'nb_newsletter' !== $post_type && 'nb_template' !== $post_type ) {
 			return false;

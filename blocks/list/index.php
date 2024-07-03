@@ -13,6 +13,15 @@
  * @see https://developer.wordpress.org/reference/functions/register_block_type/
  */
 function wp_newsletter_builder_list_block_init(): void {
+	/**
+	 * Filters whether to register the block.
+	 *
+	 * @param bool   $register Whether to register the block. Default true.
+	 * @param string $name     Block name.
+	 */
+	if ( ! apply_filters( 'wp_newsletter_builder_register_block', true, 'list' ) ) {
+		return;
+	}
 	// Register the block by passing the location of block.json.
 	register_block_type(
 		__DIR__

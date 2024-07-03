@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.4.0 - 2024-07-03
+
+- Only load Newsletter Builder blocks on Newsletter Builder post types (nb_newsletter and nb_template)
+
 ## 0.3.11 - 2024-05-09
 
 - Adds a `NewsletterSpinner` wrapper component for the `<Spinner />` component from `@wordpress/components`

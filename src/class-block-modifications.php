@@ -58,6 +58,13 @@ class Block_Modifications {
 		return $block_content;
 	}
 
+	/**
+	 * Filters whether to register a block.
+	 *
+	 * @param boolean $register Current register status.
+	 * @param string $block_name The block name.
+	 * @return boolean
+	 */
 	public function filter_wp_newsletter_builder_register_block( bool $register, string $block_name ): bool {
 		$post_type = $_GET['post'] ? get_post_type( $_GET['post'] ) : $_GET['post_type'] ?? 'post';
 		if ( 'nb_newsletter' !== $post_type && 'nb_template' !== $post_type) {

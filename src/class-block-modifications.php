@@ -72,5 +72,4 @@ class Block_Modifications {
 		}
 		return $register;
 	}
-
 }

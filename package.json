@@ -97,7 +97,7 @@
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "cross-spawn": "^7.0.3",
-    "dompurify": "^3.1.5",
+    "dompurify": "^3.1.6",
     "entities": "^5.0.0",
     "lodash": "^4.17.21",
     "prompts": "^2.4.2",

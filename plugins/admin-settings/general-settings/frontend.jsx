@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 // Components.
 import AdminGeneralSettings from './index';
 
-const element = document.getElementById('newsletter-builder-options__page');
+const element = document.getElementById('wp-newsletter-builder-settings__page');
 
 if (element) {
   const root = createRoot(element);

@@ -62,10 +62,10 @@ const AdminGeneralSettings = withNotices(
 
     return (
       <div className="wrap">
-        <div className="newsletter-builder-options__wrapper">
+        <div className="wp-newsletter-builder-settings__wrapper">
           <h1>{__('General Settings', 'wp-newsletter-builder')}</h1>
           { noticeUI }
-          <section className="newsletter-builder-options__wrapper-group">
+          <section className="wp-newsletter-builder-settings__wrapper-group">
             <h2>{__('From Email', 'wp-newsletter-builder')}</h2>
             <TextControl
               hideLabelFromVision
@@ -74,7 +74,7 @@ const AdminGeneralSettings = withNotices(
               value={fromEmail}
             />
           </section>
-          <section className="newsletter-builder-options__wrapper-group">
+          <section className="wp-newsletter-builder-settings__wrapper-group">
             <h2>{__('Reply-To Email', 'wp-newsletter-builder')}</h2>
             <TextControl
               hideLabelFromVision
@@ -83,7 +83,7 @@ const AdminGeneralSettings = withNotices(
               value={replyToEmail}
             />
           </section>
-          <section className="newsletter-builder-options__wrapper-group">
+          <section className="wp-newsletter-builder-settings__wrapper-group">
             <h2>{__('From Names', 'wp-newsletter-builder')}</h2>
             <Sortable
               emptyItem=""
@@ -111,7 +111,7 @@ const AdminGeneralSettings = withNotices(
                 )) : null}
             </Sortable>
           </section>
-          <section className="newsletter-builder-options__wrapper-group">
+          <section className="wp-newsletter-builder-settings__wrapper-group">
             <h2>{__('Footer Settings', 'wp-newsletter-builder')}</h2>
             <TextControl
               label={__('Facebook URL', 'wp-newsletter-builder')}

@@ -92,7 +92,7 @@ class Settings {
 	 * Callback function for add_submenu_page. Renders react entrypoint.
 	 */
 	public function options_menu_callback(): void {
-		echo '<div id="newsletter-builder-options__page"></div>';
+		echo '<div id="wp-newsletter-builder-settings__page"></div>';
 	}
 
 	/**

@@ -6,14 +6,6 @@ import apiFetch from '@wordpress/api-fetch';
 import type { WP_REST_API_Attachment } from 'wp-types';
 import './index.scss';
 
-declare global {
-  interface Window {
-    wp: {
-      media: (options: MediaLibraryOptions) => any;
-    };
-  }
-}
-
 type ImagePickerProps = {
   label: string;
   onChange: (value: number) => void;
@@ -31,6 +23,14 @@ type MediaLibrarySelection = {
   url: string;
 };
 
+declare global {
+  interface Window {
+    wp: {
+      media: (options: MediaLibraryOptions) => any;
+    };
+  }
+}
+
 export default function ImagePicker({
   label,
   onChange,
@@ -44,41 +44,39 @@ export default function ImagePicker({
    * Handle the Media Library modal logic.
    * @returns Promise
    */
-  const openMediaLibraryModal = () => {
-    return new Promise((resolve, reject) => {      
-      // Create the Media Library object. Restrict to images only.
-      const mediaLibrary = window?.wp?.media({
-        library: {
-          type: 'image'
-        }
-      });
-  
-      if (!mediaLibrary) {
+  const openMediaLibraryModal = () => new Promise((resolve, reject) => {
+    // Create the Media Library object. Restrict to images only.
+    const mediaLibrary = window?.wp?.media({
+      library: {
+        type: 'image',
+      },
+    });
+
+    if (!mediaLibrary) {
+      reject();
+    }
+
+    // Set up the select event listener. On success, returns a promise with the image ID and URL.
+    mediaLibrary?.on('select', () => {
+      const selectedImage = mediaLibrary?.state()?.get('selection')?.first();
+
+      if (!selectedImage) {
         reject();
       }
-  
-      // Set up the select event listener. On success, returns a promise with the image ID and URL.
-      mediaLibrary?.on('select', () => {
-        const selectedImage = mediaLibrary?.state()?.get('selection')?.first();
 
-        if (!selectedImage) {
-          reject();
-        }
-  
-        const {
-          attributes: {
-            id = 0,
-            url = '',
-          } = {},
-        } = selectedImage;
+      const {
+        attributes: {
+          id = 0,
+          url = '',
+        } = {},
+      } = selectedImage;
 
-        resolve({ id, url });
-      });
-  
-      // Open the Media Library modal.
-      mediaLibrary?.open();
+      resolve({ id, url });
     });
-  };
+
+    // Open the Media Library modal.
+    mediaLibrary?.open();
+  });
 
   /**
    * Select an image.
@@ -96,7 +94,7 @@ export default function ImagePicker({
 
     // Update the image URL state.
     setImageUrl(url);
-  }
+  };
 
   /**
    * Clear the selected image.
@@ -134,7 +132,7 @@ export default function ImagePicker({
     }
 
     imagePreview.src = imageUrl;
-  }, [imageUrl]);
+  }, [imageUrl, imagePreview]);
 
   return (
     <BaseControl label={label}>
@@ -154,6 +152,7 @@ export default function ImagePicker({
         </Button>
       </ButtonGroup>
       <img
+        alt=""
         className="image-picker__preview"
         ref={imagePreviewRef}
         src={imageUrl}

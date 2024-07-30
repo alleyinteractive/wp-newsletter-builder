@@ -40,7 +40,7 @@ interface Settings {
  * @return {WPElement} Element to render.
  */
 export default function Edit() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [settings, setSettings] = useState<Settings>();
 
   const facebookUrl = settings?.facebook_url ?? '';

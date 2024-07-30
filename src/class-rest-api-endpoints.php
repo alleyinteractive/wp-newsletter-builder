@@ -54,10 +54,10 @@ class Rest_API_Endpoints {
 		);
 		register_rest_route(
 			'wp-newsletter-builder/v1',
-			'/footer_settings/',
+			'/settings/',
 			[
 				'methods'             => 'GET',
-				'callback'            => [ $this, 'get_footer_settings' ],
+				'callback'            => [ $this, 'get_settings' ],
 				'permission_callback' => function () {
 					return current_user_can( 'edit_posts' );
 				},
@@ -138,6 +138,9 @@ class Rest_API_Endpoints {
 	 * Gets the settings from options.
 	 *
 	 * @return WP_Error|false|array{
+	 *   from_email?: string,
+	 *   reply_to_email?: string,
+	 *   from_names?: array<string>,
 	 *   facebook_url?: string,
 	 *   twitter_url?: string,
 	 *   instagram_url?: string,
@@ -146,13 +149,13 @@ class Rest_API_Endpoints {
 	 *   address?: string,
 	 * }
 	 */
-	public function get_footer_settings(): WP_Error|false|array {
+	public function get_settings(): WP_Error|false|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
 		$settings = new Settings();
 
-		return $settings->get_footer_settings();
+		return $settings->get_settings();
 	}
 
 	/**

@@ -188,11 +188,14 @@ class Settings {
 	}
 
 	/**
-	 * Gets footer settings.
+	 * Gets settings.
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
 	 * @return array{
+	 *   from_email?: string,
+	 *   reply_to_email?: string,
+	 *   from_names?: array<string>,
 	 *   facebook_url?: string,
 	 *   twitter_url?: string,
 	 *   instagram_url?: string,
@@ -201,13 +204,13 @@ class Settings {
 	 *   address?: string,
 	 * }|false  The footer settings.
 	 */
-	public function get_footer_settings(): array|false {
+	public function get_settings(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['footer_settings'] ) || ! is_array( $settings['footer_settings'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return false;
 		}
 
-		return $settings['footer_settings'];
+		return $settings;
 	}
 
 	/**

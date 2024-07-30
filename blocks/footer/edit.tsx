@@ -25,7 +25,10 @@ interface EditProps {
   };
 }
 
-interface FooterSettings {
+interface Settings {
+  from_email: string,
+  reply_to_email: string,
+  from_names: string[],
   facebook_url: string,
   twitter_url: string,
   instagram_url: string,
@@ -48,31 +51,31 @@ export default function Edit({
   },
 }: EditProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [footerSettings, setFooterSettings] = useState<FooterSettings>();
+  const [settings, setSettings] = useState<Settings>();
 
-  const facebookUrl = footerSettings?.facebook_url ?? '';
-  const twitterUrl = footerSettings?.twitter_url ?? '';
-  const instagramUrl = footerSettings?.instagram_url ?? '';
-  const youtubeUrl = footerSettings?.youtube_url ?? '';
-  const imageId = footerSettings?.image ?? 0;
-  const address = footerSettings?.address ?? '';
+  const facebookUrl = settings?.facebook_url ?? '';
+  const twitterUrl = settings?.twitter_url ?? '';
+  const instagramUrl = settings?.instagram_url ?? '';
+  const youtubeUrl = settings?.youtube_url ?? '';
+  const imageId = settings?.image ?? 0;
+  const address = settings?.address ?? '';
 
   useEffect(() => {
-    if (footerSettings) {
+    if (settings) {
       setIsLoading(false);
       return;
     }
-    apiFetch({ path: '/wp-newsletter-builder/v1/footer_settings' }).then((response) => {
-      setFooterSettings(response as any as FooterSettings);
+    apiFetch({ path: '/wp-newsletter-builder/v1/settings' }).then((response) => {
+      setSettings(response as any as Settings);
     });
-  }, [footerSettings]);
+  }, [settings]);
 
   const {
     media = null,
   } = useSelect((select) => ({
     // @ts-ignore
     media: imageId ? select('core').getMedia(imageId) : null,
-  }), [footerSettings, imageId]);
+  }), [settings, imageId]);
 
   const imageUrl = media ? media.source_url : '';
   const imageAltText = media ? media.alt_text : '';

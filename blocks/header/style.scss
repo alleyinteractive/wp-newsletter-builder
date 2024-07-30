@@ -12,9 +12,7 @@
  */
 
 .wp-block-wp-newsletter-builder-header {
-  margin-bottom: 20px;
-  margin-top: 6px;
-  // @TODO: style alt text.
+  text-align: center;
 
   &__placeholder {
     align-items: center;
@@ -22,5 +20,9 @@
     border: 1px dashed #000;
     display: flex;
     justify-content: center;
+  }
+
+  img {
+    margin: 0 auto;
   }
 }

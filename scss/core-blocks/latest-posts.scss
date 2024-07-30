@@ -1,0 +1,119 @@
+.wp-block-latest-posts {
+  border-collapse: collapse;
+  display: table;
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+
+  a {
+    color: currentColor;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-top: 16px;
+    text-decoration: none;
+  }
+
+  li {
+    border-bottom: 1px solid #ccc;
+    box-sizing: border-box;
+    clear: both;
+    display: table-row;
+    width: 100%;
+  }
+
+  img {
+    display: block;
+    margin-bottom: 16px;
+    max-width: 150px;
+    width: 150px;
+  }
+
+  .wp-block-latest-posts__post-title {
+    color: currentColor;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-decoration: none;
+  }
+
+  .wp-block-latest-posts__featured-image {
+    display: table-cell;
+    margin-top: 16px;
+
+    > a {
+      margin-top: 0;
+    }
+
+    &.aligncenter {
+      display: block;
+      margin-bottom: 8px;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: none;
+      padding-left: 0;
+      padding-right: 0;
+      width: 100%;
+
+      img {
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+
+    &.alignleft {
+      float: left;
+      margin-bottom: 8px;
+      margin-right: 16px;
+      padding-bottom: 32px;
+    }
+
+    &.alignright {
+      float: right;
+      margin-bottom: 8px;
+      margin-left: 16px;
+      padding-bottom: 32px;
+    }
+  }
+
+  .wp-block-latest-posts__post-author,
+  .wp-block-latest-posts__post-date {
+    display: block;
+    font-size: 13px;
+  }
+
+  .wp-block-latest-posts__post-excerpt {
+    font-size: 14px;
+    margin-bottom: 16px;
+    margin-top: 16px;
+
+    > a {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    li {
+      display: block;
+      width: 100%;
+
+      div {
+        display: block;
+        float: none;
+      }
+    }
+
+    .wp-block-latest-posts__featured-image.alignleft,
+    .wp-block-latest-posts__featured-image.alignright {
+      display: block;
+      float: none;
+      width: 100%;
+
+      img {
+        display: block;
+        max-width: 100%;
+        width: 100%;
+      }
+    }
+  }
+}

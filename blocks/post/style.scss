@@ -12,10 +12,6 @@
  */
 
 .wp-block-wp-newsletter-builder-post {
-  > * {
-    margin: 15px 0;
-  }
-
   .post__image-link {
     display: block;
   }
@@ -36,26 +32,16 @@
     }
   }
 
-  .wp-block-wp-newsletter-builder-two-up-post & {
-    h2 {
-      font-size: 18px;
-    }
-  }
-
+  .post__byline.wp-block-wp-newsletter-builder-post-byline,
   .post__byline {
-    font-family: Georgia,serif;
-    font-size: 15px;
-    font-weight: bold;
+    font-size: 16px;
+    margin: 0 auto 8px;
     text-align: center;
   }
 
   .post__image-link {
     display: block;
     margin: 20px auto;
-  }
-
-  .post__dek p {
-    margin: 20px;
   }
 
   .wp-block-button {
@@ -68,5 +54,9 @@
 
   table {
     width: 100%;
+  }
+
+  li {
+    font-size: 16px;
   }
 }

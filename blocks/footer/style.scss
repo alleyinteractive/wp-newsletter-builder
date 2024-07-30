@@ -27,15 +27,33 @@
   }
 
   &__link {
-    background-color: #D62827;
     border-radius: 50%;
-    color: #D62827;
     display: inline-block;
     height: 26px;
     max-height: 26px;
     text-decoration: underline;
     transition: opacity 0.1s ease-in;
     width: 26px;
+  }
+
+  .facebook-icon {
+    background-color: #1877F2;
+    color: #1877F2;
+  }
+
+  .twitter-icon {
+    background-color: #000;
+    color: #000;
+  }
+
+  .instagram-icon {
+    background-color: #E1306C;
+    color: #E1306C;
+  }
+
+  .youtube-icon {
+    background-color: #F00;
+    color: #F00;
   }
 }
 
@@ -47,6 +65,22 @@
 
 .wp-block-wp-newsletter-builder-footer__address {
   margin-top: 20px;
+
+  > span {
+    display: block;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  address {
+    display: block;
+    font-style: normal;
+    text-align: center;
+
+    > span {
+      display: block;
+    };
+  }
 }
 
 .wp-block-wp-newsletter-builder-footer__links {

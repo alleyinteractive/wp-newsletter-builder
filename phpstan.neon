@@ -5,9 +5,6 @@ parameters:
 	# Level 9 is the highest level
 	level: max
 
-	# Disable generics in type hints.
-	checkGenericClassInNonGenericObjectType: false
-
 	paths:
 		- blocks/
 		- entries/

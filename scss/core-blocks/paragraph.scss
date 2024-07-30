@@ -1,5 +1,10 @@
 p {
-  font-family: Merriweather, Georgia, serif;
+  font-family: var(--template-font-family);
   font-size: 16px;
   line-height: 1.33;
+  margin: 0;
+
+  span {
+    font-family: var(--template-font-family);
+  }
 }

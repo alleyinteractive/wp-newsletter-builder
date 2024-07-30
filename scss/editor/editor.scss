@@ -2,9 +2,6 @@
  * This adds enough specificity to override the core block-library styles while
  * allowing our custom blocks' styles to win.
  */
-html :where(.editor-styles-wrapper) {
-  @import '@/scss/core-blocks/heading';
-}
 
 // Block editor styles.
 .block-editor {
@@ -15,9 +12,19 @@ html :where(.editor-styles-wrapper) {
     width: 320px;
     width: calc(28000% - 167400px);
 
+    .wp-block-post-content.wp-block-post-content {
+      background-color: var(--template-bg-color);
+    }
+
+    // Reset this style so that the editor matches the email client output.
+    // stylelint-disable-next-line selector-max-compound-selectors
+    :where(body .is-layout-flow) > * {
+      margin-block-start: 0;
+    }
+
     // Some blocks require extra specificity.
     .block-editor-block-list__layout.is-root-container {
-      /* tbd */
+      @import '@/scss/core-blocks/heading';
     }
 
     // Block style imports.
@@ -25,5 +32,8 @@ html :where(.editor-styles-wrapper) {
     @import '@/scss/core-blocks/paragraph';
     @import '@/scss/core-blocks/button';
     @import '@/scss/core-blocks/separator';
+    @import '@/scss/core-blocks/list';
+    @import '@/scss/core-blocks/typography';
+    @import '@/scss/core-blocks/latest-posts';
   }
 }

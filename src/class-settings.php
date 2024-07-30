@@ -144,6 +144,9 @@ class Settings {
 							'address' => [
 								'type' => 'string',
 							],
+							'address_2' => [
+								'type' => 'string',
+							],
 						],
 					],
 				],
@@ -202,6 +205,7 @@ class Settings {
 	 *   youtube_url?: string,
 	 *   image?: int,
 	 *   address?: string,
+	 *   address_2?: string,
 	 * }|false  The footer settings.
 	 */
 	public function get_settings(): array|false {
@@ -221,6 +225,7 @@ class Settings {
 	public function get_from_names(): array|false {
 		$settings = get_option( static::SETTINGS_KEY, [] );
 		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
+			// @phpstan-ignore-next-line
 			$settings['from_names'] = [];
 		}
 

@@ -4,7 +4,6 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
 import { __ } from '@wordpress/i18n';
-import classNames from 'classnames';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -19,12 +18,6 @@ import { Spinner } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
 
-interface EditProps {
-  attributes: {
-    narrow_separator: boolean,
-  };
-}
-
 interface Settings {
   from_email: string,
   reply_to_email: string,
@@ -35,6 +28,7 @@ interface Settings {
   youtube_url: string,
   image: number,
   address: string,
+  address_2: string,
 }
 
 /**
@@ -45,11 +39,7 @@ interface Settings {
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({
-  attributes: {
-    narrow_separator: narrowSeparator = false,
-  },
-}: EditProps) {
+export default function Edit() {
   const [isLoading, setIsLoading] = useState(true);
   const [settings, setSettings] = useState<Settings>();
 
@@ -59,16 +49,17 @@ export default function Edit({
   const youtubeUrl = settings?.youtube_url ?? '';
   const imageId = settings?.image ?? 0;
   const address = settings?.address ?? '';
+  const address2 = settings?.address_2 ?? '';
 
   useEffect(() => {
-    if (settings) {
-      setIsLoading(false);
-      return;
-    }
-    apiFetch({ path: '/wp-newsletter-builder/v1/settings' }).then((response) => {
-      setSettings(response as any as Settings);
-    });
-  }, [settings]);
+    setIsLoading(true);
+
+    apiFetch({ path: '/wp-newsletter-builder/v1/settings' })
+      .then((response) => {
+        setSettings(response as any as Settings);
+        setIsLoading(false);
+      });
+  }, []);
 
   const {
     media = null,
@@ -82,10 +73,6 @@ export default function Edit({
 
   return (
     <div {...useBlockProps()}>
-      <hr className={
-        classNames('wp-block-separator', 'has-alpha-channel-opacity', { 'is-style-wide': !narrowSeparator })
-      }
-      />
       {isLoading
         ? (
           /* @ts-ignore */
@@ -98,7 +85,7 @@ export default function Edit({
                   {facebookUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={facebookUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link facebook-icon" href={facebookUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/facebook.png" alt="Facebook" height="26" width="26" />
                         </a>
                       </span>
@@ -106,15 +93,15 @@ export default function Edit({
                   {twitterUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={twitterUrl}>
-                          <img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="Twitter" height="26" width="26" />
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link twitter-icon" href={twitterUrl}>
+                          <img src="/wp-content/plugins/wp-newsletter-builder/images/twitter.png" alt="X" height="26" width="26" />
                         </a>
                       </span>
                     ) : null}
                   {instagramUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={instagramUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link instagram-icon" href={instagramUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/instagram.png" alt="Instagram" height="26" width="26" />
                         </a>
                       </span>
@@ -122,7 +109,7 @@ export default function Edit({
                   {youtubeUrl
                     ? (
                       <span className="wp-block-wp-newsletter-builder-footer__social-links__item">
-                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link" href={youtubeUrl}>
+                        <a className="wp-block-wp-newsletter-builder-footer__social-links__link youtube-icon" href={youtubeUrl}>
                           <img src="/wp-content/plugins/wp-newsletter-builder/images/youtube.png" alt="YouTube" height="26" width="26" />
                         </a>
                       </span>
@@ -138,18 +125,20 @@ export default function Edit({
             {address
               ? (
                 <div className="wp-block-wp-newsletter-builder-footer__address">
-                  {address}
+                  <span>{__('Our mailing address is:', 'wp-newsletter-builder')}</span>
+                  <address>
+                    <span>{address}</span>
+                    {address2 ? (<span>{address2}</span>) : null}
+                  </address>
                 </div>
               )
               : null}
           </>
         )}
       <div className="wp-block-wp-newsletter-builder-footer__links">
-        {/* @ts-ignore */}
-        <preferences>{__('Preferences', 'wp-newsletter-builder')}</preferences>
-        {' | '}
-        {/* @ts-ignore */}
-        <unsubscribe>{__('Unsubscribe', 'wp-newsletter-builder')}</unsubscribe>
+        <a href="#unsubscribe_preferences">
+          {__('Manage Subscription Preferences', 'wp-newsletter-builder')}
+        </a>
       </div>
     </div>
   );

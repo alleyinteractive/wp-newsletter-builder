@@ -1,8 +1,18 @@
 .wp-block-button {
-  font-weight: bold;
+  font-family: var(--template-font-family);
   margin: 0 auto;
-  max-width: 50%;
-  width: max-content;
+  padding: 10px 14px;
+  text-align: center;
+
+  a {
+    font-size: 14px;
+    padding: 0;
+    text-decoration: none;
+  }
+
+  a.read-more-button {
+    padding: 10px 14px;
+  }
 
   // Footer subscribe button.
   &.wp-newsletter-builder__subscribe {
@@ -16,16 +26,25 @@
   }
 }
 
-.wp-element-button {
-  background-color: #D62827;
-  border-radius: 4px;
-  color: #FFF;
-  display: inline-block;
-  font-family: Verdana, sans-serif;
+.wp-element-button,
+.wp-block-button__link {
+  background-color: inherit;
+  color: inherit;
   font-size: 14px;
-  font-weight: bold;
+  padding: 0;
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-text-size-adjust:none;
+}
+
+// Read More button does not use the Newsletter Button block, so it needs to be styled separately.
+.read-more-button {
+  background-color: #0279af;
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--template-font-family);
+  font-size: 14px;
   line-height: 24px;
-  padding: 12px;
+  padding: 10px 14px;
   text-align: center;
   text-decoration: none;
   /* stylelint-disable-next-line property-no-vendor-prefix */

@@ -4,7 +4,7 @@
 	"name": "wp-newsletter-builder/two-up-post",
 	"version": "0.1.0",
 	"title": "Two Up Newsletter Post",
-	"category": "design",
+	"category": "wp-newsletter-builder-newsletter",
 	"icon": "editor-table",
 	"description": "Displays two posts, side by side",
 	"textdomain": "wp-newsletter-builder",

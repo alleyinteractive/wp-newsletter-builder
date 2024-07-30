@@ -103,7 +103,11 @@ class Breaking_Recipients {
 			return $options;
 		}
 		foreach ( $lists as $list ) {
-			$options[ $list->ListID ] = $list->Name; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			if ( is_object( $list ) ) {
+				$options[ $list->ListID ] = $list->Name; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			} else {
+				$options[ $list['ListID'] ] = $list['Name']; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			}
 		}
 		return $options;
 	}

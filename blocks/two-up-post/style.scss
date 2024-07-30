@@ -12,16 +12,18 @@
  */
 
 .wp-block-wp-newsletter-builder-two-up-post {
-  display: flex;
-  flex-direction: row;
+  margin-bottom: 32px;
   max-width: 600px;
   width: 100%;
-  margin: 20px 0;
+
+  td {
+    vertical-align: top;
+    width: 50%;
+  }
 
   div.wp-block-wp-newsletter-builder-post {
     max-width: 300px;
     padding: 0 10px;
-    width: 50%;
 
     img {
       height: auto;
@@ -29,8 +31,32 @@
       width: 100%;
     }
 
-    h3 {
-      margin-top: 20px;
+    h2.wp-block-wp-newsletter-builder-post-title {
+      font-size: 20px !important; // Needed to override editor styles
+    }
+
+    p.post__byline {
+      font-size: 14px;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    div.wp-block-wp-newsletter-builder-post-excerpt {
+      // stylelint-disable-next-line selector-max-compound-selectors
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .wp-block-wp-newsletter-builder-post-read-more {
+    display: none;
+  }
+
+  @media screen and (max-width: 480px) {
+    td {
+      display: block;
+      width: 100% !important;
     }
   }
 }

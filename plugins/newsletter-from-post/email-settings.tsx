@@ -1,34 +1,24 @@
 /**
  * EmailSettings component
  */
-
-import { PluginSidebar } from '@wordpress/edit-post';
-import {
-  PanelBody,
-  TextareaControl,
-  CheckboxControl,
-} from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
-import { useSelect } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
-import { usePostMeta } from '@alleyinteractive/block-editor-tools';
+import { createBlock, parse, serialize } from '@wordpress/blocks';
+import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { PluginSidebar } from '@wordpress/edit-post';
+import { useCallback, useEffect, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { MultiSelect } from 'react-multi-select-component';
-import { parse, serialize } from '@wordpress/blocks';
+// eslint-disable-next-line camelcase
+import { WP_REST_API_Post } from 'wp-types';
 
 import NewsletterSpinner from '@/components/newsletterSpinner';
+import useEmailLists, { Option } from '@/hooks/useEmailLists';
+import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+
 import EmailTypeSelector from '../../components/emailTypeSelector';
-import SentNewsletter from './sent-newsletter';
-
-interface ListResult {
-  ListID: string;
-  Name: string;
-}
-
-interface Option {
-  value: string;
-  label: string;
-}
+import InvalidTemplate from './components/invalid-template';
+import RequiredFields from './components/required-fields';
 
 interface CoreEditor {
   getEditedPostAttribute: (attribute: string) => string;
@@ -43,19 +33,13 @@ interface Window {
 }
 
 function EmailSettings() {
-  const [meta, setMeta] = usePostMeta();
-  const {
-    nb_breaking_email_type: type = '',
-    nb_breaking_template: template = '',
-    nb_breaking_from_name: fromName = '',
-    nb_breaking_subject: subject = '',
-    nb_breaking_preview: preview = '',
-    nb_breaking_list: list = [],
-    nb_breaking_header_img: image = 0, // eslint-disable-line
-    nb_breaking_should_send: send = false,
-    nb_breaking_content: content = '', // eslint-disable-line
-    nb_newsletter_sent_breaking_post_id: sentBreakingPostId = [],
-  } = meta;
+  const [fetched, setFetched] = useState(false);
+  const [invalidTemplate, setInvalidTemplate] = useState(false);
+  const { meta, resetTemplate, setMeta } = useNewsletterMeta();
+  const { emailListOptions, selectedEmailList } = useEmailLists();
+  const manualSubject = meta.subject !== '';
+  const manualPreview = meta.preview !== '';
+  const listArray = Array.isArray(meta.list) ? meta.list : [meta.list];
 
   const {
     postId,
@@ -79,12 +63,6 @@ function EmailSettings() {
     };
   }, []);
 
-  const [lists, setLists] = useState<ListResult[]>([]); // eslint-disable-line
-  const manualSubject = subject !== '';
-  const manualPreview = preview !== '';
-
-  const listArray = Array.isArray(list) ? list : [list];
-
   const {
     newsletterBuilder: {
       breakingLists = {},
@@ -96,37 +74,49 @@ function EmailSettings() {
     setMeta({ nb_breaking_list: listIds });
   });
 
-  const listsToOptions = (rawLists: ListResult[]) => {
-    const output = rawLists.map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
-    return output;
-  };
-
-  const options = lists.length > 0 ? listsToOptions(lists) : [];
-  const selected = options.filter((item: Option) => listArray.includes(item.value));
-
-  useEffect(() => { // eslint-disable-line
-    if (lists.length > 0) {
-      return;
-    }
-    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
-    });
-  }, [lists]);
-
-  const contentHandler = (html: string) => {
+  const contentHandler = useCallback((html: string) => {
     const blocks = parse(html);
     const postIndex = blocks.findIndex((block) => block.name === 'wp-newsletter-builder/post');
-    blocks[postIndex].attributes.postId = postId;
 
+    if (postIndex === -1) {
+      resetTemplate();
+      setInvalidTemplate(true);
+      return;
+    }
+
+    blocks[postIndex] = createBlock('wp-newsletter-builder/post', {
+      ...blocks[postIndex].attributes,
+      postId,
+    }, blocks[postIndex].innerBlocks);
+
+    setInvalidTemplate(false);
     setMeta({ nb_breaking_content: serialize(blocks) });
-  };
+  }, [postId, resetTemplate, setMeta]);
 
-  const disabled = type === ''
-    || template === ''
-    || fromName === ''
-    || (subject === '' && postTitle === '')
-    || (preview === '' && postExcerpt === '')
-    || list.length === 0;
+  const areRequiredFieldsSet = meta.type === ''
+    || meta.template === ''
+    || meta.fromName === ''
+    || (meta.subject === '' && postTitle === '')
+    || (meta.preview === '' && postExcerpt === '')
+    || meta.list.length === 0;
+
+  /**
+   * Update the template content when the template is changed.
+   */
+  useEffect(() => {
+    if (!meta.template || fetched) {
+      return;
+    }
+
+    apiFetch({
+      path: `/wp/v2/nb_template/${meta.template}?context=edit`,
+    }).then((response) => {
+      const { content } = response as WP_REST_API_Post; // eslint-disable-line camelcase
+      setFetched(true);
+      contentHandler(content.raw as string);
+    });
+  }, [contentHandler, fetched, meta.template]);
+
   return (
     <PluginSidebar
       icon="email-alt2"
@@ -139,24 +129,29 @@ function EmailSettings() {
       >
         <EmailTypeSelector
           contentHandler={contentHandler}
-          typeHandler={(newType) => { setMeta({ nb_breaking_email_type: newType }); }}
+          typeHandler={
+            (newType) => {
+              setMeta({ nb_breaking_email_type: newType });
+              setInvalidTemplate(false);
+            }
+          }
           imageHandler={(newImage) => { setMeta({ nb_breaking_header_img: newImage }); }}
-          typeValue={type}
+          typeValue={meta.type}
           templateHandler={(newTemplate) => { setMeta({ nb_breaking_template: newTemplate }); }}
           fromNameHandler={(newFromName) => { setMeta({ nb_breaking_from_name: newFromName }); }}
-          templateValue={template}
-          fromNameValue={fromName}
+          templateValue={meta.template}
+          fromNameValue={meta.fromName}
         />
         <TextareaControl
           label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
           placeholder={__('Enter subject', 'wp-newsletter-builder')}
-          value={subject !== '' ? subject : postTitle}
+          value={meta.subject !== '' ? meta.subject : postTitle}
           onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
         />
         <TextareaControl
           label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
           placeholder={__('Enter preview text', 'wp-newsletter-builder')}
-          value={preview !== '' ? preview : postExcerpt}
+          value={meta.preview !== '' ? meta.preview : postExcerpt}
           onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
         />
         {Object.keys(breakingLists).map((key: string) => {
@@ -174,15 +169,15 @@ function EmailSettings() {
             />
           );
         })}
-        {lists.length > 0 ? (
+        {emailListOptions.length > 0 ? (
           <label
             htmlFor="wp-newsletter-builder-list"
           >
             {__('Email List', 'wp-newsletter-builder')}
             <MultiSelect
               labelledBy={__('List', 'wp-newsletter-builder')}
-              value={selected}
-              options={options}
+              value={selectedEmailList}
+              options={emailListOptions}
               onChange={setSelectedLists}
               hasSelectAll={false}
               overrideStrings={{
@@ -196,40 +191,17 @@ function EmailSettings() {
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl
             label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'wp-newsletter-builder') : __('Send Newsletter on Update', 'wp-newsletter-builder')}
-            checked={send && !disabled}
+            checked={meta.send && !areRequiredFieldsSet}
             onChange={(value) => { setMeta({ nb_breaking_should_send: value }); }}
-            disabled={disabled}
+            disabled={areRequiredFieldsSet}
           />
-          {!type ? (
-            <p style={{ color: 'red' }}>{__('Header Type is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!template ? (
-            <p style={{ color: 'red' }}>{__('Template is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!fromName ? (
-            <p style={{ color: 'red' }}>{__('From Name is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!subject && !postTitle ? (
-            <p style={{ color: 'red' }}>{__('Subject is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {!preview && !postExcerpt ? (
-            <p style={{ color: 'red' }}>{__('Preview Text is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
-          {list.length === 0 ? (
-            <p style={{ color: 'red' }}>{__('Email List is Required', 'wp-newsletter-builder')}</p>
-          ) : null}
+        </div>
+        <div>
+          <h2 className="components-panel__body-title">{__('Newsletter Validation', 'wp-newsletter-builder')}</h2>
+          <RequiredFields meta={meta} postTitle={postTitle} postExcerpt={postExcerpt} />
+          <InvalidTemplate invalid={invalidTemplate} />
         </div>
       </PanelBody>
-      {sentBreakingPostId ? (
-        <PanelBody
-          initialOpen={false}
-          title={__('Sent Newsletters', 'wp-newsletter-builder')}
-        >
-          {sentBreakingPostId.map((id: number) => (
-            <SentNewsletter postId={id} key={id} />
-          ))}
-        </PanelBody>
-      ) : null}
     </PluginSidebar>
   );
 }

@@ -26,6 +26,7 @@ class WP_Newsletter_Builder {
 		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ] );
 		add_filter( 'pre_get_posts', [ $this, 'modify_query' ] );
 		add_action( 'init', [ $this, 'check_for_fieldmanager' ] );
+		add_filter( 'block_categories_all', [ $this, 'add_newsletter_block_category' ], 10, 2 );
 	}
 
 	/**
@@ -74,17 +75,6 @@ class WP_Newsletter_Builder {
 				'supports'            => [ 'title', 'editor', 'custom-fields' ],
 				'show_in_rest'        => true,
 				'exclude_from_search' => true,
-				'template'            => [
-					[
-						'wp-newsletter-builder/email-settings',
-						[
-							'lock' => [
-								'move'   => true,
-								'remove' => true,
-							],
-						],
-					],
-				],
 				'menu_icon'           => 'dashicons-admin-customizer',
 			],
 		);
@@ -172,7 +162,7 @@ class WP_Newsletter_Builder {
 		// Publish the post, which should kick off the other transition listener to send the email.
 		$breaking_post_id = wp_insert_post(
 			[
-				'post_title'   => "Breaking News {$post->ID}",
+				'post_title'   => "Breaking News: {$post->post_title}",
 				// @phpstan-ignore-next-line cast to string is necessary.
 				'post_content' => (string) get_post_meta( $post->ID, 'nb_breaking_content', true ),
 				'post_status'  => 'publish',
@@ -307,6 +297,7 @@ class WP_Newsletter_Builder {
 		if (
 			$query->is_main_query()
 			&& isset( $query->query_vars['post_type'] )
+			&& ! $query->is_admin
 			&& 'nb_newsletter' === $query->query_vars['post_type']
 		) {
 			$query->query['post_status']      = [ 'publish', 'draft' ];
@@ -346,5 +337,23 @@ class WP_Newsletter_Builder {
 		if ( ! defined( 'FM_VERSION' ) ) {
 			add_action( 'admin_notices', [ $this, 'fieldmanager_not_found_error' ] );
 		}
+	}
+
+	/**
+	 * Adds a new Newsletter block category.
+	 *
+	 * @param array $categories Array of categories for block types.
+	 * 
+	 * @return array
+	 */
+	public function add_newsletter_block_category( $categories ): array {
+		
+		$categories[] = [
+			'slug'  => 'wp-newsletter-builder-newsletter',
+			'title' => 'Newsletter',
+			'icon'  => 'email-alt',
+		];
+
+		return $categories;
 	}
 }

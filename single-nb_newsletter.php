@@ -9,7 +9,7 @@ if ( function_exists( 'newrelic_disable_autorum' ) ) {
 	newrelic_disable_autorum();
 }
 
-$wp_newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_preview', true );
+$wp_newsletter_builder_preview = get_post_meta( get_queried_object_id(), 'nb_newsletter_preview', true );
 ?>
 <!doctype html>
 
@@ -35,9 +35,16 @@ $wp_newsletter_builder_preview = get_post_meta( get_the_ID(), 'nb_newsletter_pre
 <!--[if !mso]><!-->
 <body class="main">
 <!--<![endif]-->
-	<?php if ( ! empty( $wp_newsletter_builder_preview ) ) : ?>
-		<div style="display:none;"><?php echo esc_html( $wp_newsletter_builder_preview ); ?></div>
-	<?php endif; ?>
+	<?php
+	if ( ! empty( $wp_newsletter_builder_preview ) ) {
+		/**
+		 * Allow preview markup and text to be added to the newsletter.
+		 *
+		 * @param string $wp_newsletter_builder_preview The preview text.
+		 */
+		do_action( 'wp_newsletter_builder_preview_text', $wp_newsletter_builder_preview );
+	}
+	?>
 	<table class="wrapper" cellpadding="0" cellspacing="0" role="presentation">
 		<tbody>
 			<tr>

@@ -9,6 +9,9 @@
 	"description": "Child block of Newsletter Signup Form to show a single list",
 	"textdomain": "wp-newsletter-builder",
 	"editorScript": "file:index.ts",
+	"supports": {
+		"inserter": false
+	},
 	"render": "file:render.php",
 	"attributes": {
 		"logo": {

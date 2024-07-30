@@ -108,7 +108,7 @@ class Settings {
 					'schema' => [
 						'type'       => 'object',
 						'properties' => [
-							'from_email' => [
+							'from_email'     => [
 								'type'   => 'string',
 								'format' => 'email',
 							],
@@ -116,35 +116,35 @@ class Settings {
 								'type'   => 'string',
 								'format' => 'email',
 							],
-							'from_names' => [
+							'from_names'     => [
 								'type'  => 'array',
 								'items' => [
 									'type' => 'string',
 								],
 							],
-							'facebook_url' => [
+							'facebook_url'   => [
 								'type'   => 'string',
 								'format' => 'uri',
 							],
-							'twitter_url' => [
+							'twitter_url'    => [
 								'type'   => 'string',
 								'format' => 'uri',
 							],
-							'instagram_url' => [
+							'instagram_url'  => [
 								'type'   => 'string',
 								'format' => 'uri',
 							],
-							'youtube_url' => [
+							'youtube_url'    => [
 								'type'   => 'string',
 								'format' => 'uri',
 							],
-							'image' => [
+							'image'          => [
 								'type' => 'number',
 							],
-							'address' => [
+							'address'        => [
 								'type' => 'string',
 							],
-							'address_2' => [
+							'address_2'      => [
 								'type' => 'string',
 							],
 						],

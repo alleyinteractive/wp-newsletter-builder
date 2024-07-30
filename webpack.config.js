@@ -27,6 +27,7 @@ module.exports = (env, { mode }) => ({
           'wp-newsletter-builder-separator/index': './block-filters/separator',
           'wp-newsletter-builder-from-post/index': './plugins/newsletter-from-post',
           'newsletter-status/index': './plugins/newsletter-status',
+          'wp-newsletter-builder-admin-general-settings/index': './plugins/admin-settings/general-settings/frontend.jsx',
         }),
     };
   },

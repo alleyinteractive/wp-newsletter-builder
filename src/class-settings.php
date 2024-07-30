@@ -83,7 +83,7 @@ class Settings {
 			__( 'General Settings', 'wp-newsletter-builder' ),
 			__( 'General Settings', 'wp-newsletter-builder' ),
 			'manage_options',
-			'wp-newsletter-builder-settings',
+			'general-settings',
 			[ $this, 'options_menu_callback' ],
 		);
 	}

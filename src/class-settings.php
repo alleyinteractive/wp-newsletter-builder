@@ -38,7 +38,7 @@ class Settings {
 		wp_register_script(
 			'wp-newsletter-builder-admin-general-settings',
 			get_entry_asset_url( 'wp-newsletter-builder-admin-general-settings' ),
-			array_merge( get_asset_dependency_array( 'wp-newsletter-builder-admin-setting' ), [ 'wp-editor' ] ),
+			array_merge( get_asset_dependency_array( 'wp-newsletter-builder-admin-general-settings' ), [ 'wp-editor' ] ),
 			get_asset_version( 'wp-newsletter-builder-admin-general-settings' ),
 			true
 		);

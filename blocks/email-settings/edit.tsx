@@ -188,6 +188,7 @@ export default function Edit() {
           value={suppressionGroup}
           options={suppressionLists.map((item) => ({ label: item.Name, value: item.ListID }))}
           onChange={(newValue: string) => setMeta({ nb_newsletter_suppression_group: newValue })}
+          required
         />
       ) : (
         /* @ts-ignore */

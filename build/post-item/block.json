@@ -1,0 +1,20 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/post-item",
+  "version": "0.1.0",
+  "title": "Newsletter Post Item",
+  "category": "design",
+  "icon": "editor-table",
+  "description": "Displays a post block inside a table cell.",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "supports": {
+    "inserter": false
+  },
+  "render": "file:render.php"
+}

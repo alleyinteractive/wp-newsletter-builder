@@ -35,6 +35,8 @@ module.exports = (env, { mode }) => ({
           'newsletter-status/index': './plugins/newsletter-status',
           'newsletter-template-styles/index': './plugins/newsletter-template-styles',
           'pre-publish-checks/index': './plugins/pre-publish-checks',
+          'wp-newsletter-builder-admin-general-settings/index': './plugins/admin-settings/general-settings/frontend.jsx',
+          'wp-newsletter-builder-admin-email-types/index': './plugins/admin-settings/email-types/frontend.jsx',
         }),
     };
   },

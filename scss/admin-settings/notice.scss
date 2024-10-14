@@ -1,0 +1,20 @@
+.components-notice-list {
+	.components-notice {
+		--border: 1px solid #c3c4c7;
+	
+		&.is-error,
+		&.is-info,
+		&.is-success,
+		&.is-warning {
+			background-color: #fff;
+			border-bottom: var(--border); 
+			border-right: var(--border); 
+			border-top: var(--border); 
+		}
+	
+		&__content {
+			margin-bottom: 0;
+			margin-top: 0;
+		}
+	}
+}	

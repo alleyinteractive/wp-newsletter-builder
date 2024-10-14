@@ -24,20 +24,128 @@ class Email_Types {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
-		add_filter( 'pre_update_option_' . static::SETTINGS_KEY, [ $this, 'sort_settings_on_save' ], 10, 1 );
+		// add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
+		// add_filter( 'pre_update_option_' . static::SETTINGS_KEY, [ $this, 'sort_settings_on_save' ], 10, 1 );
+
+		add_action( 'admin_init', [ $this, 'register_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'admin_menu', [ $this, 'register_submenu_page' ] );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'rest_api_init', [ $this, 'register_settings' ] );
 	}
 
 	/**
-	 * Registers the submenu settings page for the Email Types.
-	 *
-	 * @return void
+	 * Register scripts for the settings page.
 	 */
+	public function register_scripts() {
+		wp_register_script(
+			'wp-newsletter-builder-admin-email-types',
+			get_entry_asset_url( 'wp-newsletter-builder-admin-email-types' ),
+			array_merge( get_asset_dependency_array( 'wp-newsletter-builder-admin-email-types' ), [ 'wp-editor' ] ),
+			get_asset_version( 'wp-newsletter-builder-admin-email-types' ),
+			true
+		);
+		wp_set_script_translations( 'wp-newsletter-builder-admin-email-types' );
+	}
+
+	/**
+	 * Enqueue scripts and styles for the settings page.
+	 */
+	public function enqueue_assets() {
+		wp_enqueue_script( 'wp-newsletter-builder-admin-email-types' );
+
+		// Enqueue styles for the settings page.
+		wp_enqueue_style(
+			'wp-newsletter-builder-admin-email-types',
+			get_entry_asset_url( 'wp-newsletter-builder-admin-email-types', 'index.css' ),
+			[],
+			get_asset_version( 'wp-newsletter-builder-admin-email-types' ),
+		);
+
+		// Enqueue styles for all settings pages.
+		wp_enqueue_style(
+			'wp-newsletter-builder-admin-settings',
+			get_entry_asset_url( 'admin-settings', 'index.css' ),
+			get_asset_dependency_array( 'admin-settings' ),
+			get_asset_version( 'admin-settings' ),
+		);
+
+		// Core component styles.
+		wp_enqueue_style( 'wp-components' );
+
+		// Media functionality for Media Library button.
+		wp_enqueue_media();
+	}
+
+	/**
+	 * Register the settings submenu page.
+	 */
+	public function register_submenu_page(): void {
+		add_submenu_page(
+			'edit.php?post_type=nb_newsletter',
+			__( 'Email Types', 'wp-newsletter-builder' ),
+			__( 'Email Types', 'wp-newsletter-builder' ),
+			'manage_options',
+			'email-types',
+			[ $this, 'options_menu_callback' ],
+		);
+	}
+
+	/**
+	 * Callback function for add_submenu_page. Renders react entrypoint.
+	 */
+	public function options_menu_callback(): void {
+		echo '<div id="wp-newsletter-builder-settings__page-email-types"></div>';
+	}
+
 	public function maybe_register_settings_page(): void {
 		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
-			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Email Types', 'wp-newsletter-builder' ), __( 'Email Types', 'wp-newsletter-builder' ) );
-			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
+		\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Email Types', 'wp-newsletter-builder' ), __( 'Email Types', 'wp-newsletter-builder' ) );
+		\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
 		}
+	}
+
+	/**
+	 * Register the settings for the page.
+	 */
+	public function register_settings(): void {
+		register_setting(
+			'options',
+			static::SETTINGS_KEY,
+			[
+				'type'         => 'object',
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'array',
+						'properties' => [
+							'uuid4'     => [
+								'type' => 'string',
+							],
+							'label'     => [
+								'type' => 'string',
+							],
+							'image'     => [
+								'type' => 'number',
+							],
+							'templates' => [
+								'type' => 'object',
+								'properties' => [
+									'id' => [
+										'type' => 'number',
+									],
+									'label' => [
+										'type' => 'string',
+									],
+								],
+							],
+							'from_name' => [
+								'type' => 'string',
+							],
+						],
+					],
+				],
+			],
+		);
 	}
 
 	/**

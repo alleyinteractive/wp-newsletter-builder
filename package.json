@@ -96,7 +96,7 @@
     "array-move": "^4.0.0",
     "axios": "^1.7.7",
     "classnames": "^2.5.1",
-    "cross-spawn": "^7.0.3",
+    "cross-spawn": "^7.0.5",
     "dompurify": "^3.1.7",
     "entities": "^5.0.0",
     "lodash": "^4.17.21",

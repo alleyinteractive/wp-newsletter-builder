@@ -106,7 +106,7 @@
     "react-dom": "18.3.1",
     "react-easy-sort": "^1.6.0",
     "react-multi-select-component": "^4.3.4",
-    "uuid": "^11.0.2",
+    "uuid": "^11.0.3",
     "wp-types": "^4.67.0"
   },
   "devDependencies": {

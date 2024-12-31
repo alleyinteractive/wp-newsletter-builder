@@ -12,12 +12,13 @@
     "not IE 11"
   ],
   "scripts": {
-    "build": "wp-scripts build --webpack-copy-php --webpack-src-dir=blocks",
+    "build": "alley-build build",
     "create-block": "node ./bin/create-block",
     "precheck-types": "check-node-version --package",
     "check-types": "tsc",
     "lint:fix": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx . --fix",
     "lint": "npm run check-types && eslint --ext .jsx --ext .js --ext .ts --ext .tsx .",
+    "packages-update": "alley-build packages-update --dist-tag=wp-6.7",
     "postinstall": "rm -rf node_modules/.cache/babel-loader && rm -rf node_modules/.cache/webpack",
     "prebuild": "check-node-version --package",
     "predev": "check-node-version --package",
@@ -29,8 +30,8 @@
     "pretest:watch": "check-node-version --package",
     "pretest": "check-node-version --package",
     "release": "npx @alleyinteractive/create-release@latest",
-    "start": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks",
-    "start:hot": "wp-scripts start --webpack-copy-php --webpack-src-dir=blocks --hot",
+    "start": "alley-build start",
+    "start:hot": "alley-build start --hot",
     "stylelint:fix": "stylelint --fix \"**/*.scss\"",
     "stylelint": "stylelint \"**/*.scss\" --allow-empty-input",
     "test:watch": "jest --watch",
@@ -72,6 +73,7 @@
     "wp-types": "^4.67.0"
   },
   "devDependencies": {
+    "@alleyinteractive/build-tool": "^0.1.5",
     "@alleyinteractive/eslint-config": "^0.1.6",
     "@alleyinteractive/stylelint-config": "^0.0.2",
     "@babel/preset-env": "^7.25.8",

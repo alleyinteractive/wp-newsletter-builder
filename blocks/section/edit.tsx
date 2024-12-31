@@ -96,6 +96,7 @@ export default function Edit({
   const handleSelect = (posts: number[]) => {
     postBlocks.forEach((id: string) => {
       const postId = posts.shift();
+      // @ts-ignore
       dispatch('core/block-editor').updateBlockAttributes(id, { postId });
     });
   };
@@ -103,6 +104,7 @@ export default function Edit({
   useEffect(() => {
     if (showNumbers) {
       postBlocks.forEach((id: string, index: number) => {
+        // @ts-ignore
         dispatch('core/block-editor').updateBlockAttributes(id, { number: index + 1 });
       });
     }

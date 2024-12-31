@@ -16,8 +16,8 @@
     "create-block": "node ./bin/create-block",
     "precheck-types": "check-node-version --package",
     "check-types": "tsc",
-    "lint:fix": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx . --fix",
-    "lint": "npm run check-types && eslint --ext .jsx --ext .js --ext .ts --ext .tsx .",
+    "eslint:fix": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx . --fix",
+    "eslint": "npm run check-types && eslint --ext .jsx --ext .js --ext .ts --ext .tsx .",
     "packages-update": "alley-build packages-update --dist-tag=wp-6.7",
     "postinstall": "rm -rf node_modules/.cache/babel-loader && rm -rf node_modules/.cache/webpack",
     "prebuild": "check-node-version --package",
@@ -34,8 +34,9 @@
     "start:hot": "alley-build start --hot",
     "stylelint:fix": "stylelint --fix \"**/*.scss\"",
     "stylelint": "stylelint \"**/*.scss\" --allow-empty-input",
-    "test:watch": "jest --watch",
-    "test": "jest --passWithNoTests"
+    "jest:watch": "jest --watch",
+    "jest": "jest --passWithNoTests",
+    "test": "npm run eslint && npm run check-types && npm run jest"
   },
   "dependencies": {
     "@alleyinteractive/block-editor-tools": "^0.11",

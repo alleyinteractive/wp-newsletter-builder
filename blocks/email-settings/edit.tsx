@@ -92,7 +92,7 @@ export default function Edit() {
       newBlocks = [...parsedContentFromTemplate];
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 

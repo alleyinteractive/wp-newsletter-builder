@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/post",
+  "version": "0.1.0",
+  "title": "Newsletter Single Post",
+  "category": "wp-newsletter-builder-newsletter",
+  "icon": "admin-post",
+  "description": "Displays a post",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "postId": {
+      "type": "number",
+      "default": 0
+    },
+    "postType": {
+      "type": "string",
+      "default": "post"
+    },
+    "overrideUrl": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "providesContext": {
+    "postId": "postId",
+    "postType": "postType",
+    "queryId": "0",
+    "overrideUrl": "overrideUrl"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-newsletter-builder/heading",
+  "version": "0.1.0",
+  "title": "Newsletter Heading",
+  "category": "text",
+  "icon": "heading",
+  "description": "Heading wrapper that provides email-friendly enhancements",
+  "textdomain": "heading",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "elColor": {
+      "type": "string",
+      "default": "#000"
+    }
+  }
+}

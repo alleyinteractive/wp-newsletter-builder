@@ -85,7 +85,7 @@
     "check-node-version": "^4.2.1",
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^13.0.0",
-    "jest": "^30.0.2",
+    "jest": "^30.0.3",
     "mini-css-extract-plugin": "^2.9.2",
     "ts-jest": "^29.3.4",
     "typescript": "^5.8.3",

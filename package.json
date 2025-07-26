@@ -75,7 +75,7 @@
   },
   "devDependencies": {
     "@alleyinteractive/build-tool": "^0.2.0",
-    "@alleyinteractive/eslint-config": "^0.1.6",
+    "@alleyinteractive/eslint-config": "^0.2.0",
     "@alleyinteractive/stylelint-config": "^0.1.0",
     "@babel/preset-env": "^7.28.0",
     "@types/wordpress__edit-post": "^7.5.5",

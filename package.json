@@ -84,7 +84,7 @@
     "babel-jest": "^30.0.5",
     "check-node-version": "^4.2.1",
     "clean-webpack-plugin": "^4.0.0",
-    "copy-webpack-plugin": "^13.0.0",
+    "copy-webpack-plugin": "^13.0.1",
     "jest": "^30.0.5",
     "mini-css-extract-plugin": "^2.9.2",
     "ts-jest": "^29.4.1",

@@ -151,8 +151,12 @@ class Sendgrid implements Email_Provider {
 			}
 		}
 		$html_content = $this->get_content( $newsletter_id );
-		if ( ! $html_content ) {
-			$html_content = '';
+		if ( false === $html_content ) {
+			error_log( sprintf( 'Newsletter Builder: Aborting campaign creation for newsletter %d due to content rendering failure', $newsletter_id ) );
+			return [
+				'response'         => 'Failed to render newsletter content. Check error logs for details.',
+				'http_status_code' => 500,
+			];
 		}
 
 		$css_to_inline_styles = new CssToInlineStyles();
@@ -420,12 +424,36 @@ class Sendgrid implements Email_Provider {
 
 		// Capture template output for the new query.
 		ob_start();
-		load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
-		$content = ob_get_clean();
+
+		try {
+			load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
+			$content = ob_get_clean();
+		} catch ( \Exception $e ) {
+			ob_end_clean();
+			// Restore globals before returning.
+			$wp_query = $old_wp_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			wp_set_current_user( $old_current_user->ID );
+
+			// Log the error.
+			error_log( sprintf( 'Newsletter Builder: Failed to render newsletter %d. Error: %s', $post_id, $e->getMessage() ) );
+			return false;
+		}
 
 		// Restore globals.
 		$wp_query = $old_wp_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		wp_set_current_user( $old_current_user->ID );
+
+		// Validate that content was actually generated.
+		if ( empty( $content ) || strlen( trim( $content ) ) < 100 ) {
+			error_log( sprintf( 'Newsletter Builder: Newsletter %d rendered with empty or insufficient content (length: %d)', $post_id, strlen( $content ) ) );
+			return false;
+		}
+
+		// Check that content contains the newsletter container div as a basic sanity check.
+		if ( false === strpos( $content, 'wp-newsletter-builder-container' ) ) {
+			error_log( sprintf( 'Newsletter Builder: Newsletter %d content appears malformed (missing container element)', $post_id ) );
+			return false;
+		}
 
 		return $content;
 	}

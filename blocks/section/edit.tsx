@@ -96,7 +96,6 @@ export default function Edit({
   const handleSelect = (posts: number[]) => {
     postBlocks.forEach((id: string) => {
       const postId = posts.shift();
-      // @ts-expect-error
       dispatch('core/block-editor').updateBlockAttributes(id, { postId });
     });
   };
@@ -104,7 +103,6 @@ export default function Edit({
   useEffect(() => {
     if (showNumbers) {
       postBlocks.forEach((id: string, index: number) => {
-        // @ts-expect-error
         dispatch('core/block-editor').updateBlockAttributes(id, { number: index + 1 });
       });
     }
@@ -124,16 +122,18 @@ export default function Edit({
         <InnerBlocks />
       </div>
       <InspectorControls>
+        { /* @ts-ignore */}
         <PanelBody
           title={__('Post Selection', 'wp-newsletter-builder')}
           initialOpen
         >
+          { /* @ts-ignore */}
           <PanelRow>
             <MultiplePostPicker
               onUpdate={handleSelect}
               allowedTypes={allowedPostTypes}
               params={{ after: cutoff.toISOString(), per_page: 20 }}
-              // @ts-expect-error
+              // @ts-ignore
               searchRender={PostPickerResult}
             />
           </PanelRow>

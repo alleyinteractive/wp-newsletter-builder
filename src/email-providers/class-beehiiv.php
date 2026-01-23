@@ -351,6 +351,7 @@ class Beehiiv implements Email_Provider {
 
 		// Build recipients with segment targeting.
 		$recipients = [
+			'web'   => (object) [], // Required by API, but can be empty.
 			'email' => [],
 		];
 

@@ -5,7 +5,7 @@
  * @package wp-newsletter-builder
  */
 
-declare( strict_types=1 );
+declare(strict_types=1);
 
 namespace WP_Newsletter_Builder;
 

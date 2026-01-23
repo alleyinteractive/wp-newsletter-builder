@@ -340,15 +340,22 @@ class Beehiiv implements Email_Provider {
 		$subject = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 		$preview = get_post_meta( $newsletter_id, 'nb_newsletter_preview', true );
 
-		// Build email settings for segment targeting.
+		// Build email settings.
 		$email_settings = [
-			'subject_line' => ! empty( $subject ) ? $subject : get_the_title( $newsletter_id ),
-			'preview_text' => ! empty( $preview ) ? $preview : null,
+			'email_subject_line' => ! empty( $subject ) ? $subject : get_the_title( $newsletter_id ),
 		];
 
-		// Add segment targeting if segments are selected.
+		if ( ! empty( $preview ) ) {
+			$email_settings['email_preview_text'] = $preview;
+		}
+
+		// Build recipients with segment targeting.
+		$recipients = [
+			'email' => [],
+		];
+
 		if ( ! empty( $list_ids ) ) {
-			$email_settings['include_segment_ids'] = $list_ids;
+			$recipients['email']['include_segment_ids'] = $list_ids;
 		}
 
 		$request_body = [
@@ -357,6 +364,7 @@ class Beehiiv implements Email_Provider {
 			'body_content'   => $html_content,
 			'status'         => 'confirmed', // 'confirmed' with no scheduled_at publishes immediately.
 			'email_settings' => $email_settings,
+			'recipients'     => $recipients,
 		];
 
 		$endpoint = '/publications/' . $client['publication_id'] . '/posts';

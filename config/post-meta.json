@@ -9,7 +9,8 @@
     "post_types": [
       "nb_newsletter"
     ],
-    "type": "number"
+    "type": "integer",
+    "default": 0
   },
   "nb_newsletter_from_name": {
     "post_types": [
@@ -50,7 +51,8 @@
     "post_types": [
       "nb_newsletter"
     ],
-    "type": "number"
+    "type": "integer",
+    "default": 0
   },
   "nb_breaking_email_type": {
     "post_types": [
@@ -62,7 +64,8 @@
     "post_types": [
       "post"
     ],
-    "type": "number"
+    "type": "integer",
+    "default": 0
   },
   "nb_breaking_from_name": {
     "post_types": [
@@ -97,7 +100,8 @@
     "post_types": [
       "post"
     ],
-    "type": "number"
+    "type": "integer",
+    "default": 0
   },
   "nb_breaking_should_send": {
     "post_types": [

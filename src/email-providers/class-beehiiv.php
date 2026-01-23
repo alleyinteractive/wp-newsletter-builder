@@ -340,21 +340,24 @@ class Beehiiv implements Email_Provider {
 		$subject = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
 		$preview = get_post_meta( $newsletter_id, 'nb_newsletter_preview', true );
 
-		$request_body = [
-			'title'        => get_the_title( $newsletter_id ),
-			'subtitle'     => ! empty( $preview ) ? $preview : null,
-			'body_content' => $html_content,
-			'status'       => 'draft',
+		// Build email settings for segment targeting.
+		$email_settings = [
+			'subject_line' => ! empty( $subject ) ? $subject : get_the_title( $newsletter_id ),
+			'preview_text' => ! empty( $preview ) ? $preview : null,
 		];
 
-		// Add email settings with segment targeting.
+		// Add segment targeting if segments are selected.
 		if ( ! empty( $list_ids ) ) {
-			$request_body['email_settings'] = [
-				'subject_line'        => $subject,
-				'preview_text'        => ! empty( $preview ) ? $preview : null,
-				'include_segment_ids' => $list_ids,
-			];
+			$email_settings['include_segment_ids'] = $list_ids;
 		}
+
+		$request_body = [
+			'title'          => get_the_title( $newsletter_id ),
+			'subtitle'       => ! empty( $preview ) ? $preview : null,
+			'body_content'   => $html_content,
+			'status'         => 'confirmed', // 'confirmed' with no scheduled_at publishes immediately.
+			'email_settings' => $email_settings,
+		];
 
 		$endpoint = '/publications/' . $client['publication_id'] . '/posts';
 		$response = $this->api_request( $endpoint, 'POST', $request_body );
@@ -372,6 +375,9 @@ class Beehiiv implements Email_Provider {
 	/**
 	 * Sends a campaign.
 	 *
+	 * In Beehiiv, the post is created with status 'confirmed' which publishes immediately.
+	 * This method verifies the post was created successfully by fetching its current status.
+	 *
 	 * @param string $campaign_id The campaign id (post id in Beehiiv).
 	 * @return array{
 	 *   response: mixed,
@@ -384,13 +390,10 @@ class Beehiiv implements Email_Provider {
 			return false;
 		}
 
-		// Update the post status to 'confirmed' to send immediately.
-		$request_body = [
-			'status' => 'confirmed',
-		];
-
+		// The post was created with status 'confirmed' which publishes immediately.
+		// Fetch the post to verify it was published successfully.
 		$endpoint = '/publications/' . $client['publication_id'] . '/posts/' . $campaign_id;
-		$response = $this->api_request( $endpoint, 'PATCH', $request_body );
+		$response = $this->api_request( $endpoint, 'GET' );
 
 		if ( ! $response ) {
 			return false;

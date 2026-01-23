@@ -96,12 +96,7 @@ class Beehiiv implements Email_Provider {
 	 * @return string|false
 	 */
 	private function get_vip_publication_id(): string|false {
-		if ( is_multisite() ) {
-			$publication_id = get_site_option( self::VIP_PUBLICATION_ID_OPTION );
-		} else {
-			$publication_id = get_option( self::VIP_PUBLICATION_ID_OPTION );
-		}
-
+		$publication_id = get_option( self::VIP_PUBLICATION_ID_OPTION );
 		return ! empty( $publication_id ) ? $publication_id : false;
 	}
 
@@ -260,16 +255,30 @@ class Beehiiv implements Email_Provider {
 			return [];
 		}
 
-		$endpoint = '/publications/' . $client['publication_id'] . '/segments?limit=100&status=completed';
+		// Fetch all segments regardless of status (status=all).
+		$endpoint = '/publications/' . $client['publication_id'] . '/segments?limit=100';
 
 		try {
 			$response = $this->api_request( $endpoint );
-			if ( ! $response || empty( $response['body']->data ) ) {
+
+			// Check for API errors.
+			if ( ! $response ) {
 				return [];
 			}
+
+			// Handle error responses from the API.
+			if ( $response['status_code'] >= 400 ) {
+				return [];
+			}
+
+			// Extract data from response.
+			if ( empty( $response['body']->data ) ) {
+				return [];
+			}
+
 			$result = $response['body']->data;
 		} catch ( \Exception $ex ) {
-			$result = [];
+			return [];
 		}
 
 		if ( ! is_array( $result ) ) {
@@ -278,6 +287,10 @@ class Beehiiv implements Email_Provider {
 
 		$lists = [];
 		foreach ( $result as $segment ) {
+			// Only include segments that have an id and name.
+			if ( empty( $segment->id ) || empty( $segment->name ) ) {
+				continue;
+			}
 			$lists[] = [
 				'ListID' => $segment->id,
 				'Name'   => $segment->name,

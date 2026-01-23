@@ -107,9 +107,8 @@ function main(): void {
 		return;
 	}
 	global $newsletter_builder_email_provider;
-	$provider = new $selected_email_provider();
 
-	$newsletter_builder_email_provider = new $provider();
+	$newsletter_builder_email_provider = new $selected_email_provider();
 	if ( $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
 		$newsletter_builder_email_provider->setup();
 	} else {

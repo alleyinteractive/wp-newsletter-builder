@@ -4,8 +4,8 @@
   "license": "GPL-2.0-or-later",
   "main": "plugin.php",
   "engines": {
-    "node": "22",
-    "npm": "10"
+    "node": ">=22",
+    "npm": ">=10"
   },
   "browserslist": [
     "defaults",

@@ -224,7 +224,7 @@ class Beehiiv implements Email_Provider {
 				'Content-Type'  => 'application/json',
 				'Accept'        => 'application/json',
 			],
-			'timeout' => 30,
+			'timeout' => 5, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout -- External API may need more time.
 		];
 
 		if ( ! empty( $body ) && in_array( $method, [ 'POST', 'PUT', 'PATCH' ], true ) ) {
@@ -508,9 +508,9 @@ class Beehiiv implements Email_Provider {
 		}
 
 		$request_body = [
-			'email'              => $email,
+			'email'               => $email,
 			'reactivate_existing' => true,
-			'send_welcome_email' => false,
+			'send_welcome_email'  => false,
 		];
 
 		// Add custom fields if provided.

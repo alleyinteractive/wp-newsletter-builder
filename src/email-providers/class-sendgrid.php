@@ -152,7 +152,6 @@ class Sendgrid implements Email_Provider {
 		}
 		$html_content = $this->get_content( $newsletter_id );
 		if ( false === $html_content ) {
-			error_log( sprintf( 'Newsletter Builder: Aborting campaign creation for newsletter %d due to content rendering failure', $newsletter_id ) );
 			return [
 				'response'         => 'Failed to render newsletter content. Check error logs for details.',
 				'http_status_code' => 500,
@@ -434,8 +433,6 @@ class Sendgrid implements Email_Provider {
 			$wp_query = $old_wp_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 			wp_set_current_user( $old_current_user->ID );
 
-			// Log the error.
-			error_log( sprintf( 'Newsletter Builder: Failed to render newsletter %d. Error: %s', $post_id, $e->getMessage() ) );
 			return false;
 		}
 
@@ -445,13 +442,11 @@ class Sendgrid implements Email_Provider {
 
 		// Validate that content was actually generated.
 		if ( empty( $content ) || strlen( trim( $content ) ) < 100 ) {
-			error_log( sprintf( 'Newsletter Builder: Newsletter %d rendered with empty or insufficient content (length: %d)', $post_id, strlen( $content ) ) );
 			return false;
 		}
 
 		// Check that content contains the newsletter container div as a basic sanity check.
 		if ( false === strpos( $content, 'wp-newsletter-builder-container' ) ) {
-			error_log( sprintf( 'Newsletter Builder: Newsletter %d content appears malformed (missing container element)', $post_id ) );
 			return false;
 		}
 

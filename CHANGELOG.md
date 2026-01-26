@@ -2,6 +2,14 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.6.0 - 2026-01-25
+
+- Add provider class for Beehiiv Send API
+
+## 0.5.0 - 2025-01-13
+
+- Convert to use Alley build system instead of default wp-scripts
+
 ## 0.4.0 - 2024-07-03
 
 - Only load Newsletter Builder blocks on Newsletter Builder post types (nb_newsletter and nb_template)
@@ -9,7 +17,7 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 ## 0.3.11 - 2024-05-09
 
 - Adds a `NewsletterSpinner` wrapper component for the `<Spinner />` component from `@wordpress/components`
-  - [see link to GitHub issue](https://github.com/WordPress/gutenberg/issues/61322)
+	- [see link to GitHub issue](https://github.com/WordPress/gutenberg/issues/61322)
 - Change `nb_newsletter_template` post meta from type `string` to type `number`
 - Change SendGrid Provider to send `suppression_group_id` and remove sending `custom_unsubscribe_url`
 

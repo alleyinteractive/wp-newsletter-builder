@@ -63,7 +63,7 @@
     "cross-spawn": "^7.0.6",
     "dompurify": "^3.3.1",
     "entities": "^7.0.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "prompts": "^2.4.2",
     "prop-types": "^15.8.1",
     "react": "18.3.1",

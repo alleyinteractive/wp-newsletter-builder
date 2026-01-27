@@ -327,8 +327,11 @@ class Beehiiv implements Email_Provider {
 		}
 
 		$html_content = $this->get_content( $newsletter_id );
-		if ( ! $html_content ) {
-			$html_content = '';
+		if ( false === $html_content ) {
+			return [
+				'response'         => 'Failed to render newsletter content. Check error logs for details.',
+				'http_status_code' => 500,
+			];
 		}
 
 		$css_to_inline_styles = new CssToInlineStyles();
@@ -629,12 +632,32 @@ class Beehiiv implements Email_Provider {
 
 		// Capture template output for the new query.
 		ob_start();
-		load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
-		$content = ob_get_clean();
+
+		try {
+			load_template( WP_PLUGIN_DIR . '/wp-newsletter-builder/single-nb_newsletter.php' );
+			$content = ob_get_clean();
+		} catch ( \Exception $e ) {
+			ob_end_clean();
+			// Restore globals before returning.
+			$wp_query = $old_wp_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			wp_set_current_user( $old_current_user->ID );
+
+			return false;
+		}
 
 		// Restore globals.
 		$wp_query = $old_wp_query; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		wp_set_current_user( $old_current_user->ID );
+
+		// Validate that content was actually generated.
+		if ( empty( $content ) || strlen( trim( $content ) ) < 100 ) {
+			return false;
+		}
+
+		// Check that content contains the newsletter container div as a basic sanity check.
+		if ( false === strpos( $content, 'wp-newsletter-builder-container' ) ) {
+			return false;
+		}
 
 		return $content;
 	}

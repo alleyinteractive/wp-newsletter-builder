@@ -62,7 +62,7 @@
     "classnames": "^2.5.1",
     "cross-spawn": "^7.0.6",
     "dompurify": "^3.3.3",
-    "entities": "^7.0.1",
+    "entities": "^8.0.0",
     "lodash": "^4.17.23",
     "prompts": "^2.4.2",
     "prop-types": "^15.8.1",

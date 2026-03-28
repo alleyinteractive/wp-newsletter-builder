@@ -86,7 +86,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "copy-webpack-plugin": "^14.0.0",
     "jest": "^30.3.0",
-    "mini-css-extract-plugin": "^2.10.1",
+    "mini-css-extract-plugin": "^2.10.2",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",
     "webpack-cli": "^7.0.2"

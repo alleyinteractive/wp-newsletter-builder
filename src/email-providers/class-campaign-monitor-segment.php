@@ -90,8 +90,8 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Clients(
-			$settings['client_id'],
+		$wrap = new \CS_REST_Lists(
+			$settings['list_id'],
 			$auth
 		);
 

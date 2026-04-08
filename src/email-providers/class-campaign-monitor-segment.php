@@ -108,6 +108,10 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		$segments = $wrap->get_segments()->response;
 		$lists    = [];
 
+		if (  empty( $segments ) || ! is_array( $segments ) ) {
+			return false;
+		}
+
 		foreach ( $segments as $segment ) {
 			// Filter segments to only include segments for the list we're using, and exclude default segments.
 			if ( $segment->ListID === $settings['list_id'] && ! in_array( $segment->Title, $default_segments, true ) ) {

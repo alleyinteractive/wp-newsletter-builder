@@ -23,5 +23,6 @@
     "vendor",
     "node_modules",
     "build/**/*"
-  ]
+  ],
+  "ignoreDeprecations": "6.0"
 }

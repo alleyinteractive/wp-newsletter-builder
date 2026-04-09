@@ -2,12 +2,10 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "module": "es6",
-    "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "build",
     "paths": {

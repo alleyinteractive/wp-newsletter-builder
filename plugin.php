@@ -69,7 +69,6 @@ global $newsletter_builder_email_provider;
  * Instantiate the plugin.
  */
 function main(): void {
-	new Ads();
 	new Block_Modifications();
 	new Email_Types();
 	new Settings();

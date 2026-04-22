@@ -2,7 +2,7 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
-## Unreleased
+## 0.7.0 - 2026-04-22
 
 - Adds `wp_newsletter_builder_email_type_additional_fields` filter for adding Fieldmanager fields that can be used to configure email types.
 - Removes `Ads` class. See [#345](https://github.com/alleyinteractive/wp-newsletter-builder/issues/345).

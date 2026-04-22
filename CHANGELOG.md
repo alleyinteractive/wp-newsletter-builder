@@ -2,6 +2,10 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## Unreleased
+
+- Adds `wp_newsletter_builder_email_type_additional_fields` filter for adding Fieldmanager fields that can be used to configure email types.
+
 ## 0.6.1 - 2026-01-26
 
 - Fixed issue where certain exceptions thrown during rendering could result in a blank email being sent to a list.

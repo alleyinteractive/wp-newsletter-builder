@@ -7,6 +7,8 @@
 
 namespace WP_Newsletter_Builder;
 
+use Fieldmanager_Field;
+
 /**
  * Email Types class
  */
@@ -48,51 +50,65 @@ class Email_Types {
 	public function register_fields(): void {
 		$plugin_settings = new Settings();
 		$from_names      = $plugin_settings->get_from_names();
-		$settings        = new \Fieldmanager_Group(
-			[
-				'name'           => static::SETTINGS_KEY,
-				'children'       => [
-					'uuid4'     => new class() extends \Fieldmanager_Hidden {
-						/**
-						 * Ensure that each group has a unique ID.
-						 *
-						 * @param mixed         $value          Submitted value.
-						 * @param array<string> $current_value  The current values.
-						 * @return array<string>|string The sanitized values.
-						 */
-						public function presave( $value, $current_value = [] ) {
-							return $current_value ?: wp_generate_uuid4();
-						}
-					},
-					'label'     => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
-					'image'     => new \Fieldmanager_Media(
+
+		$children = [
+			'uuid4'     => new class() extends \Fieldmanager_Hidden {
+				/**
+				 * Ensure that each group has a unique ID.
+				 *
+				 * @param mixed         $value         Submitted value.
+				 * @param array<string> $current_value The current values.
+				 * @return array<string>|string The sanitized values.
+				 */
+				public function presave( $value, $current_value = [] ) {
+					return $current_value ?: wp_generate_uuid4();
+				}
+			},
+			'label'     => new \Fieldmanager_TextField( __( 'Label', 'wp-newsletter-builder' ) ),
+			'image'     => new \Fieldmanager_Media(
+				[
+					'label'        => __( 'Image', 'wp-newsletter-builder' ),
+					'preview_size' => 'full',
+				],
+			),
+			'templates' => new \Fieldmanager_Checkboxes(
+				'Templates',
+				[
+					'datasource' => new \Fieldmanager_Datasource_Post(
 						[
-							'label'        => __( 'Image', 'wp-newsletter-builder' ),
-							'preview_size' => 'full',
-						]
-					),
-					'templates' => new \Fieldmanager_Checkboxes(
-						'Templates',
-						[
-							'datasource' => new \Fieldmanager_Datasource_Post(
-								[
-									'query_args' => [
-										'post_type'      => 'nb_template',
-										'posts_per_page' => -1,
-										'orderby'        => 'title',
-									],
-									'use_ajax'   => false,
-								]
-							),
-						]
-					),
-					'from_name' => new \Fieldmanager_Select(
-						__( 'From Name', 'wp-newsletter-builder' ),
-						[
-							'options' => $from_names,
-						]
+							'query_args' => [
+								'post_type'      => 'nb_template',
+								'posts_per_page' => - 1,
+								'orderby'        => 'title',
+							],
+							'use_ajax'   => false,
+						],
 					),
 				],
+			),
+			'from_name' => new \Fieldmanager_Select(
+				__( 'From Name', 'wp-newsletter-builder' ),
+				[
+					'options' => $from_names,
+				],
+			),
+		];
+
+		/**
+		 * Filters the additional Fieldmanager group children that can be used to configure email types.
+		 *
+		 * @param Fieldmanager_Field[] $additional_fields Associative array of field names and fields to add to the Email Type settings group.
+		 */
+		$additional_fields = apply_filters( 'wp_newsletter_builder_email_type_additional_fields', [] );
+
+		if ( is_array( $additional_fields ) && $additional_fields !== [] ) {
+			$children += $additional_fields;
+		}
+
+		$settings = new \Fieldmanager_Group(
+			[
+				'name'           => static::SETTINGS_KEY,
+				'children'       => $children,
 				'limit'          => 0,
 				'add_more_label' => __( 'Add Another Email Type', 'wp-newsletter-builder' ),
 				'collapsible'    => true,
@@ -105,7 +121,7 @@ class Email_Types {
 				],
 				// We need to specify this condition since there will always be a UUID in the group.
 				'group_is_empty' => fn ( $values ) => empty( $values['label'] ) && empty( $values['template'] ),
-			]
+			],
 		);
 
 		$settings->activate_submenu_page();

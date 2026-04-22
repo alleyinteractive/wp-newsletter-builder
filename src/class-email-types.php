@@ -99,7 +99,7 @@ class Email_Types {
 		 *
 		 * @param Fieldmanager_Field[] $additional_fields Associative array of field names and fields to add to the Email Type settings group.
 		 */
-		$additional_fields = apply_filters( 'wp_newsletter_builder_email_type_fields', [] );
+		$additional_fields = apply_filters( 'wp_newsletter_builder_email_type_additional_fields', [] );
 
 		if ( is_array( $additional_fields ) && $additional_fields !== [] ) {
 			$children += $additional_fields;

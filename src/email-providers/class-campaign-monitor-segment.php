@@ -19,12 +19,47 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	public const SETTINGS_KEY = 'nb_campaign_monitor_segment_settings';
 
 	/**
+	 * Authentication details for the API client.
+	 *
+	 * @var array
+	 */
+	private array $auth = [];
+
+	/**
 	 * Sets things up.
 	 *
 	 * @return void
 	 */
 	public function setup(): void {
 		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
+		$this->set_auth();
+	}
+
+	/**
+	 * Sets the authentication details for the API client.
+	 *
+	 * @return void
+	 */
+	private function set_auth(): void {
+		$api_key = $this->get_setting( 'api_key' );
+		if ( ! $api_key ) {
+			$this->auth = [];
+		}
+		$this->auth = [ 'api_key' => $api_key ];
+	}
+
+	/**
+	 * Gets a setting from the database.
+	 *
+	 * @param string $key The setting key.
+	 * @return string|false The setting value or false if not found.
+	 */
+	private function get_setting( string $key ): string|false {
+		$settings = get_option( static::SETTINGS_KEY );
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings[ $key ] ) ) {
+			return false;
+		}
+		return $settings[ $key ];
 	}
 
 	/**
@@ -66,12 +101,10 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * @return \CS_REST_General|false
 	 */
 	public function get_client(): \CS_REST_General|false {
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
+		if ( ! $this->auth ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
-		return new \CS_REST_General( $auth );
+		return new \CS_REST_General( $this->auth );
 	}
 
 	/**
@@ -82,15 +115,14 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * @return mixed
 	 */
 	public function get_lists(): mixed {
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		$list_id = $this->get_setting( 'list_id' );
+		if ( ! $list_id || ! $this->auth ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Lists(
-			$settings['list_id'],
-			$auth
+		$lists = new \CS_REST_Lists(
+			$list_id,
+			$this->auth
 		);
 
 		$default_segments = [
@@ -103,25 +135,24 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		];
 
 		// Get all segments for the client.
-		$segments = $wrap->get_segments()->response;
-		$lists    = [];
+		$output_lists = [];
+		$segments     = $lists->get_segments()->response;
 
-		if (  empty( $segments ) || ! is_array( $segments ) ) {
+		if ( empty( $segments ) || ! is_array( $segments ) ) {
 			return false;
 		}
 
 		foreach ( $segments as $segment ) {
-			// Filter segments to only include segments for the list we're using, and exclude default segments.
-			if ( $segment->ListID === $settings['list_id'] && ! in_array( $segment->Title, $default_segments, true ) ) {
+			if ( ! in_array( $segment->Title, $default_segments, true ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				// Reshape the segments into the list format the rest of the plugin expects.
-				$lists[] = (object) [
-					'ListID' => $segment->SegmentID,
-					'Name'   => $segment->Title,
+				$output_lists[] = (object) [
+					'ListID' => $segment->SegmentID, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					'Name'   => $segment->Title, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				];
 			}
 		}
 
-		return $lists;
+		return $output_lists;
 	}
 
 	/**
@@ -137,14 +168,11 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
-		// TODO: Move non-email provider code to the core plugin.
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( empty( $this->auth ) ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Campaigns( $campaign_id, $auth );
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $this->auth );
 
 		$newsletter = get_post( $newsletter_id );
 		if ( ! $newsletter instanceof \WP_Post ) {
@@ -180,13 +208,13 @@ class Campaign_Monitor_Segment implements Email_Provider {
 			'Subject'    => get_post_meta( $newsletter->ID, 'nb_newsletter_subject', true ),
 			'Name'       => sprintf( '%s - Post %d - %s', $newsletter->post_title, $newsletter->ID, get_post_modified_time( 'Y-m-d H:i:s', false, $newsletter->ID ) ),
 			'FromName'   => $from_name,
-			'FromEmail'  => $settings['from_email'],
-			'ReplyTo'    => $settings['reply_to_email'],
+			'FromEmail'  => $this->get_setting( 'from_email' ),
+			'ReplyTo'    => $this->get_setting( 'reply_to_email' ),
 			'HtmlUrl'    => $url,
 			'SegmentIDs' => [ (string) $segment_id ],
 		];
 
-		$result = $wrap->create( $settings['client_id'], $params );
+		$result = $campaigns->create( $this->get_setting( 'client_id' ), $params );
 
 		return [
 			'response'         => $result->response,
@@ -204,17 +232,15 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function send_campaign( string $campaign_id ): array|false {
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( ! $this->auth ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Campaigns( $campaign_id, $auth );
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $this->auth );
 
-		$result = $wrap->send(
+		$result = $campaigns->send(
 			[
-				'ConfirmationEmail' => $settings['confirmation_email'],
+				'ConfirmationEmail' => $this->get_setting( 'confirmation_email' ),
 				'SendDate'          => 'immediately',
 			]
 		);
@@ -241,9 +267,9 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Campaigns( $campaign_id, $auth );
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $auth );
 
-		$result = $wrap->get_summary();
+		$result = $campaigns->get_summary();
 		return [
 			'response'         => $result->response,
 			'http_status_code' => $result->http_status_code,
@@ -291,15 +317,13 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( ! $this->auth ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Subscribers( $list_id, $auth );
+		$subscribers = new \CS_REST_Subscribers( $list_id, $this->auth );
 
-		$result = $wrap->add(
+		$result = $subscribers->add(
 			[
 				'EmailAddress'   => $email,
 				'Resubscribe'    => true,
@@ -325,15 +349,13 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 * }|false  The response from the API.
 	 */
 	public function remove_subscriber( string $list_id, string $email ): array|false {
-		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if ( ! $this->auth ) {
 			return false;
 		}
-		$auth = [ 'api_key' => $settings['api_key'] ];
 
-		$wrap = new \CS_REST_Subscribers( $list_id, $auth );
+		$subscribers = new \CS_REST_Subscribers( $list_id, $this->auth );
 
-		$result = $wrap->unsubscribe( $email );
+		$result = $subscribers->unsubscribe( $email );
 
 		return [
 			'response'         => $result->response,

@@ -71,9 +71,7 @@ class Campaign_Monitor_Segment implements Email_Provider {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];
-		$wrap = new \CS_REST_General( $auth );
-
-		return $wrap;
+		return new \CS_REST_General( $auth );
 	}
 
 	/**

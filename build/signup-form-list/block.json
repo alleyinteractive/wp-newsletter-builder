@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/signup-form-list",
+  "version": "0.1.0",
+  "title": "Newsletter Signup Form List",
+  "category": "widgets",
+  "icon": "yes",
+  "description": "Child block of Newsletter Signup Form to show a single list",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "supports": {
+    "inserter": false
+  },
+  "render": "file:render.php",
+  "attributes": {
+    "logo": {
+      "type": "number",
+      "default": 0
+    },
+    "title": {
+      "type": "string"
+    },
+    "frequency": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "listId": {
+      "type": "string"
+    },
+    "initialChecked": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

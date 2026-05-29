@@ -2,6 +2,11 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## 0.8.0 - 2026-05-28
+
+- Adds an email provider for Campaign Monitor integrations which use a single list with segments instead of multiple separate lists.
+
+
 ## 0.7.0 - 2026-04-22
 
 - Adds `wp_newsletter_builder_email_type_additional_fields` filter for adding Fieldmanager fields that can be used to configure email types.

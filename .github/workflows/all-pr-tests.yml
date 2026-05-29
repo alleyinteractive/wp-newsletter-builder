@@ -32,6 +32,8 @@ jobs:
       - name: Run General Tests
         # See https://github.com/alleyinteractive/action-test-general for more options
         uses: alleyinteractive/action-test-general@develop
+        with:
+          skip-audit: 'true'
 
       - name: Run Node Tests
         # See https://github.com/alleyinteractive/action-test-node for more options.

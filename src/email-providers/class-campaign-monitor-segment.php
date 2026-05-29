@@ -1,0 +1,392 @@
+<?php
+/**
+ * WP_Newsletter_Builder class file
+ *
+ * @package wp-newsletter-builder
+ */
+
+namespace WP_Newsletter_Builder\Email_Providers;
+
+/**
+ * Campaign Monitor Client class for implementations which use a single list with segments instead of individual lists.
+ */
+class Campaign_Monitor_Segment implements Email_Provider {
+	/**
+	 * Settings key.
+	 *
+	 * @var string
+	 */
+	public const SETTINGS_KEY = 'nb_campaign_monitor_segment_settings';
+
+	/**
+	 * Authentication details for the API client.
+	 *
+	 * @var array
+	 */
+	private array $auth = [];
+
+	/**
+	 * Sets things up.
+	 *
+	 * @return void
+	 */
+	public function setup(): void {
+		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
+		$this->set_auth();
+	}
+
+	/**
+	 * Sets the authentication details for the API client.
+	 *
+	 * @return void
+	 */
+	private function set_auth(): void {
+		$api_key = $this->get_setting( 'api_key' );
+		if ( ! $api_key ) {
+			$this->auth = [];
+		}
+		$this->auth = [ 'api_key' => $api_key ];
+	}
+
+	/**
+	 * Gets a setting from the database.
+	 *
+	 * @param string $key The setting key.
+	 * @return string|false The setting value or false if not found.
+	 */
+	private function get_setting( string $key ): string|false {
+		$settings = get_option( static::SETTINGS_KEY );
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings[ $key ] ) ) {
+			return false;
+		}
+		return $settings[ $key ];
+	}
+
+	/**
+	 * Registers the submenu settings page for the Campaign Monitor options.
+	 *
+	 * @return void
+	 */
+	public function maybe_register_settings_page(): void {
+		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
+			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'Campaign Monitor Settings', 'wp-newsletter-builder' ), __( 'Campaign Monitor Settings', 'wp-newsletter-builder' ) );
+			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
+		}
+	}
+
+	/**
+	 * Registers the fields on the settings page for the Campaign Monitor options.
+	 *
+	 * @return void
+	 */
+	public function register_fields(): void {
+		$settings = new \Fieldmanager_Group(
+			[
+				'name'     => static::SETTINGS_KEY,
+				'children' => [
+					'api_key'            => new \Fieldmanager_Password( __( 'API Key', 'wp-newsletter-builder' ) ),
+					'client_id'          => new \Fieldmanager_TextField( __( 'Client ID', 'wp-newsletter-builder' ) ),
+					'confirmation_email' => new \Fieldmanager_TextField( __( 'Confirmation Email', 'wp-newsletter-builder' ) ),
+					'list_id'            => new \Fieldmanager_TextField( __( 'List ID', 'wp-newsletter-builder' ) ),
+				],
+			]
+		);
+
+		$settings->activate_submenu_page();
+	}
+
+	/**
+	 * Get the API key and instantiate a client using the API key.
+	 *
+	 * @return \CS_REST_General|false
+	 */
+	public function get_client(): \CS_REST_General|false {
+		if ( ! $this->auth ) {
+			return false;
+		}
+		return new \CS_REST_General( $this->auth );
+	}
+
+	/**
+	 * Gets the lists for the client.
+	 *
+	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
+	 *
+	 * @return mixed
+	 */
+	public function get_lists(): mixed {
+		$list_id = $this->get_setting( 'list_id' );
+		if ( ! $list_id || ! $this->auth ) {
+			return false;
+		}
+
+		$lists = new \CS_REST_Lists(
+			$list_id,
+			$this->auth
+		);
+
+		$default_segments = [
+			'Active',
+			'Engaged',
+			'Unengaged',
+			'Dormant',
+			'Zombies',
+			'Ghosts',
+		];
+
+		// Get all segments for the client.
+		$output_lists = [];
+		$segments     = $lists->get_segments()->response;
+
+		if ( empty( $segments ) || ! is_array( $segments ) ) {
+			return false;
+		}
+
+		foreach ( $segments as $segment ) {
+			if ( ! in_array( $segment->Title, $default_segments, true ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				// Reshape the segments into the list format the rest of the plugin expects.
+				$output_lists[] = (object) [
+					'ListID' => $segment->SegmentID, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					'Name'   => $segment->Title, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				];
+			}
+		}
+
+		return $output_lists;
+	}
+
+	/**
+	 * Creates an email campaign.
+	 *
+	 * @param int           $newsletter_id The id of the nb_newsletter post.
+	 * @param array<string> $list_ids    The list ids to send the campaign to.
+	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string        $from_name   The from name.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
+	 */
+	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
+		if ( empty( $this->auth ) ) {
+			return false;
+		}
+
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $this->auth );
+
+		$newsletter = get_post( $newsletter_id );
+		if ( ! $newsletter instanceof \WP_Post ) {
+			return false;
+		}
+
+		$url = add_query_arg(
+			[
+				'post_type' => 'nb_newsletter',
+				'p'         => $newsletter->ID,
+			],
+			home_url(),
+		);
+
+		$segment_id = get_post_meta( $newsletter->ID, 'nb_newsletter_list', true ); // This meta field is used to store the segment id instead of the list id in this provider.
+
+		if ( empty( $segment_id ) ) {
+			return false;
+		}
+
+		if ( is_array( $segment_id ) ) {
+			$segment_id = reset( $segment_id );
+		}
+
+		/**
+		 * Filter the URL for the HTML version of the newsletter.
+		 *
+		 * @param string $url The URL.
+		 */
+		$url = apply_filters( 'wp_newsletter_builder_html_url', $url );
+
+		$params = [
+			'Subject'    => get_post_meta( $newsletter->ID, 'nb_newsletter_subject', true ),
+			'Name'       => sprintf( '%s - Post %d - %s', $newsletter->post_title, $newsletter->ID, get_post_modified_time( 'Y-m-d H:i:s', false, $newsletter->ID ) ),
+			'FromName'   => $from_name,
+			'FromEmail'  => $this->get_setting( 'from_email' ),
+			'ReplyTo'    => $this->get_setting( 'reply_to_email' ),
+			'HtmlUrl'    => $url,
+			'SegmentIDs' => [ (string) $segment_id ],
+		];
+
+		$result = $campaigns->create( $this->get_setting( 'client_id' ), $params );
+
+		return [
+			'response'         => $result->response,
+			'http_status_code' => $result->http_status_code,
+		];
+	}
+
+	/**
+	 * Sends a campaign.
+	 *
+	 * @param string $campaign_id The campaign id.
+	 * @return array{
+	 *   response: mixed,
+	 *   success: boolean,
+	 * }|false  The response from the API.
+	 */
+	public function send_campaign( string $campaign_id ): array|false {
+		if ( ! $this->auth ) {
+			return false;
+		}
+
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $this->auth );
+
+		$result = $campaigns->send(
+			[
+				'ConfirmationEmail' => $this->get_setting( 'confirmation_email' ),
+				'SendDate'          => 'immediately',
+			]
+		);
+
+		return [
+			'response' => $result->response,
+			'success'  => 200 === $result->http_status_code,
+		];
+	}
+
+	/**
+	 * Gets campaign summary.
+	 *
+	 * @param string $campaign_id The campaign id.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
+	 */
+	public function get_campaign_summary( string $campaign_id ): array|false {
+		$settings = get_option( static::SETTINGS_KEY );
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+			return false;
+		}
+		$auth = [ 'api_key' => $settings['api_key'] ];
+
+		$campaigns = new \CS_REST_Campaigns( $campaign_id, $auth );
+
+		$result = $campaigns->get_summary();
+		return [
+			'response'         => $result->response,
+			'http_status_code' => $result->http_status_code,
+		];
+	}
+
+	/**
+	 * Determine if the campaign was created successfully.
+	 *
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
+	 * @return bool
+	 */
+	public function campaign_created_successfully( array|false $result ): bool {
+		return ! empty( $result['http_status_code'] ) ? 201 === $result['http_status_code'] : false;
+	}
+
+	/**
+	 * Gets the campaign id from the result.
+	 *
+	 * @param array|false $result {.
+	 *   @type mixed $response The deserialised result of the API call.
+	 *   @type int $http_status_code The http status code of the API call.
+	 * } The response from the creation request.
+	 * @phpstan-param array{response: mixed, http_status_code: int}|false $result
+	 * @return mixed
+	 */
+	public function get_campaign_id_from_create_result( array|false $result ): mixed {
+		return $result['response'] ?? false;
+	}
+
+
+	/**
+	 * Add subscriber to list
+	 *
+	 * @param string                       $list_id The list id.
+	 * @param string                       $email The email address.
+	 * @param array<array<string, string>> $custom_fields The custom fields.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
+	 */
+	public function add_subscriber( string $list_id, string $email, array $custom_fields = [] ): array|false {
+		if ( ! $this->auth ) {
+			return false;
+		}
+
+		$subscribers = new \CS_REST_Subscribers( $list_id, $this->auth );
+
+		$result = $subscribers->add(
+			[
+				'EmailAddress'   => $email,
+				'Resubscribe'    => true,
+				'ConsentToTrack' => 'yes',
+				'CustomFields'   => $custom_fields,
+			]
+		);
+
+		return [
+			'response'         => $result->response,
+			'http_status_code' => $result->http_status_code,
+		];
+	}
+
+	/**
+	 * Remove subscriber from list.
+	 *
+	 * @param string $list_id The list id.
+	 * @param string $email The email address.
+	 * @return array{
+	 *   response: mixed,
+	 *   http_status_code: int,
+	 * }|false  The response from the API.
+	 */
+	public function remove_subscriber( string $list_id, string $email ): array|false {
+		if ( ! $this->auth ) {
+			return false;
+		}
+
+		$subscribers = new \CS_REST_Subscribers( $list_id, $this->auth );
+
+		$result = $subscribers->unsubscribe( $email );
+
+		return [
+			'response'         => $result->response,
+			'http_status_code' => $result->http_status_code,
+		];
+	}
+
+	/**
+	 * Whether the provider manages from names.
+	 *
+	 * @return boolean
+	 */
+	public function provider_manages_from_names(): bool {
+		return false;
+	}
+
+	/**
+	 * Whether or not the provider uses suppression lists.
+	 *
+	 * @return boolean
+	 */
+	public function uses_suppression_lists(): bool {
+		return false;
+	}
+
+	/**
+	 * Gets the suppression lists.
+	 *
+	 * @return mixed
+	 */
+	public function get_suppression_lists(): mixed {
+		return [];
+	}
+}

@@ -24,97 +24,134 @@ class Settings {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'maybe_register_settings_page' ] );
+		add_action( 'admin_init', [ $this, 'register_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'admin_menu', [ $this, 'register_submenu_page' ] );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'rest_api_init', [ $this, 'register_settings' ] );
 	}
 
 	/**
-	 * Registers the submenu settings page for Newsletter Builder.
-	 *
-	 * @return void
+	 * Register scripts for the settings page.
 	 */
-	public function maybe_register_settings_page(): void {
-		if ( function_exists( 'fm_register_submenu_page' ) && \current_user_can( 'manage_options' ) ) {
-			\fm_register_submenu_page( static::SETTINGS_KEY, 'edit.php?post_type=nb_newsletter', __( 'General Settings', 'wp-newsletter-builder' ), __( 'General Settings', 'wp-newsletter-builder' ) );
-			\add_action( 'fm_submenu_' . static::SETTINGS_KEY, [ $this, 'register_fields' ] );
-		}
+	public function register_scripts() {
+		wp_register_script(
+			'wp-newsletter-builder-admin-general-settings',
+			get_entry_asset_url( 'wp-newsletter-builder-admin-general-settings' ),
+			array_merge( get_asset_dependency_array( 'wp-newsletter-builder-admin-general-settings' ), [ 'wp-editor' ] ),
+			get_asset_version( 'wp-newsletter-builder-admin-general-settings' ),
+			true
+		);
+		wp_set_script_translations( 'wp-newsletter-builder-admin-general-settings' );
 	}
 
 	/**
-	 * Registers the fields on the settings page for Newsletter Builder.
-	 *
-	 * @return void
+	 * Enqueue scripts and styles for the settings page.
 	 */
-	public function register_fields(): void {
-		$fields = [
-			'name'     => static::SETTINGS_KEY,
-			'children' => [
-				'from_email'      => new \Fieldmanager_TextField( __( 'From Email', 'wp-newsletter-builder' ) ),
-				'reply_to_email'  => new \Fieldmanager_TextField( __( 'Reply To Email', 'wp-newsletter-builder' ) ),
-				'from_names'      => new \Fieldmanager_TextField(
-					[
-						'label'              => __( 'From Names', 'wp-newsletter-builder' ),
-						'limit'              => 0,
-						'add_more_label'     => __( 'Add From Name', 'wp-newsletter-builder' ),
-						'one_label_per_item' => false,
-					]
-				),
-				'footer_settings' => new \Fieldmanager_Group(
-					[
-						'label'       => __( 'Footer Settings', 'wp-newsletter-builder' ),
-						'collapsed'   => true,
-						'collapsible' => true,
-						'children'    => [
-							'facebook_url'  => new \Fieldmanager_Link(
-								[
-									'label' => __( 'Facebook URL', 'wp-newsletter-builder' ),
-								]
-							),
-							'twitter_url'   => new \Fieldmanager_Link(
-								[
-									'label' => __( 'Twitter URL', 'wp-newsletter-builder' ),
-								]
-							),
-							'instagram_url' => new \Fieldmanager_Link(
-								[
-									'label' => __( 'Instagram URL', 'wp-newsletter-builder' ),
-								]
-							),
-							'youtube_url'   => new \Fieldmanager_Link(
-								[
-									'label' => __( 'YouTube URL', 'wp-newsletter-builder' ),
-								]
-							),
-							'image'         => new \Fieldmanager_Media(
-								[
-									'label'        => __( 'Footer Image', 'wp-newsletter-builder' ),
-									'preview_size' => 'medium',
-								]
-							),
-							'address'       => new \Fieldmanager_TextField(
-								[
-									'label' => __( 'Company Address Line 1', 'wp-newsletter-builder' ),
-								]
-							),
-							'address_2'     => new \Fieldmanager_TextField(
-								[
-									'label' => __( 'Company Address Line 2', 'wp-newsletter-builder' ),
-								]
-							),
+	public function enqueue_assets() {
+		wp_enqueue_script( 'wp-newsletter-builder-admin-general-settings' );
+
+		// Enqueue styles for the settings page.
+		wp_enqueue_style(
+			'wp-newsletter-builder-admin-general-settings',
+			get_entry_asset_url( 'wp-newsletter-builder-admin-general-settings', 'index.css' ),
+			[],
+			get_asset_version( 'wp-newsletter-builder-admin-general-settings' ),
+		);
+
+		// Enqueue styles for all settings pages.
+		wp_enqueue_style(
+			'wp-newsletter-builder-admin-settings',
+			get_entry_asset_url( 'admin-settings', 'index.css' ),
+			get_asset_dependency_array( 'admin-settings' ),
+			get_asset_version( 'admin-settings' ),
+		);
+
+		// Core component styles.
+		wp_enqueue_style( 'wp-components' );
+
+		// Media functionality for Media Library button.
+		wp_enqueue_media();
+	}
+
+	/**
+	 * Register the settings submenu page.
+	 */
+	public function register_submenu_page(): void {
+		add_submenu_page(
+			'edit.php?post_type=nb_newsletter',
+			__( 'General Settings', 'wp-newsletter-builder' ),
+			__( 'General Settings', 'wp-newsletter-builder' ),
+			'manage_options',
+			'general-settings',
+			[ $this, 'options_menu_callback' ],
+		);
+	}
+
+	/**
+	 * Callback function for add_submenu_page. Renders react entrypoint.
+	 */
+	public function options_menu_callback(): void {
+		echo '<div id="wp-newsletter-builder-settings__page-general-settings"></div>';
+	}
+
+	/**
+	 * Register the settings for the page.
+	 */
+	public function register_settings(): void {
+		register_setting(
+			'options',
+			static::SETTINGS_KEY,
+			[
+				'type'         => 'object',
+				'show_in_rest' => [
+					'schema' => [
+						'type'       => 'object',
+						'properties' => [
+							'from_email'     => [
+								'type'   => 'string',
+								'format' => 'email',
+							],
+							'reply_to_email' => [
+								'type'   => 'string',
+								'format' => 'email',
+							],
+							'from_names'     => [
+								'type'  => 'array',
+								'items' => [
+									'type' => 'string',
+								],
+							],
+							'facebook_url'   => [
+								'type'   => 'string',
+								'format' => 'uri',
+							],
+							'twitter_url'    => [
+								'type'   => 'string',
+								'format' => 'uri',
+							],
+							'instagram_url'  => [
+								'type'   => 'string',
+								'format' => 'uri',
+							],
+							'youtube_url'    => [
+								'type'   => 'string',
+								'format' => 'uri',
+							],
+							'image'          => [
+								'type' => 'number',
+							],
+							'address'        => [
+								'type' => 'string',
+							],
+							'address_2'      => [
+								'type' => 'string',
+							],
 						],
-					]
-				),
-			],
-		];
-		global $newsletter_builder_email_provider;
-		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
-			if ( $newsletter_builder_email_provider->provider_manages_from_names() ) {
-				unset( $fields['children']['from_email'] );
-				unset( $fields['children']['reply_to_email'] );
-				unset( $fields['children']['from_names'] );
-			}
-		}
-		$settings = new \Fieldmanager_Group( $fields );
-		$settings->activate_submenu_page();
+					],
+				],
+			]
+		);
 	}
 
 	/**
@@ -154,11 +191,14 @@ class Settings {
 	}
 
 	/**
-	 * Gets footer settings.
+	 * Gets settings.
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
 	 * @return array{
+	 *   from_email?: string,
+	 *   reply_to_email?: string,
+	 *   from_names?: array<string>,
 	 *   facebook_url?: string,
 	 *   twitter_url?: string,
 	 *   instagram_url?: string,
@@ -168,13 +208,13 @@ class Settings {
 	 *   address_2?: string,
 	 * }|false  The footer settings.
 	 */
-	public function get_footer_settings(): array|false {
+	public function get_settings(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['footer_settings'] ) || ! is_array( $settings['footer_settings'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return false;
 		}
 
-		return $settings['footer_settings'];
+		return $settings;
 	}
 
 	/**

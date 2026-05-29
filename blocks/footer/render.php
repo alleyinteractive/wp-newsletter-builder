@@ -10,14 +10,13 @@
  */
 
 $nb_settings         = get_option( 'nb_settings' );
-$nb_footer_settings  = is_array( $nb_settings ) ? $nb_settings['footer_settings'] : [];
-$nb_facebook_url     = $nb_footer_settings['facebook_url'] ?? '';
-$nb_twitter_url      = $nb_footer_settings['twitter_url'] ?? '';
-$nb_instagram_url    = $nb_footer_settings['instagram_url'] ?? '';
-$nb_youtube_url      = $nb_footer_settings['youtube_url'] ?? '';
-$nb_image_id         = $nb_footer_settings['image'] ?? 0;
-$nb_address          = $nb_footer_settings['address'] ?? '';
-$nb_address_2        = $nb_footer_settings['address_2'] ?? '';
+$nb_facebook_url     = $nb_settings['facebook_url'] ?? '';
+$nb_twitter_url      = $nb_settings['twitter_url'] ?? '';
+$nb_instagram_url    = $nb_settings['instagram_url'] ?? '';
+$nb_youtube_url      = $nb_settings['youtube_url'] ?? '';
+$nb_image_id         = $nb_settings['image'] ?? 0;
+$nb_address          = $nb_settings['address'] ?? '';
+$nb_address_2        = $nb_settings['address_2'] ?? '';
 $nb_has_social_links = ! empty( $nb_facebook_url ) || ! empty( $nb_twitter_url ) || ! empty( $nb_instagram_url ) || ! empty( $nb_youtube_url );
 
 $plugin_url = plugins_url( 'wp-newsletter-builder' );

@@ -18,7 +18,10 @@ import { Spinner } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEffect, useState } from '@wordpress/element';
 
-interface FooterSettings {
+interface Settings {
+  from_email: string,
+  reply_to_email: string,
+  from_names: string[],
   facebook_url: string,
   twitter_url: string,
   instagram_url: string,
@@ -38,22 +41,22 @@ interface FooterSettings {
  */
 export default function Edit() {
   const [isLoading, setIsLoading] = useState(false);
-  const [footerSettings, setFooterSettings] = useState<FooterSettings>();
+  const [settings, setSettings] = useState<Settings>();
 
-  const facebookUrl = footerSettings?.facebook_url ?? '';
-  const twitterUrl = footerSettings?.twitter_url ?? '';
-  const instagramUrl = footerSettings?.instagram_url ?? '';
-  const youtubeUrl = footerSettings?.youtube_url ?? '';
-  const imageId = footerSettings?.image ?? 0;
-  const address = footerSettings?.address ?? '';
-  const address2 = footerSettings?.address_2 ?? '';
+  const facebookUrl = settings?.facebook_url ?? '';
+  const twitterUrl = settings?.twitter_url ?? '';
+  const instagramUrl = settings?.instagram_url ?? '';
+  const youtubeUrl = settings?.youtube_url ?? '';
+  const imageId = settings?.image ?? 0;
+  const address = settings?.address ?? '';
+  const address2 = settings?.address_2 ?? '';
 
   useEffect(() => {
     setIsLoading(true);
 
-    apiFetch({ path: '/wp-newsletter-builder/v1/footer_settings' })
+    apiFetch({ path: '/wp-newsletter-builder/v1/settings' })
       .then((response) => {
-        setFooterSettings(response as any as FooterSettings);
+        setSettings(response as any as Settings);
         setIsLoading(false);
       });
   }, []);
@@ -63,7 +66,7 @@ export default function Edit() {
   } = useSelect((select) => ({
     // @ts-ignore
     media: imageId ? select('core').getMedia(imageId) : null,
-  }), [footerSettings, imageId]);
+  }), [settings, imageId]);
 
   const imageUrl = media ? media.source_url : '';
   const imageAltText = media ? media.alt_text : '';

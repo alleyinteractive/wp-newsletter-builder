@@ -16,7 +16,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 import apiFetch from '@wordpress/api-fetch';
 import { Spinner } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from 'react';
 
 interface FooterSettings {
   facebook_url: string,
@@ -63,7 +63,7 @@ export default function Edit() {
   } = useSelect((select) => ({
     // @ts-ignore
     media: imageId ? select('core').getMedia(imageId) : null,
-  }), [footerSettings, imageId]);
+  }), [imageId]);
 
   const imageUrl = media ? media.source_url : '';
   const imageAltText = media ? media.alt_text : '';

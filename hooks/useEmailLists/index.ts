@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from '@wordpress/element';
+import { useEffect, useMemo, useState } from 'react';
 import apiFetch from '@wordpress/api-fetch';
-import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import useNewsletterMeta from '../useNewsletterMeta';
 
 interface ListResult {
   ListID: string;

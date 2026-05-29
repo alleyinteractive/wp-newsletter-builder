@@ -1,14 +1,14 @@
+import { usePostMetaValue } from '@alleyinteractive/block-editor-tools';
 import { MultiSelect } from 'react-multi-select-component';
 import { __ } from '@wordpress/i18n';
 import { TextControl, Spinner, SelectControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from 'react';
 import { dispatch, useSelect } from '@wordpress/data';
 import { BlockInstance, parse } from '@wordpress/blocks';
 import { useBlockProps } from '@wordpress/block-editor';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
-import usePostMeta from '../../hooks/usePostMeta';
 
 import './index.scss';
 
@@ -34,16 +34,14 @@ interface Window {
 }
 
 export default function Edit() {
-  const [meta, setMeta] = usePostMeta();
-  const {
-    nb_newsletter_subject: subject,
-    nb_newsletter_preview: preview,
-    nb_newsletter_list: list,
-    nb_newsletter_email_type: emailtype,
-    nb_newsletter_template: template,
-    nb_newsletter_from_name: fromname,
-    nb_newsletter_suppression_group: suppressionGroup,
-  } = meta;
+  const [emailType, setEmailType] = usePostMetaValue('nb_newsletter_email_type');
+  const [fromName, setFromName] = usePostMetaValue('nb_newsletter_from_name');
+  const [, setHeaderImg] = usePostMetaValue('nb_newsletter_header_img');
+  const [list, setList] = usePostMetaValue('nb_newsletter_list');
+  const [preview, setPreview] = usePostMetaValue('nb_newsletter_preview');
+  const [subject, setSubject] = usePostMetaValue('nb_newsletter_subject');
+  const [suppressionGroup, setSuppressionGroup] = usePostMetaValue('nb_newsletter_suppression_group');
+  const [template, setTemplate] = usePostMetaValue('nb_newsletter_template');
 
   const contentController = useSelect((select) => {
     const { getBlocksByName, getBlocksByClientId } = select('core/block-editor') as BlockEditor;
@@ -58,22 +56,6 @@ export default function Edit() {
       usesSuppressionLists = false,
     } = {},
   } = (window as any as Window);
-
-  const typeHandler = (newValue: string) => {
-    setMeta({ nb_newsletter_email_type: newValue });
-  };
-
-  const templateHandler = (newValue: string) => {
-    setMeta({ nb_newsletter_template: newValue });
-  };
-
-  const fromNameHandler = (newValue: string) => {
-    setMeta({ nb_newsletter_from_name: newValue });
-  };
-
-  const imageHandler = (image: number) => {
-    setMeta({ nb_newsletter_header_img: image });
-  };
 
   const contentHandler = (content: string) => {
     const emailSettingsBlockIds = contentController.getEmailSettingsBlocks();
@@ -101,15 +83,12 @@ export default function Edit() {
 
   const [suppressionLists, setSuppressionLists] = useState<ListResult[]>([]);
 
-  const setSelectedLists = ((newValue: Array<Option>) => {
-    const listIds = newValue.map((item: Option) => item.value);
-    setMeta({ nb_newsletter_list: listIds });
-  });
+  const setSelectedLists = (newValue: Array<Option>) => setList(
+    newValue.map((item: Option) => item.value),
+  );
 
-  const listsToOptions = (rawLists: ListResult[]) => {
-    const output = rawLists.map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
-    return output;
-  };
+  const listsToOptions = (rawLists: ListResult[]) => rawLists
+    .map((item: ListResult) => ({ label: item.Name, value: item.ListID }));
 
   const options = lists.length > 0 ? listsToOptions(lists) : [];
   const selected = options.filter((item: Option) => listArray.includes(item.value));
@@ -138,28 +117,28 @@ export default function Edit() {
   return (
     <div {...useBlockProps()}>
       <EmailTypeSelector
-        typeValue={emailtype}
+        typeValue={emailType}
         contentHandler={contentHandler}
-        typeHandler={typeHandler}
-        imageHandler={imageHandler}
-        templateHandler={templateHandler}
-        fromNameHandler={fromNameHandler}
+        typeHandler={setEmailType}
+        imageHandler={setHeaderImg}
+        templateHandler={setTemplate}
+        fromNameHandler={setFromName}
         templateValue={template}
-        fromNameValue={fromname}
+        fromNameValue={fromName}
       />
       {/* @ts-ignore */}
       <TextControl
         label={__('Subject', 'wp-newsletter-builder')}
         placeholder={__('Enter subject', 'wp-newsletter-builder')}
         value={subject}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
+        onChange={setSubject}
       />
       {/* @ts-ignore */}
       <TextControl
         label={__('Preview Text', 'wp-newsletter-builder')}
         placeholder={__('Enter preview text', 'wp-newsletter-builder')}
         value={preview}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
+        onChange={setPreview}
       />
       {/* @ts-ignore */}
       {lists.length > 0 ? (
@@ -188,13 +167,10 @@ export default function Edit() {
           label={__('Suppression Group', 'wp-newsletter-builder')}
           value={suppressionGroup}
           options={suppressionLists.map((item) => ({ label: item.Name, value: item.ListID }))}
-          onChange={(newValue: string) => setMeta({ nb_newsletter_suppression_group: newValue })}
+          onChange={setSuppressionGroup}
           required
         />
-      ) : (
-        /* @ts-ignore */
-        null
-      )}
+      ) : null}
     </div>
   );
 }

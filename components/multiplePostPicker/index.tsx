@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import React, { useState } from 'react';
 
 import { Button } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -11,7 +11,7 @@ interface MultiplePostPickerProps {
   onUpdate: (ids: number[]) => void;
   params?: object;
   searchEndpoint?: string;
-  searchRender: (post: object) => JSX.Element;
+  searchRender: (post: object) => React.ReactElement;
 }
 
 function MultiplePostPicker({

@@ -6,15 +6,15 @@ import { createBlock, parse, serialize } from '@wordpress/blocks';
 import { CheckboxControl, PanelBody, TextareaControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { PluginSidebar } from '@wordpress/edit-post';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import { MultiSelect } from 'react-multi-select-component';
 // eslint-disable-next-line camelcase
 import { WP_REST_API_Post } from 'wp-types';
 
-import NewsletterSpinner from '@/components/newsletterSpinner';
-import useEmailLists, { Option } from '@/hooks/useEmailLists';
-import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import NewsletterSpinner from '../../components/newsletterSpinner';
+import useEmailLists, { Option } from '../../hooks/useEmailLists';
+import useNewsletterMeta from '../../hooks/useNewsletterMeta';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import InvalidTemplate from './components/invalid-template';

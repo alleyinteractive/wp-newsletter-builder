@@ -1,4 +1,4 @@
-import { useState } from '@wordpress/element';
+import React, { useState } from 'react';
 
 import {
   Button,
@@ -17,7 +17,7 @@ interface SearchModalProps {
   baseUrl: string;
   closeModal: () => void;
   onUpdate: (ids: number[]) => void;
-  searchRender: (post: object) => JSX.Element;
+  searchRender: (post: object) => React.ReactElement;
 }
 
 function SearchModal({

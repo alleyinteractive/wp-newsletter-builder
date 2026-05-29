@@ -1,4 +1,5 @@
 import SortableList, { SortableItem, SortableKnob } from 'react-easy-sort';
+import React from 'react';
 
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wordpress/components';
@@ -8,7 +9,7 @@ import type { WP_REST_API_Search_Result } from 'wp-types'; // eslint-disable-lin
 import './selected-list.scss';
 
 interface SelectedListProps {
-  searchRender: (post: object) => JSX.Element;
+  searchRender: (post: object) => React.ReactElement;
   selected?: WP_REST_API_Search_Result[]; // eslint-disable-line camelcase
   setSelected: (posts: WP_REST_API_Search_Result[]) => void; // eslint-disable-line camelcase
 }

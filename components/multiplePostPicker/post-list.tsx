@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import React, { useCallback, useEffect, useState } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { __, sprintf } from '@wordpress/i18n';
@@ -9,7 +9,7 @@ import './post-list.scss';
 
 interface PostListProps {
   baseUrl: string;
-  searchRender: (post: object) => JSX.Element;
+  searchRender: (post: object) => React.ReactElement;
   selected?: WP_REST_API_Search_Result[]; // eslint-disable-line camelcase
   setSelected: (post: WP_REST_API_Search_Result) => void; // eslint-disable-line camelcase
 }

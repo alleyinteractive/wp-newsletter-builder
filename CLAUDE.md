@@ -73,7 +73,7 @@ Extends core WordPress blocks (button, heading, image, list, paragraph, separato
 Editor enhancements: newsletter-from-post, newsletter-status, newsletter-template-styles, pre-publish-checks
 
 ### Hooks (`hooks/`)
-Custom React hooks: `useEmailLists`, `useInnerBlocks`, `useInnerBlocksAttributes`, `useNewsletterMeta`, `useNewsletterStats`, `usePostMeta`
+Custom React hooks: `useEmailLists`, `useNewsletterMeta`, `useNewsletterStats`
 
 ### Entries (`entries/`)
 Entry points compiled by webpack. Include `index.php` in an entry directory for auto-loading via `load_scripts()`.
@@ -87,7 +87,6 @@ Entry points compiled by webpack. Include `index.php` in an entry directory for 
 - PSR-4 autoloading via Composer
 
 ### JavaScript/TypeScript
-- Import alias: `@/` resolves to project root
 - Full TypeScript with strict mode
 - Block registration via `block.json`
 - Dynamic blocks use `render.php` for server-side rendering

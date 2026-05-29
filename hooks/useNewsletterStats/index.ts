@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useState } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 
 interface Stats {

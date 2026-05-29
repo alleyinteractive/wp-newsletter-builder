@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { NewsletterMeta } from '@/hooks/useNewsletterMeta';
+import { NewsletterMeta } from '../../../hooks/useNewsletterMeta';
 
 interface RequiredFieldsProps {
   meta: Pick<NewsletterMeta, 'type' | 'template' | 'fromName' | 'subject' | 'preview' | 'list'>

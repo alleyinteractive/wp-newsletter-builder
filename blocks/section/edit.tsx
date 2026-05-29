@@ -7,10 +7,10 @@ import {
 import { dispatch, select } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { PanelBody, PanelRow } from '@wordpress/components';
-import { useEffect } from '@wordpress/element';
+import { useEffect } from 'react';
 
-import MultiplePostPicker from '@/components/multiplePostPicker';
-import PostPickerResult from '@/components/postPickerResult';
+import MultiplePostPicker from '../../components/multiplePostPicker';
+import PostPickerResult from '../../components/postPickerResult';
 import './index.scss';
 
 interface EditProps {

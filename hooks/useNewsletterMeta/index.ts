@@ -1,5 +1,5 @@
 import { usePostMeta } from '@alleyinteractive/block-editor-tools';
-import { useCallback } from '@wordpress/element';
+import { useCallback } from 'react';
 
 export interface NewsletterMeta {
   type: string;

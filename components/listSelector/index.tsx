@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 
 type ListSelectorProps = {

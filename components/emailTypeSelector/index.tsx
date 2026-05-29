@@ -1,6 +1,6 @@
 import { SelectControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 import { WP_REST_API_Post } from 'wp-types'; // eslint-disable-line camelcase
 

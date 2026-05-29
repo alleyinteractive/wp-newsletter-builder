@@ -1,4 +1,4 @@
-import React, { useEffect } from '@wordpress/element';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { usePostMetaValue } from '@alleyinteractive/block-editor-tools';

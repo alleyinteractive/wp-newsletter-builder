@@ -21,7 +21,7 @@ import { useSelect } from '@wordpress/data';
  * @see https://www.npmjs.com/package/@wordpress/scripts#using-css
  */
 import './index.scss';
-import { usePostMeta } from '@alleyinteractive/block-editor-tools';
+import { usePostMetaValue } from '@alleyinteractive/block-editor-tools';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -32,17 +32,14 @@ import { usePostMeta } from '@alleyinteractive/block-editor-tools';
  * @return {WPElement} Element to render.
  */
 export default function Edit() {
-  const [meta] = usePostMeta();
-  const {
-    nb_newsletter_header_img: imageId,
-  } = meta;
+  const [headerImg] = usePostMetaValue('nb_newsletter_header_img');
 
   const {
     media = null,
   } = useSelect((select) => ({
     // @ts-ignore
-    media: imageId ? select('core').getMedia(imageId) : null,
-  }), [imageId]);
+    media: headerImg ? select('core').getMedia(headerImg) : null,
+  }), [headerImg]);
 
   const imageUrl = media ? media.source_url : '';
 

@@ -1,8 +1,8 @@
+import { useInnerBlocksAttributes } from '@alleyinteractive/block-editor-tools';
 import { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls, InnerBlocks } from '@wordpress/block-editor';
 import { ColorPicker, PanelBody } from '@wordpress/components';
-import useInnerBlockAttributes from '@/hooks/useInnerBlocksAttributes';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -43,7 +43,7 @@ export default function Edit({
   clientId,
 }: EditProps) {
   const TEMPLATE = [['core/button']];
-  const innerBlockAttributes = useInnerBlockAttributes(clientId);
+  const innerBlockAttributes = useInnerBlocksAttributes(clientId);
   const innerBorderRadius = innerBlockAttributes[0]?.style?.border?.radius || '0';
   const innerWidth = innerBlockAttributes[0]?.width;
   const buttonStyles = {

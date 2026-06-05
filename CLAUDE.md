@@ -32,15 +32,12 @@ composer phpstan       # PHP static analysis (level: max)
 
 ### Testing
 ```bash
-npm run test                    # Jest tests
-npm run test:watch              # Jest watch mode
+npm run test                    # Runs all tests (TypeScript, ESLint, Stylelint)
+npm run check-types             # TypeScript tests
+npm run eslint                  # ESLint tests
+npm run stylelint               # Stylelint tests
 composer phpunit                # PHPUnit tests
 composer test                   # Full PHP suite: phpcs + phpunit + phpstan
-
-# Single test file
-npx jest --testPathPattern="specific-test"
-./vendor/bin/phpunit tests/path/to/TestClass.php
-```
 
 ### Block Scaffolding
 ```bash

@@ -29,12 +29,8 @@ composer require alleyinteractive/wp-newsletter-builder
 
 ## Usage
 
-Activate the plugin in WordPress and use it like so:
+Activate the plugin in WordPress.
 
-```php
-$plugin = WP_Newsletter_Builder\WP_Newsletter_Builder\WP_Newsletter_Builder();
-$plugin->perform_magic();
-```
 ### Enabling an Email Provider
 
 The plugin supports multiple email providers. To enable an email provider, add the following code as a plugin or function in your theme  `wp-newsletter-builder-PROVIDER.php`:
@@ -75,13 +71,15 @@ add_filter( 'wp_newsletter_builder_allowed_post_types',
 
 ## Testing
 
-Run `npm run test` to run Jest tests against JavaScript files. Run
-`npm run test:watch` to keep the test runner open and watching for changes.
+Run `npm run test` to run all tests (TypeScript, ESLint, Stylelint).
 
-Run `npm run lint` to run ESLint against all JavaScript files. Linting will also
-happen when running development or production builds.
+Run `npm run check-types` to run Typescript checks against all TypeScript files.
 
-Run `composer test` to run tests against PHPUnit and the PHP code in the plugin.
+Run `npm run eslint` to run ESLint against all TypeScript & JavaScript files.
+
+Run `npm run stylelint` to run Stylelint against all SCSS files.
+
+Run `composer test` to run tests against the PHP code in the plugin.
 
 ### The `entries` directory and entry points
 

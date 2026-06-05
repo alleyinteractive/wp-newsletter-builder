@@ -1,3 +1,5 @@
+@use 'sass:meta';
+
 /*
  * This adds enough specificity to override the core block-library styles while
  * allowing our custom blocks' styles to win.
@@ -24,16 +26,16 @@
 
     // Some blocks require extra specificity.
     .block-editor-block-list__layout.is-root-container {
-      @import '../core-blocks/heading';
+      @include meta.load-css('../core-blocks/heading');
     }
 
     // Block style imports.
-    @import '../core-blocks/image';
-    @import '../core-blocks/paragraph';
-    @import '../core-blocks/button';
-    @import '../core-blocks/separator';
-    @import '../core-blocks/list';
-    @import '../core-blocks/typography';
-    @import '../core-blocks/latest-posts';
+    @include meta.load-css('../core-blocks/image');
+    @include meta.load-css('../core-blocks/paragraph');
+    @include meta.load-css('../core-blocks/button');
+    @include meta.load-css('../core-blocks/separator');
+    @include meta.load-css('../core-blocks/list');
+    @include meta.load-css('../core-blocks/typography');
+    @include meta.load-css('../core-blocks/latest-posts');
   }
 }

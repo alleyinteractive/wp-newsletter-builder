@@ -10,93 +10,10 @@
 namespace WP_Newsletter_Builder;
 
 // Register and enqueue assets.
-add_action( 'wp_enqueue_scripts', __NAMESPACE__ . '\action_wp_enqueue_scripts' );
-add_action( 'wp_newsletter_builder_enqueue_styles', __NAMESPACE__ . '\action_newsletters_enqueue_styles' );
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\action_admin_enqueue_scripts' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
 add_action( 'admin_head', __NAMESPACE__ . '\set_template_values' );
 
-/**
- * A callback for the wp_enqueue_scripts hook.
- */
-function action_wp_enqueue_scripts(): void {
-	/*
-	|--------------------------------------------------------------------------
-	| Enqueue site assets using the asset/entry helper functions.
-	|--------------------------------------------------------------------------
-	|
-	| This function is called by the enqueue_block_editor_assets hook. Use it to
-	| enqueue assets that are loaded across your site.
-	|
-	| For more advanced usage, check out the WordPress Asset Manager plugin by Alley.
-	|
-	|     https://github.com/alleyinteractive/wp-asset-manager
-	|
-	*/
-}
-
-/**
- * A callback for the wp_newsletter_builder_enqueue_styles hook.
- */
-function action_newsletters_enqueue_styles(): void {
-	$blocks = [
-		'footer',
-		'header',
-		'post',
-		'section',
-		'two-up-post',
-	];
-	?>
-	<style type="text/css">
-	<?php
-	$template_id = get_post_meta( get_queried_object_id(), 'nb_newsletter_template', true );
-	$font        = get_post_meta( $template_id, 'nb_template_font', true );
-	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
-	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
-	foreach ( $blocks as $block ) {
-		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
-			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
-
-			$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-			if ( ! empty( $css ) ) {
-				$css = str_replace( '../images/', plugins_url( '../build/images/', __FILE__ ), $css );
-				echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			}
-		}
-	}
-
-	// Global block styles.
-	if ( validate_path( trailingslashit( get_entry_dir_path( 'blocks', true ) ) . 'index.css' ) ) {
-		$entry_base_url = trailingslashit( get_entry_dir_path( 'blocks', true ) ) . 'index.css';
-
-		$css = file_get_contents( $entry_base_url ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
-		if ( ! empty( $css ) ) {
-			$css = str_replace( 'var(--template-font-family)', $font, $css );
-			$css = str_replace( 'var(--template-bg-color)', $bg_color, $css );
-			$css = str_replace( 'var(--template-link-color)', $link_color, $css );
-			echo wp_strip_all_tags( $css ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		}
-	}
-	?>
-	</style>
-	<?php
-}
-
-/**
- * A callback for the admin_enqueue_scripts hook.
- */
-function action_admin_enqueue_scripts(): void {
-	/*
-	|--------------------------------------------------------------------------
-	| Enqueue admin assets using the asset/entry helper functions.
-	|--------------------------------------------------------------------------
-	|
-	| This function is called by the admin_enqueue_scripts hook. Use it to enqueue
-	| assets that are loaded only in the WordPress admin.
-	|
-	*/
-}
-
+// TODO: Migrate this to the index.php file that defines the settings editor script.
 /**
  * A callback for the enqueue_block_editor_assets hook.
  */
@@ -131,12 +48,6 @@ function action_enqueue_block_editor_assets(): void {
 	foreach ( $templates as $template ) {
 		$template_map[ $template->ID ] = $template->post_title;
 	}
-	wp_enqueue_style(
-		'wp-newsletter-builder-editor',
-		get_entry_asset_url( 'editor', 'index.css' ),
-		get_asset_dependency_array( 'editor' ),
-		get_asset_version( 'editor' )
-	);
 	$settings = new Settings();
 	global $newsletter_builder_email_provider;
 	$uses_suppression_lists = false;
@@ -283,6 +194,7 @@ function load_scripts(): void {
 
 load_scripts();
 
+// TODO: Combine this with the logic in single-nb_newsletter.php so we don't repeat ourselves.
 /**
  * Set the template values for the editor.
  */

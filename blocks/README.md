@@ -22,7 +22,7 @@ blocks/
     │   block.json
     │   edit.jsx
     |   index.scss
-    |   index.js
+    |   index.ts
     |   index.php
     |   styles.scss
     |   render.php

@@ -9,7 +9,8 @@ if ( function_exists( 'newrelic_disable_autorum' ) ) {
 	newrelic_disable_autorum();
 }
 
-$wp_newsletter_builder_preview = get_post_meta( get_queried_object_id(), 'nb_newsletter_preview', true );
+$wp_newsletter_builder_preview     = get_post_meta( get_queried_object_id(), 'nb_newsletter_preview', true );
+$wp_newsletter_builder_template_id = get_post_meta( get_queried_object_id(), 'nb_newsletter_template', true );
 ?>
 <!doctype html>
 
@@ -20,12 +21,20 @@ $wp_newsletter_builder_preview = get_post_meta( get_queried_object_id(), 'nb_new
 	<meta name="x-apple-disable-message-reformatting">
 
 	<title><?php the_title(); ?></title>
+
+	<style>
+		:root {
+			--template-font-family: <?php echo wp_strip_all_tags( get_post_meta( $wp_newsletter_builder_template_id, 'nb_template_font', true ) ?: '' ); ?>;
+			--template-bg-color: <?php echo wp_strip_all_tags( get_post_meta( $wp_newsletter_builder_template_id, 'nb_template_bg_color', true ) ?: '' ); ?>;
+			--template-link-color: <?php echo wp_strip_all_tags( get_post_meta( $wp_newsletter_builder_template_id, 'nb_template_link_color', true ) ?: '' ); ?>;
+		}
+	</style>
+
 	<?php
-	/**
-	 * Fires in the head of single_nb_newsletter.php
-	 * Used to include inline styles.
-	 */
-	do_action( 'wp_newsletter_builder_enqueue_styles' );
+	if ( ! did_action( 'wp_enqueue_scripts' ) ) {
+		do_action( 'wp_enqueue_scripts' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+	}
+	wp_print_styles( 'wp-newsletter-builder-blocks-css' );
 	?>
 </head>
 

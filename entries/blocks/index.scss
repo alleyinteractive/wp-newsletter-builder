@@ -1,0 +1,17 @@
+@use 'sass:meta';
+
+@include meta.load-css('../../scss/reset');
+@include meta.load-css('../../scss/global');
+@include meta.load-css('../../scss/core-blocks/button');
+@include meta.load-css('../../scss/core-blocks/heading');
+@include meta.load-css('../../scss/core-blocks/image');
+@include meta.load-css('../../scss/core-blocks/latest-posts');
+@include meta.load-css('../../scss/core-blocks/list');
+@include meta.load-css('../../scss/core-blocks/paragraph');
+@include meta.load-css('../../scss/core-blocks/separator');
+@include meta.load-css('../../scss/core-blocks/typography');
+@include meta.load-css('../../blocks/footer/style');
+@include meta.load-css('../../blocks/header/style');
+@include meta.load-css('../../blocks/post/style');
+@include meta.load-css('../../blocks/section/style');
+@include meta.load-css('../../blocks/two-up-post/style');

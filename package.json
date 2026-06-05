@@ -15,8 +15,6 @@
     "check-types": "tsc --noEmit",
     "eslint": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx .",
     "eslint:fix": "eslint --ext .jsx --ext .js --ext .ts --ext .tsx . --fix",
-    "jest": "jest --passWithNoTests",
-    "jest:watch": "jest --watch",
     "packages-update": "alley-build packages-update --dist-tag=wp-6.9",
     "postinstall": "rm -rf node_modules/.cache/babel-loader && rm -rf node_modules/.cache/webpack",
     "release": "npx @alleyinteractive/create-release@latest",
@@ -24,7 +22,7 @@
     "start:hot": "alley-build start --hot",
     "stylelint": "stylelint \"**/*.scss\" --allow-empty-input",
     "stylelint:fix": "stylelint --fix \"**/*.scss\"",
-    "test": "npm run check-types && npm run eslint && npm run stylelint && npm run jest"
+    "test": "npm run check-types && npm run eslint && npm run stylelint"
   },
   "devDependencies": {
     "@alleyinteractive/build-tool": "^0.3.0",

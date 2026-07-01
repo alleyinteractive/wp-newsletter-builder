@@ -7,7 +7,7 @@
  * Author: Alley Interactive
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 6.2
- * Tested up to: 6.9.4
+ * Tested up to: 7.0
  *
  * Text Domain: wp-newsletter-builder
  * Domain Path: /languages/

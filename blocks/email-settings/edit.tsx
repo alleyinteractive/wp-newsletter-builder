@@ -114,26 +114,25 @@ export default function Edit() {
   const options = lists.length > 0 ? listsToOptions(lists) : [];
   const selected = options.filter((item: Option) => listArray.includes(item.value));
 
+  // Fetch each list once on mount. Depending on the list state here would refetch
+  // forever when an endpoint returns an empty array.
   useEffect(() => {
-    if (lists.length > 0) {
-      return;
-    }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
+      setLists(Array.isArray(response) ? response as ListResult[] : []);
     });
-  }, [lists]);
+  }, []);
 
   useEffect(() => {
-    if (suppressionLists.length > 0) {
+    if (!usesSuppressionLists) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/suppression-lists' }).then((response) => {
-      const newLists = response as any as ListResult[];
+      const newLists = Array.isArray(response) ? response as ListResult[] : [];
       newLists.unshift({ Name: __('Select a suppression list', 'wp-newsletter-builder'), ListID: '' });
 
       setSuppressionLists(newLists);
     });
-  }, [suppressionLists]);
+  }, [usesSuppressionLists]);
 
   return (
     <div {...useBlockProps()}>

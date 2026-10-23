@@ -101,7 +101,7 @@ class Email_Types {
 		 */
 		$additional_fields = apply_filters( 'wp_newsletter_builder_email_type_additional_fields', [] );
 
-		if ( is_array( $additional_fields ) && $additional_fields !== [] ) {
+		if ( [] !== $additional_fields ) {
 			$children += $additional_fields;
 		}
 
@@ -120,7 +120,7 @@ class Email_Types {
 					'label',
 				],
 				// We need to specify this condition since there will always be a UUID in the group.
-				'group_is_empty' => fn ( $values ) => empty( $values['label'] ) && empty( $values['template'] ),
+				'group_is_empty' => fn ( $values ) => ! is_array( $values ) || ( empty( $values['label'] ) && empty( $values['templates'] ) ),
 			],
 		);
 
@@ -130,14 +130,19 @@ class Email_Types {
 	/**
 	 * Sort the email types on save so that they are always alphabetical.
 	 *
-	 * @param array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}> $new_value The value being saved.
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
+	 * @param mixed $new_value The value being saved.
+	 * @return mixed
 	 */
-	public function sort_settings_on_save( array $new_value ): array {
+	public function sort_settings_on_save( $new_value ): mixed {
+		if ( ! is_array( $new_value ) ) {
+			return $new_value;
+		}
 		usort(
 			$new_value,
 			function ( $a, $b ) {
-				return strcasecmp( $a['label'], $b['label'] );
+				$a_label = is_array( $a ) && is_string( $a['label'] ?? null ) ? $a['label'] : '';
+				$b_label = is_array( $b ) && is_string( $b['label'] ?? null ) ? $b['label'] : '';
+				return strcasecmp( $a_label, $b_label );
 			}
 		);
 
@@ -145,18 +150,98 @@ class Email_Types {
 	}
 
 	/**
-	 * Gets the lists for the client.
+	 * Gets the configured email types.
+	 *
+	 * Each email type has a string `uuid4`; the documented fields (label, image, templates, from_name, safe_rtb,
+	 * ad_tags, roadblock, key_values) are present only when stored with a valid value, since Fieldmanager omits
+	 * empty fields. Fields added via the wp_newsletter_builder_email_type_additional_fields filter pass through.
+	 * Email types without a UUID are skipped.
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
+	 * @return array<array<string, mixed>>
 	 */
-	public function get_email_types(): array {
+	public static function get_email_types(): array {
 		$settings = get_option( static::SETTINGS_KEY );
 		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];
 		}
 
-		return $settings;
+		$email_types = [];
+		foreach ( $settings as $email_type ) {
+			if ( ! is_array( $email_type ) || empty( $email_type['uuid4'] ) || ! is_string( $email_type['uuid4'] ) ) {
+				continue;
+			}
+			$email_types[] = self::normalize_email_type( $email_type['uuid4'], $email_type );
+		}
+
+		return $email_types;
+	}
+
+	/**
+	 * Normalizes a stored email type. Known fields with invalid values are dropped; additional
+	 * fields (e.g. from the wp_newsletter_builder_email_type_additional_fields filter) are kept as-is.
+	 *
+	 * @param string       $uuid4      The email type's UUID.
+	 * @param array<mixed> $email_type The stored email type.
+	 * @return array<string, mixed>
+	 */
+	private static function normalize_email_type( string $uuid4, array $email_type ): array {
+		$known_keys = [ 'uuid4', 'label', 'image', 'templates', 'from_name', 'safe_rtb', 'ad_tags', 'roadblock', 'key_values' ];
+		$normalized = [];
+		foreach ( $email_type as $key => $value ) {
+			if ( is_string( $key ) && ! in_array( $key, $known_keys, true ) ) {
+				$normalized[ $key ] = $value;
+			}
+		}
+
+		$normalized['uuid4'] = $uuid4;
+
+		if ( isset( $email_type['label'] ) && is_string( $email_type['label'] ) ) {
+			$normalized['label'] = $email_type['label'];
+		}
+		if ( isset( $email_type['image'] ) && is_numeric( $email_type['image'] ) ) {
+			$normalized['image'] = (int) $email_type['image'];
+		}
+		if ( isset( $email_type['templates'] ) && is_array( $email_type['templates'] ) ) {
+			$normalized['templates'] = array_map( 'intval', array_values( array_filter( $email_type['templates'], 'is_numeric' ) ) );
+		}
+		if ( isset( $email_type['from_name'] ) && is_string( $email_type['from_name'] ) ) {
+			$normalized['from_name'] = $email_type['from_name'];
+		}
+		if ( isset( $email_type['safe_rtb'] ) && is_string( $email_type['safe_rtb'] ) ) {
+			$normalized['safe_rtb'] = $email_type['safe_rtb'];
+		}
+		if ( isset( $email_type['ad_tags'] ) && is_array( $email_type['ad_tags'] ) ) {
+			$ad_tags = [];
+			foreach ( $email_type['ad_tags'] as $ad_tag ) {
+				if ( is_array( $ad_tag ) && isset( $ad_tag['tag_code'] ) && is_string( $ad_tag['tag_code'] ) ) {
+					$ad_tags[] = [ 'tag_code' => $ad_tag['tag_code'] ];
+				}
+			}
+			$normalized['ad_tags'] = $ad_tags;
+		}
+		if ( isset( $email_type['roadblock'] ) ) {
+			$normalized['roadblock'] = ! empty( $email_type['roadblock'] );
+		}
+		if ( isset( $email_type['key_values'] ) && is_array( $email_type['key_values'] ) ) {
+			$key_values = [];
+			foreach ( $email_type['key_values'] as $key_value ) {
+				if (
+					is_array( $key_value )
+					&& isset( $key_value['key'], $key_value['value'] )
+					&& is_string( $key_value['key'] )
+					&& is_string( $key_value['value'] )
+				) {
+					$key_values[] = [
+						'key'   => $key_value['key'],
+						'value' => $key_value['value'],
+					];
+				}
+			}
+			$normalized['key_values'] = $key_values;
+		}
+
+		return $normalized;
 	}
 }

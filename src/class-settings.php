@@ -174,7 +174,32 @@ class Settings {
 			return false;
 		}
 
-		return $settings['footer_settings'];
+		$footer_settings = $settings['footer_settings'];
+		$normalized      = [];
+
+		if ( isset( $footer_settings['facebook_url'] ) && is_string( $footer_settings['facebook_url'] ) ) {
+			$normalized['facebook_url'] = $footer_settings['facebook_url'];
+		}
+		if ( isset( $footer_settings['twitter_url'] ) && is_string( $footer_settings['twitter_url'] ) ) {
+			$normalized['twitter_url'] = $footer_settings['twitter_url'];
+		}
+		if ( isset( $footer_settings['instagram_url'] ) && is_string( $footer_settings['instagram_url'] ) ) {
+			$normalized['instagram_url'] = $footer_settings['instagram_url'];
+		}
+		if ( isset( $footer_settings['youtube_url'] ) && is_string( $footer_settings['youtube_url'] ) ) {
+			$normalized['youtube_url'] = $footer_settings['youtube_url'];
+		}
+		if ( isset( $footer_settings['image'] ) && is_numeric( $footer_settings['image'] ) ) {
+			$normalized['image'] = (int) $footer_settings['image'];
+		}
+		if ( isset( $footer_settings['address'] ) && is_string( $footer_settings['address'] ) ) {
+			$normalized['address'] = $footer_settings['address'];
+		}
+		if ( isset( $footer_settings['address_2'] ) && is_string( $footer_settings['address_2'] ) ) {
+			$normalized['address_2'] = $footer_settings['address_2'];
+		}
+
+		return $normalized;
 	}
 
 	/**
@@ -183,12 +208,17 @@ class Settings {
 	 * @return array<string>|false
 	 */
 	public function get_from_names(): array|false {
-		$settings = get_option( static::SETTINGS_KEY, [] );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
-			// @phpstan-ignore-next-line
-			$settings['from_names'] = [];
+		$settings   = get_option( static::SETTINGS_KEY, [] );
+		$from_names = [];
+		if ( is_array( $settings ) && ! empty( $settings['from_names'] ) && is_array( $settings['from_names'] ) ) {
+			$from_names = array_filter( $settings['from_names'], 'is_string' );
 		}
 
-		return apply_filters( 'wp_newsletter_builder_from_names', $settings['from_names'] );
+		$from_names = apply_filters( 'wp_newsletter_builder_from_names', $from_names );
+		if ( ! is_array( $from_names ) ) {
+			return false;
+		}
+
+		return array_filter( $from_names, 'is_string' );
 	}
 }

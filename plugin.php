@@ -8,6 +8,7 @@
  * Author URI: https://github.com/alleyinteractive/wp-newsletter-builder
  * Requires at least: 6.2
  * Tested up to: 6.9.4
+ * Requires PHP: 8.3
  *
  * Text Domain: wp-newsletter-builder
  * Domain Path: /languages/
@@ -81,7 +82,7 @@ function main(): void {
 	$selected_email_provider = apply_filters( 'wp_newsletter_builder_selected_provider', '' );
 
 	// Check if provider has been selected and exists.
-	if ( empty( $selected_email_provider ) || ! class_exists( $selected_email_provider ) ) {
+	if ( empty( $selected_email_provider ) || ! is_string( $selected_email_provider ) || ! class_exists( $selected_email_provider ) ) {
 		\add_action(
 			'admin_notices',
 			function () {

@@ -49,10 +49,10 @@ function action_newsletters_enqueue_styles(): void {
 	?>
 	<style type="text/css">
 	<?php
-	$template_id = get_post_meta( get_queried_object_id(), 'nb_newsletter_template', true );
-	$font        = get_post_meta( $template_id, 'nb_template_font', true );
-	$bg_color    = get_post_meta( $template_id, 'nb_template_bg_color', true );
-	$link_color  = get_post_meta( $template_id, 'nb_template_link_color', true );
+	$template_id = get_newsletter_template_id( get_queried_object_id() );
+	$font        = get_template_meta_string( $template_id, 'nb_template_font' );
+	$bg_color    = get_template_meta_string( $template_id, 'nb_template_bg_color' );
+	$link_color  = get_template_meta_string( $template_id, 'nb_template_link_color' );
 	foreach ( $blocks as $block ) {
 		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
 			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
@@ -121,7 +121,7 @@ function action_enqueue_block_editor_assets(): void {
 	$templates    = get_posts( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_posts_get_posts
 		[
 			'post_type'        => 'nb_template',
-			'posts_per_page'   => -1,
+			'posts_per_page'   => -1, // phpcs:ignore WordPressVIPMinimum.Performance.NoPaging.posts_per_page_posts_per_page
 			'orderby'          => 'ID',
 			'suppress_filters' => false,
 		]
@@ -213,7 +213,23 @@ function get_entry_asset_map( string $dir_entry_name ): array {
 		$asset_file_path = trailingslashit( $base_path ) . 'index.asset.php';
 
 		if ( validate_path( $asset_file_path ) ) {
-			return include $asset_file_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+			$asset_map = include $asset_file_path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.IncludingFile, WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+
+			if ( ! is_array( $asset_map ) ) {
+				return [];
+			}
+
+			$validated = [];
+
+			if ( isset( $asset_map['dependencies'] ) && is_array( $asset_map['dependencies'] ) ) {
+				$validated['dependencies'] = array_values( array_filter( $asset_map['dependencies'], 'is_string' ) );
+			}
+
+			if ( isset( $asset_map['version'] ) && is_string( $asset_map['version'] ) ) {
+				$validated['version'] = $asset_map['version'];
+			}
+
+			return $validated;
 		}
 	}
 
@@ -288,13 +304,14 @@ load_scripts();
  */
 function set_template_values(): void {
 	$current_screen = get_current_screen();
-	if ( ( 'post' !== $current_screen->base ) || ( 'nb_newsletter' !== $current_screen->post_type ) ) {
+	if ( ! $current_screen instanceof \WP_Screen || ( 'post' !== $current_screen->base ) || ( 'nb_newsletter' !== $current_screen->post_type ) ) {
 		return;
 	}
-	$template_id     = get_post_meta( get_the_ID(), 'nb_newsletter_template', true );
-	$bg_color_meta   = get_post_meta( $template_id, 'nb_template_bg_color', true );
-	$font_meta       = get_post_meta( $template_id, 'nb_template_font', true );
-	$link_color_meta = get_post_meta( $template_id, 'nb_template_link_color', true );
+	$post_id         = get_the_ID();
+	$template_id     = false !== $post_id ? get_newsletter_template_id( $post_id ) : 0;
+	$bg_color_meta   = get_template_meta_string( $template_id, 'nb_template_bg_color' );
+	$font_meta       = get_template_meta_string( $template_id, 'nb_template_font' );
+	$link_color_meta = get_template_meta_string( $template_id, 'nb_template_link_color' );
 	$bg_color        = ! empty( $bg_color_meta ) ? $bg_color_meta : '#fefefe';
 	$font            = ! empty( $font_meta ) ? $font_meta : 'Arial, sans-serif';
 	$link_color      = ! empty( $link_color_meta ) ? $link_color_meta : '#0073aa';
@@ -304,4 +321,29 @@ function set_template_values(): void {
 		$bg_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$link_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
+}
+
+/**
+ * Get the ID of the template assigned to a newsletter.
+ *
+ * @param int $newsletter_id The newsletter post ID.
+ * @return int The template post ID, or 0 if none is set.
+ */
+function get_newsletter_template_id( int $newsletter_id ): int {
+	$template_id = get_post_meta( $newsletter_id, 'nb_newsletter_template', true );
+
+	return is_numeric( $template_id ) ? (int) $template_id : 0;
+}
+
+/**
+ * Get a string meta value from a newsletter template.
+ *
+ * @param int    $template_id The template post ID.
+ * @param string $meta_key    The meta key to retrieve.
+ * @return string The meta value, or an empty string if it is not set or not a string.
+ */
+function get_template_meta_string( int $template_id, string $meta_key ): string {
+	$value = get_post_meta( $template_id, $meta_key, true );
+
+	return is_string( $value ) ? $value : '';
 }

@@ -82,7 +82,14 @@ class Breaking_Recipients {
 		}
 		$lists = [];
 		foreach ( $settings as $recipient_list ) {
-			$lists[ $recipient_list['list'] ] = $options[ $recipient_list['list'] ];
+			if ( ! is_array( $recipient_list ) || ! isset( $recipient_list['list'] ) ) {
+				continue;
+			}
+			$list_id = $recipient_list['list'];
+			if ( ! is_string( $list_id ) && ! is_int( $list_id ) ) {
+				continue;
+			}
+			$lists[ $list_id ] = $options[ $list_id ] ?? '';
 		}
 		return $lists;
 	}
@@ -90,7 +97,7 @@ class Breaking_Recipients {
 	/**
 	 * Gets the options for the Breaking News Recipient lists.
 	 *
-	 * @return array<string, string>
+	 * @return array<int|string, string> List names keyed by list ID.
 	 */
 	private function get_options(): array {
 		global $newsletter_builder_email_provider;
@@ -104,9 +111,16 @@ class Breaking_Recipients {
 		}
 		foreach ( $lists as $list ) {
 			if ( is_object( $list ) ) {
-				$options[ $list->ListID ] = $list->Name; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$list_id   = $list->ListID ?? null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				$list_name = $list->Name ?? null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			} elseif ( is_array( $list ) ) {
+				$list_id   = $list['ListID'] ?? null;
+				$list_name = $list['Name'] ?? null;
 			} else {
-				$options[ $list['ListID'] ] = $list['Name']; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+				continue;
+			}
+			if ( ( is_string( $list_id ) || is_int( $list_id ) ) && is_string( $list_name ) ) {
+				$options[ $list_id ] = $list_name;
 			}
 		}
 		return $options;

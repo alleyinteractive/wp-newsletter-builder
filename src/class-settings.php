@@ -158,15 +158,7 @@ class Settings {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array{
-	 *   facebook_url?: string,
-	 *   twitter_url?: string,
-	 *   instagram_url?: string,
-	 *   youtube_url?: string,
-	 *   image?: int,
-	 *   address?: string,
-	 *   address_2?: string,
-	 * }|false  The footer settings.
+	 * @return array<mixed>|false The footer settings.
 	 */
 	public function get_footer_settings(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
@@ -174,32 +166,7 @@ class Settings {
 			return false;
 		}
 
-		$footer_settings = $settings['footer_settings'];
-		$normalized      = [];
-
-		if ( isset( $footer_settings['facebook_url'] ) && is_string( $footer_settings['facebook_url'] ) ) {
-			$normalized['facebook_url'] = $footer_settings['facebook_url'];
-		}
-		if ( isset( $footer_settings['twitter_url'] ) && is_string( $footer_settings['twitter_url'] ) ) {
-			$normalized['twitter_url'] = $footer_settings['twitter_url'];
-		}
-		if ( isset( $footer_settings['instagram_url'] ) && is_string( $footer_settings['instagram_url'] ) ) {
-			$normalized['instagram_url'] = $footer_settings['instagram_url'];
-		}
-		if ( isset( $footer_settings['youtube_url'] ) && is_string( $footer_settings['youtube_url'] ) ) {
-			$normalized['youtube_url'] = $footer_settings['youtube_url'];
-		}
-		if ( isset( $footer_settings['image'] ) && is_numeric( $footer_settings['image'] ) ) {
-			$normalized['image'] = (int) $footer_settings['image'];
-		}
-		if ( isset( $footer_settings['address'] ) && is_string( $footer_settings['address'] ) ) {
-			$normalized['address'] = $footer_settings['address'];
-		}
-		if ( isset( $footer_settings['address_2'] ) && is_string( $footer_settings['address_2'] ) ) {
-			$normalized['address_2'] = $footer_settings['address_2'];
-		}
-
-		return $normalized;
+		return $settings['footer_settings'];
 	}
 
 	/**

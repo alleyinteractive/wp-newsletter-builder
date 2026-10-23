@@ -136,15 +136,7 @@ class Rest_API_Endpoints {
 	/**
 	 * Gets the settings from options.
 	 *
-	 * @return WP_Error|false|array{
-	 *   facebook_url?: string,
-	 *   twitter_url?: string,
-	 *   instagram_url?: string,
-	 *   youtube_url?: string,
-	 *   image?: int,
-	 *   address?: string,
-	 *   address_2?: string,
-	 * }
+	 * @return WP_Error|false|array<mixed>
 	 */
 	public function get_footer_settings(): WP_Error|false|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {

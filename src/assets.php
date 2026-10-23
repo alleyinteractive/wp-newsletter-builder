@@ -160,6 +160,7 @@ function action_enqueue_block_editor_assets(): void {
 			'fromNames'            => $settings->get_from_names(),
 			'templates'            => $template_map,
 			'usesSuppressionLists' => $uses_suppression_lists,
+			'sendsEmail'           => provider_sends_email(),
 			'allowedPostTypes'     => $allowed_post_types,
 		]
 	);
@@ -204,7 +205,7 @@ function get_entry_dir_path( string $dir_entry_name, bool $dir = false ): string
  *
  * @param string $dir_entry_name The entry point directory name.
  *
- * @return array{dependencies?: array<string>, version?: string}    An array of dependencies and version for this asset.
+ * @return array{dependencies?: array<non-empty-string>, version?: string}    An array of dependencies and version for this asset.
  */
 function get_entry_asset_map( string $dir_entry_name ): array {
 	$base_path = get_entry_dir_path( $dir_entry_name, true );
@@ -225,7 +226,7 @@ function get_entry_asset_map( string $dir_entry_name ): array {
  *
  * @param string $dir_entry_name The entry point directory name.
  *
- * @return array<string> The asset's dependency array.
+ * @return array<non-empty-string> The asset's dependency array.
  */
 function get_asset_dependency_array( string $dir_entry_name ): array {
 	$asset_arr = get_entry_asset_map( $dir_entry_name );

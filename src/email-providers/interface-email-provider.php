@@ -9,6 +9,10 @@ namespace WP_Newsletter_Builder\Email_Providers;
 
 /**
  * Interface Email_Provider
+ *
+ * Providers may also implement an optional `sends_email(): bool` method. Return
+ * false to indicate the provider never sends email, which disables sending and
+ * the email list requirements. See \WP_Newsletter_Builder\provider_sends_email().
  */
 interface Email_Provider {
 	/**
@@ -60,14 +64,14 @@ interface Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
-	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string|null   $campaign_id Optional campaign id to update.
 	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false;
+	public function create_campaign( int $newsletter_id, array $list_ids, ?string $campaign_id, string $from_name ): array|false;
 
 	/**
 	 * Sends a campaign.

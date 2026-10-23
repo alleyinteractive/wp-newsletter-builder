@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import sendsEmail from '@/services/sends-email';
 
 interface ListResult {
   ListID: string;
@@ -28,7 +29,7 @@ function useEmailLists() {
     .filter((item: Option) => meta.list.includes(item.value)), [meta.list, emailListOptions]);
 
   useEffect(() => { // eslint-disable-line
-    if (lists.length > 0) {
+    if (!sendsEmail() || lists.length > 0) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {

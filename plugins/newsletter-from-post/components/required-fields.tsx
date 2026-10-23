@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { NewsletterMeta } from '@/hooks/useNewsletterMeta';
+import sendsEmail from '@/services/sends-email';
 
 interface RequiredFieldsProps {
   meta: Pick<NewsletterMeta, 'type' | 'template' | 'fromName' | 'subject' | 'preview' | 'list'>
@@ -25,7 +26,7 @@ function RequiredFields({ meta, postTitle, postExcerpt }: RequiredFieldsProps) {
       {!meta.preview && !postExcerpt ? (
         <p style={{ color: 'red' }}>{__('Preview Text is Required', 'wp-newsletter-builder')}</p>
       ) : null}
-      {meta.list.length === 0 ? (
+      {sendsEmail() && meta.list.length === 0 ? (
         <p style={{ color: 'red' }}>{__('Email List is Required', 'wp-newsletter-builder')}</p>
       ) : null}
     </>

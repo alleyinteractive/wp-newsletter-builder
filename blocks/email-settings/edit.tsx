@@ -9,6 +9,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import usePostMeta from '../../hooks/usePostMeta';
+import sendsEmail from '../../services/sends-email';
 
 import './index.scss';
 
@@ -96,6 +97,8 @@ export default function Edit() {
     dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 
+  // Email lists come from the provider, so hide them if it doesn't send email.
+  const showLists = sendsEmail();
   const [lists, setLists] = useState<ListResult[]>([]);
   const listArray = Array.isArray(list) ? list : [list];
 
@@ -115,16 +118,16 @@ export default function Edit() {
   const selected = options.filter((item: Option) => listArray.includes(item.value));
 
   useEffect(() => {
-    if (lists.length > 0) {
+    if (!showLists || lists.length > 0) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(response as any as ListResult[]);
     });
-  }, [lists]);
+  }, [lists, showLists]);
 
   useEffect(() => {
-    if (suppressionLists.length > 0) {
+    if (!usesSuppressionLists || suppressionLists.length > 0) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/suppression-lists' }).then((response) => {
@@ -133,7 +136,7 @@ export default function Edit() {
 
       setSuppressionLists(newLists);
     });
-  }, [suppressionLists]);
+  }, [suppressionLists, usesSuppressionLists]);
 
   return (
     <div {...useBlockProps()}>
@@ -162,7 +165,7 @@ export default function Edit() {
         onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
       />
       {/* @ts-ignore */}
-      {lists.length > 0 ? (
+      {showLists && lists.length > 0 ? (
         <label
           htmlFor="wp-newsletter-builder-list"
         >
@@ -178,10 +181,11 @@ export default function Edit() {
             }}
           />
         </label>
-      ) : (
+      ) : null}
+      {showLists && lists.length === 0 ? (
         /* @ts-ignore */
         <Spinner />
-      )}
+      ) : null}
       {/* @ts-ignore */}
       {usesSuppressionLists && suppressionLists.length > 0 ? (
         <SelectControl

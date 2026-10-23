@@ -85,6 +85,18 @@ class Rest_API_Endpoints {
 		);
 		register_rest_route(
 			'wp-newsletter-builder/v1',
+			'/export/(?P<post_id>\d+)',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'get_export' ],
+				'permission_callback' => function ( WP_REST_Request $request ) {
+					$post_id = $request->get_param( 'post_id' );
+					return is_numeric( $post_id ) && current_user_can( 'edit_post', (int) $post_id );
+				},
+			]
+		);
+		register_rest_route(
+			'wp-newsletter-builder/v1',
 			'/suppression-lists/',
 			[
 				'methods'             => 'GET',
@@ -296,6 +308,35 @@ class Rest_API_Endpoints {
 			'success' => true,
 			'message' => __( 'Successfully subscribed.', 'wp-newsletter-builder' ),
 			'results' => $list_results,
+		];
+	}
+
+	/**
+	 * Gets the rendered HTML of a newsletter for export.
+	 *
+	 * @param WP_REST_Request $request The request object.
+	 *
+	 * @return WP_Error|array{
+	 *   html: string,
+	 *   filename: string,
+	 * }
+	 */
+	public function get_export( WP_REST_Request $request ): WP_Error|array { // phpcs:ignore Squiz.Commenting.FunctionComment.IncorrectTypeHint
+		$post_id = $request->get_param( 'post_id' );
+		$post_id = is_numeric( $post_id ) ? (int) $post_id : 0;
+		if ( 'nb_newsletter' !== get_post_type( $post_id ) ) {
+			return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid newsletter ID.', 'wp-newsletter-builder' ), [ 'status' => 404 ] );
+		}
+
+		$renderer = new Newsletter_Renderer();
+		$html     = $renderer->render_for_export( $post_id );
+		if ( false === $html ) {
+			return new WP_Error( 'render_failed', esc_html__( 'The newsletter could not be rendered.', 'wp-newsletter-builder' ), [ 'status' => 500 ] );
+		}
+
+		return [
+			'html'     => $html,
+			'filename' => $renderer->get_export_filename( $post_id ),
 		];
 	}
 

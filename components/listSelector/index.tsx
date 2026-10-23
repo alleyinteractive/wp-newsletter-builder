@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import sendsEmail from '@/services/sends-email';
 
 type ListSelectorProps = {
   selected: string;
@@ -28,13 +29,18 @@ export default function ListSelector({
   const options = lists.length > 0 ? listsToOptions(lists) : [];
 
   useEffect(() => {
-    if (lists.length > 0) {
+    if (!sendsEmail() || lists.length > 0) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(response as any as ListResult[]);
     });
   }, [lists]);
+
+  // Lists come from the email provider, so there are none if it doesn't send email.
+  if (!sendsEmail()) {
+    return null;
+  }
 
   return (
     <SelectControl

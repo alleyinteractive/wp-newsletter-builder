@@ -15,6 +15,7 @@ import { WP_REST_API_Post } from 'wp-types';
 import NewsletterSpinner from '@/components/newsletterSpinner';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import sendsEmail from '@/services/sends-email';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import InvalidTemplate from './components/invalid-template';
@@ -98,7 +99,7 @@ function EmailSettings() {
     || meta.fromName === ''
     || (meta.subject === '' && postTitle === '')
     || (meta.preview === '' && postExcerpt === '')
-    || meta.list.length === 0;
+    || (sendsEmail() && meta.list.length === 0);
 
   /**
    * Update the template content when the template is changed.
@@ -154,7 +155,7 @@ function EmailSettings() {
           value={meta.preview !== '' ? meta.preview : postExcerpt}
           onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
         />
-        {Object.keys(breakingLists).map((key: string) => {
+        {sendsEmail() ? Object.keys(breakingLists).map((key: string) => {
           const value: string = breakingLists[key];
           return (
             <CheckboxControl
@@ -168,8 +169,8 @@ function EmailSettings() {
               }}
             />
           );
-        })}
-        {emailListOptions.length > 0 ? (
+        }) : null}
+        {sendsEmail() && emailListOptions.length > 0 ? (
           <label
             htmlFor="wp-newsletter-builder-list"
           >
@@ -185,9 +186,8 @@ function EmailSettings() {
               }}
             />
           </label>
-        ) : (
-          <NewsletterSpinner />
-        )}
+        ) : null}
+        {sendsEmail() && emailListOptions.length === 0 ? <NewsletterSpinner /> : null}
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl
             label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'wp-newsletter-builder') : __('Send Newsletter on Update', 'wp-newsletter-builder')}

@@ -244,6 +244,10 @@ class WP_Newsletter_Builder {
 	 * @return void
 	 */
 	public function do_send( int $post_id ): void {
+		if ( ! provider_sends_email() ) {
+			return;
+		}
+
 		$lists = get_post_meta( $post_id, 'nb_newsletter_list', true );
 		if ( ! is_array( $lists ) ) {
 			$lists = [ $lists ];

@@ -322,28 +322,3 @@ function set_template_values(): void {
 		$link_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 }
-
-/**
- * Get the ID of the template assigned to a newsletter.
- *
- * @param int $newsletter_id The newsletter post ID.
- * @return int The template post ID, or 0 if none is set.
- */
-function get_newsletter_template_id( int $newsletter_id ): int {
-	$template_id = get_post_meta( $newsletter_id, 'nb_newsletter_template', true );
-
-	return is_numeric( $template_id ) ? (int) $template_id : 0;
-}
-
-/**
- * Get a string meta value from a newsletter template.
- *
- * @param int    $template_id The template post ID.
- * @param string $meta_key    The meta key to retrieve.
- * @return string The meta value, or an empty string if it is not set or not a string.
- */
-function get_template_meta_string( int $template_id, string $meta_key ): string {
-	$value = get_post_meta( $template_id, $meta_key, true );
-
-	return is_string( $value ) ? $value : '';
-}

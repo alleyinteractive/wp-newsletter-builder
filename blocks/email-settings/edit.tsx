@@ -97,6 +97,7 @@ export default function Edit() {
   };
 
   const [lists, setLists] = useState<ListResult[]>([]);
+  const [listsLoaded, setListsLoaded] = useState(false);
   const listArray = Array.isArray(list) ? list : [list];
 
   const [suppressionLists, setSuppressionLists] = useState<ListResult[]>([]);
@@ -117,9 +118,12 @@ export default function Edit() {
   // Fetch each list once on mount. Depending on the list state here would refetch
   // forever when an endpoint returns an empty array.
   useEffect(() => {
-    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(Array.isArray(response) ? response as ListResult[] : []);
-    });
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' })
+      .then((response) => {
+        setLists(Array.isArray(response) ? response as ListResult[] : []);
+      })
+      .catch(() => setLists([]))
+      .finally(() => setListsLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -177,10 +181,14 @@ export default function Edit() {
             }}
           />
         </label>
-      ) : (
+      ) : null}
+      {lists.length === 0 && listsLoaded ? (
+        <p>{__('No email lists are available.', 'wp-newsletter-builder')}</p>
+      ) : null}
+      {lists.length === 0 && !listsLoaded ? (
         /* @ts-ignore */
         <Spinner />
-      )}
+      ) : null}
       {/* @ts-ignore */}
       {usesSuppressionLists && suppressionLists.length > 0 ? (
         <SelectControl

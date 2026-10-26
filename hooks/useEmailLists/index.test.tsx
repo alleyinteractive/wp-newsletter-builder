@@ -38,6 +38,28 @@ describe('useEmailLists', () => {
 
     expect(mockApiFetch).toHaveBeenCalledTimes(1);
     expect(result.emailListOptions).toEqual([]);
+    expect(result.listsLoaded).toBe(true);
+    unmount();
+  });
+
+  it('is not loaded until the request settles', async () => {
+    mockApiFetch.mockReturnValue(new Promise(() => {}));
+
+    const { unmount } = await render(<TestComponent />);
+    await flush();
+
+    expect(result.listsLoaded).toBe(false);
+    unmount();
+  });
+
+  it('is loaded with no lists when the request fails', async () => {
+    mockApiFetch.mockRejectedValue(new Error('Request failed'));
+
+    const { unmount } = await render(<TestComponent />);
+    await flush();
+
+    expect(result.emailListOptions).toEqual([]);
+    expect(result.listsLoaded).toBe(true);
     unmount();
   });
 

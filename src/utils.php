@@ -26,10 +26,11 @@ function get_byline( \WP_Post|int $post ): string {
 	}
 
 	if ( function_exists( '\Byline_Manager\get_the_byline' ) ) {
-		$byline = \Byline_Manager\get_the_byline( $post->ID );
+		$byline_manager_byline = \Byline_Manager\get_the_byline( $post->ID );
+		$byline                = is_string( $byline_manager_byline ) ? $byline_manager_byline : '';
 	} elseif ( function_exists( 'get_coauthors' ) ) {
 		$authors      = get_coauthors( $post->ID );
-		$author_names = wp_list_pluck( $authors, 'display_name' );
+		$author_names = is_array( $authors ) ? array_values( array_filter( wp_list_pluck( $authors, 'display_name' ), 'is_string' ) ) : [];
 		if ( ! empty( $author_names ) ) {
 			if ( 1 === count( $author_names ) ) {
 				$byline = sprintf(
@@ -67,7 +68,9 @@ function get_byline( \WP_Post|int $post ): string {
 	/**
 	 * Filters the byline.
 	 */
-	return apply_filters( 'wp_newsletter_builder_byline', $byline, $post );
+	$filtered_byline = apply_filters( 'wp_newsletter_builder_byline', $byline, $post );
+
+	return is_string( $filtered_byline ) ? $filtered_byline : $byline;
 }
 
 /**
@@ -78,18 +81,18 @@ function get_byline( \WP_Post|int $post ): string {
 function get_edit_post_type(): string {
 	global $post, $typenow, $current_screen;
 
-	if ( $post && $post->post_type ) {
+	if ( $post instanceof \WP_Post && $post->post_type ) {
 		return $post->post_type;
 	}
-	if ( $typenow ) {
+	if ( is_string( $typenow ) && $typenow ) {
 		return $typenow;
 	}
 
-	if ( $current_screen && $current_screen->post_type ) {
+	if ( $current_screen instanceof \WP_Screen && $current_screen->post_type ) {
 		return $current_screen->post_type;
 	}
 
-	if ( isset( $_REQUEST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( isset( $_REQUEST['post_type'] ) && is_string( $_REQUEST['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return sanitize_key( $_REQUEST['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	}
 
@@ -117,4 +120,29 @@ function provider_sends_email(): bool {
 	}
 
 	return true;
+}
+
+/**
+ * Get the ID of the template assigned to a newsletter.
+ *
+ * @param int $newsletter_id The newsletter post ID.
+ * @return int The template post ID, or 0 if none is set.
+ */
+function get_newsletter_template_id( int $newsletter_id ): int {
+	$template_id = get_post_meta( $newsletter_id, 'nb_newsletter_template', true );
+
+	return is_numeric( $template_id ) ? (int) $template_id : 0;
+}
+
+/**
+ * Get a string meta value from a newsletter template.
+ *
+ * @param int    $template_id The template post ID.
+ * @param string $meta_key    The meta key to retrieve.
+ * @return string The meta value, or an empty string if it is not set or not a string.
+ */
+function get_template_meta_string( int $template_id, string $meta_key ): string {
+	$value = get_post_meta( $template_id, $meta_key, true );
+
+	return is_string( $value ) ? $value : '';
 }

@@ -23,10 +23,13 @@ add_action( 'init', 'wp_newsletter_builder_signup_form_block_init' );
 /**
  * Allows the use of the input tag in the newsletter builder block.
  *
- * @param array<string, array<string, array<string, string>|bool>> $tags The allowed tags.
- * @return array<string, array<string, array<string, string>|bool>>
+ * @param mixed $tags The allowed tags.
+ * @return array<mixed>
  */
-function wp_newsletter_builder_modify_wpkses_post_allowed_tags( array $tags ): array {
+function wp_newsletter_builder_modify_wpkses_post_allowed_tags( $tags ): array {
+	if ( ! is_array( $tags ) ) {
+		$tags = [];
+	}
 	$tags['input'] = [
 		'type'        => true,
 		'name'        => true,

@@ -64,7 +64,7 @@ interface Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
-	 * @param string|null   $campaign_id Optional campaign id to update.
+	 * @param string|null   $campaign_id Optional campaign id to update, or null.
 	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,

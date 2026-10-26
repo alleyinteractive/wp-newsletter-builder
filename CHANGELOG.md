@@ -2,8 +2,11 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
-## 0.9.0 - 2026-10-23
+## unreleased
 
+- Drop support for PHP 8.2
+- Broad update to ensure the codebase passes `composer test` PHP checks
+- Include block filter and editor plugin entries in build
 - Adds a `Null_Provider` email provider that enables all Newsletter Builder functionality except sending email. Editors can build newsletters and export their HTML without connecting an email service provider.
 - Adds an Export HTML panel to the newsletter editor to copy the rendered newsletter HTML to the clipboard or download it as an `.html` file.
 - Adds `wp-newsletter-builder/v1/export/{id}` REST endpoint that returns a newsletter's rendered HTML with CSS inlined.

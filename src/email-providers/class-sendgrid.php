@@ -14,6 +14,8 @@ use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
  * Sendgrid Client class
  */
 class Sendgrid implements Email_Provider {
+	use Api_Response;
+
 	/**
 	 * Settings key.
 	 *
@@ -68,7 +70,7 @@ class Sendgrid implements Email_Provider {
 	 */
 	public function get_client(): \SendGrid|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || ! is_string( $settings['api_key'] ) ) {
 			return false;
 		}
 		$sendgrid = new \SendGrid( $settings['api_key'] );
@@ -105,9 +107,13 @@ class Sendgrid implements Email_Provider {
 		}
 		$lists = [];
 		foreach ( $result as $list ) {
+			$list_name = $this->get_response_value( $list, 'name' );
+			if ( ! is_string( $list_name ) ) {
+				continue;
+			}
 			$lists[] = [
-				'ListID' => $list->id,
-				'Name'   => $list->name,
+				'ListID' => $this->get_response_value( $list, 'id' ),
+				'Name'   => $list_name,
 			];
 		}
 		// Sort by the Name field.
@@ -125,14 +131,14 @@ class Sendgrid implements Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
-	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string|null   $campaign_id Optional campaign id to update, or null.
 	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
+	public function create_campaign( int $newsletter_id, array $list_ids, ?string $campaign_id, string $from_name ): array|false {
 		$sendgrid = $this->get_client();
 		if ( empty( $sendgrid ) ) {
 			return false;
@@ -145,8 +151,8 @@ class Sendgrid implements Email_Provider {
 			return false;
 		}
 		foreach ( $body as $sender ) {
-			if ( sprintf( '%s (%s)', $sender->from->name, $sender->from->email ) === $from_name ) {
-				$sender_id = $sender->id;
+			if ( $this->get_sender_label( $sender ) === $from_name ) {
+				$sender_id = $this->get_response_value( $sender, 'id' );
 				break;
 			}
 		}
@@ -178,8 +184,9 @@ class Sendgrid implements Email_Provider {
 			$html_content = str_replace( 'href="#unsubscribe_preferences"', 'href="{{unsubscribe_preferences}}"', $html_content );
 		}
 
-		$text_content = wp_strip_all_tags( $html_content );
-		$subject      = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
+		$text_content      = wp_strip_all_tags( $html_content );
+		$subject           = get_post_meta( $newsletter_id, 'nb_newsletter_subject', true );
+		$suppression_group = get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
 
 		$request_body                                       = (object) [];
 		$request_body->name                                 = get_the_title( $newsletter_id );
@@ -192,7 +199,7 @@ class Sendgrid implements Email_Provider {
 		$request_body->email_config->generate_plain_content = true;
 		$request_body->email_config->sender_id              = $sender_id ?? 0;
 		$request_body->email_config->subject                = $subject;
-		$request_body->email_config->suppression_group_id   = (int) get_post_meta( $newsletter_id, 'nb_newsletter_suppression_group', true );
+		$request_body->email_config->suppression_group_id   = is_numeric( $suppression_group ) ? (int) $suppression_group : 0;
 
 		$request_body->send_to->list_ids    = $list_ids;
 		$request_body->send_to->segment_ids = [];
@@ -225,8 +232,7 @@ class Sendgrid implements Email_Provider {
 		}
 
 		try {
-			// @phpstan-ignore-next-line
-			$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->schedule()->put( [ 'send_at' => 'now' ] );
+			$response = $sg->client->marketing()->singlesends()->_( $campaign_id )->_( 'schedule' )->put( [ 'send_at' => 'now' ] );
 			return [
 				'response'         => $response->body(),
 				'http_status_code' => $response->statusCode(),
@@ -257,16 +263,16 @@ class Sendgrid implements Email_Provider {
 			return false;
 		}
 
-		$campaign_body = (object) json_decode( $campaign_response->body() );
-		$stats_body    = (object) json_decode( $stats_response->body() );
+		$campaign_body = json_decode( $campaign_response->body() );
+		$stats_body    = json_decode( $stats_response->body() );
 
 		return [
 			'response' => [
-				'Status'       => $campaign_body?->status ?? '',
-				'Name'         => $campaign_body?->name ?? '',
-				'Recipients'   => $stats_body->results[0]?->stats?->delivered ?? '',
-				'TotalOpened'  => $stats_body->results[0]?->stats?->opens ?? '',
-				'UniqueOpened' => $stats_body->results[0]?->stats?->unique_opens ?? '',
+				'Status'       => $this->get_response_value( $campaign_body, 'status' ) ?? '',
+				'Name'         => $this->get_response_value( $campaign_body, 'name' ) ?? '',
+				'Recipients'   => $this->get_response_value( $stats_body, 'results', 0, 'stats', 'delivered' ) ?? '',
+				'TotalOpened'  => $this->get_response_value( $stats_body, 'results', 0, 'stats', 'opens' ) ?? '',
+				'UniqueOpened' => $this->get_response_value( $stats_body, 'results', 0, 'stats', 'unique_opens' ) ?? '',
 			],
 			'success'  => true,
 		];
@@ -384,18 +390,38 @@ class Sendgrid implements Email_Provider {
 			return [];
 		}
 		foreach ( $body as $sender ) {
-			$senders[] = sprintf( '%s (%s)', $sender->from->name, $sender->from->email );
+			$label = $this->get_sender_label( $sender );
+			if ( null !== $label ) {
+				$senders[] = $label;
+			}
 		}
 		return $senders;
 	}
 
 	/**
+	 * Builds the "Name (email)" label for a sender returned by the Sendgrid API.
+	 *
+	 * @param mixed $sender A decoded sender object from the API.
+	 * @return string|null The label, or null if the sender is malformed.
+	 */
+	private function get_sender_label( mixed $sender ): ?string {
+		$name  = $this->get_response_value( $sender, 'from', 'name' );
+		$email = $this->get_response_value( $sender, 'from', 'email' );
+
+		if ( ! is_string( $name ) || ! is_string( $email ) ) {
+			return null;
+		}
+
+		return sprintf( '%s (%s)', $name, $email );
+	}
+
+	/**
 	 * Filters the from names to use Senders from the API.
 	 *
-	 * @param array<string> $from_names The existing from names.
+	 * @param mixed $from_names The existing from names.
 	 * @return array<string>
 	 */
-	public function filter_from_names( array $from_names ): array {
+	public function filter_from_names( $from_names ): array {
 		return $this->get_senders();
 	}
 
@@ -484,9 +510,13 @@ class Sendgrid implements Email_Provider {
 		}
 		$lists = [];
 		foreach ( $result as $list ) {
+			$list_name = $this->get_response_value( $list, 'name' );
+			if ( ! is_string( $list_name ) ) {
+				continue;
+			}
 			$lists[] = [
-				'ListID' => $list->id,
-				'Name'   => $list->name,
+				'ListID' => $this->get_response_value( $list, 'id' ),
+				'Name'   => $list_name,
 			];
 		}
 		// Sort by the Name field.

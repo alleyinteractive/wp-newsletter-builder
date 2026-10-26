@@ -13,6 +13,8 @@ use TijsVerkoyen\CssToInlineStyles\CssToInlineStyles;
  * Beehiiv Client class
  */
 class Beehiiv implements Email_Provider {
+	use Api_Response;
+
 	/**
 	 * Settings key.
 	 *
@@ -87,7 +89,7 @@ class Beehiiv implements Email_Provider {
 		}
 
 		$api_key = vip_get_env_var( self::VIP_API_KEY_ENV_VAR );
-		return ! empty( $api_key ) ? $api_key : false;
+		return is_string( $api_key ) && ! empty( $api_key ) ? $api_key : false;
 	}
 
 	/**
@@ -97,7 +99,7 @@ class Beehiiv implements Email_Provider {
 	 */
 	private function get_vip_publication_id(): string|false {
 		$publication_id = get_option( self::VIP_PUBLICATION_ID_OPTION );
-		return ! empty( $publication_id ) ? $publication_id : false;
+		return is_string( $publication_id ) && ! empty( $publication_id ) ? $publication_id : false;
 	}
 
 	/**
@@ -191,7 +193,14 @@ class Beehiiv implements Email_Provider {
 
 		// Fall back to standard settings configuration.
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['publication_id'] ) ) {
+		if (
+			empty( $settings )
+			|| ! is_array( $settings )
+			|| empty( $settings['api_key'] )
+			|| empty( $settings['publication_id'] )
+			|| ! is_string( $settings['api_key'] )
+			|| ! is_string( $settings['publication_id'] )
+		) {
 			return false;
 		}
 
@@ -228,7 +237,11 @@ class Beehiiv implements Email_Provider {
 		];
 
 		if ( ! empty( $body ) && in_array( $method, [ 'POST', 'PUT', 'PATCH' ], true ) ) {
-			$args['body'] = wp_json_encode( $body );
+			$encoded_body = wp_json_encode( $body );
+			if ( false === $encoded_body ) {
+				return false;
+			}
+			$args['body'] = $encoded_body;
 		}
 
 		$response = wp_remote_request( $url, $args );
@@ -237,9 +250,14 @@ class Beehiiv implements Email_Provider {
 			return false;
 		}
 
+		$status_code = wp_remote_retrieve_response_code( $response );
+		if ( ! is_int( $status_code ) ) {
+			return false;
+		}
+
 		return [
 			'body'        => json_decode( wp_remote_retrieve_body( $response ) ),
-			'status_code' => wp_remote_retrieve_response_code( $response ),
+			'status_code' => $status_code,
 		];
 	}
 
@@ -272,11 +290,10 @@ class Beehiiv implements Email_Provider {
 			}
 
 			// Extract data from response.
-			if ( empty( $response['body']->data ) ) {
+			$result = $this->get_response_value( $response['body'], 'data' );
+			if ( empty( $result ) ) {
 				return [];
 			}
-
-			$result = $response['body']->data;
 		} catch ( \Exception $ex ) {
 			return [];
 		}
@@ -287,13 +304,16 @@ class Beehiiv implements Email_Provider {
 
 		$lists = [];
 		foreach ( $result as $segment ) {
+			$segment_id   = $this->get_response_value( $segment, 'id' );
+			$segment_name = $this->get_response_value( $segment, 'name' );
+
 			// Only include segments that have an id and name.
-			if ( empty( $segment->id ) || empty( $segment->name ) ) {
+			if ( empty( $segment_id ) || empty( $segment_name ) || ! is_string( $segment_name ) ) {
 				continue;
 			}
 			$lists[] = [
-				'ListID' => $segment->id,
-				'Name'   => $segment->name,
+				'ListID' => $segment_id,
+				'Name'   => $segment_name,
 			];
 		}
 
@@ -313,14 +333,14 @@ class Beehiiv implements Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids      The segment ids to send the campaign to.
-	 * @param string        $campaign_id   Optional campaign id to update.
+	 * @param string|null   $campaign_id   Optional campaign id to update, or null.
 	 * @param string        $from_name     The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
+	public function create_campaign( int $newsletter_id, array $list_ids, ?string $campaign_id, string $from_name ): array|false {
 		$client = $this->get_client();
 		if ( ! $client ) {
 			return false;
@@ -439,15 +459,15 @@ class Beehiiv implements Email_Provider {
 			return false;
 		}
 
-		$post_data = $response['body']->data ?? $response['body'];
+		$post_data = $this->get_response_value( $response['body'], 'data' ) ?? $response['body'];
 
 		return [
 			'response' => [
-				'Status'       => $post_data->status ?? '',
-				'Name'         => $post_data->title ?? '',
-				'Recipients'   => $post_data->stats->email->delivered ?? '',
-				'TotalOpened'  => $post_data->stats->email->opens ?? '',
-				'UniqueOpened' => $post_data->stats->email->unique_opens ?? '',
+				'Status'       => $this->get_response_value( $post_data, 'status' ) ?? '',
+				'Name'         => $this->get_response_value( $post_data, 'title' ) ?? '',
+				'Recipients'   => $this->get_response_value( $post_data, 'stats', 'email', 'delivered' ) ?? '',
+				'TotalOpened'  => $this->get_response_value( $post_data, 'stats', 'email', 'opens' ) ?? '',
+				'UniqueOpened' => $this->get_response_value( $post_data, 'stats', 'email', 'unique_opens' ) ?? '',
 			],
 			'success'  => true,
 		];
@@ -485,12 +505,10 @@ class Beehiiv implements Email_Provider {
 		if ( empty( $result ) ) {
 			return false;
 		}
-		$response = $result['response'];
-		if ( ! empty( $response ) && is_object( $response ) ) {
-			// Handle both direct response and nested data response.
-			return $response->data->id ?? $response->id ?? false;
-		}
-		return false;
+		// Handle both direct response and nested data response.
+		return $this->get_response_value( $result['response'], 'data', 'id' )
+			?? $this->get_response_value( $result['response'], 'id' )
+			?? false;
 	}
 
 	/**
@@ -554,11 +572,14 @@ class Beehiiv implements Email_Provider {
 		$endpoint     = '/publications/' . $client['publication_id'] . '/subscriptions/by_email/' . rawurlencode( $email );
 		$get_response = $this->api_request( $endpoint );
 
-		if ( ! $get_response || empty( $get_response['body']->data->id ) ) {
+		if ( ! $get_response ) {
 			return false;
 		}
 
-		$subscription_id = $get_response['body']->data->id;
+		$subscription_id = $this->get_response_value( $get_response['body'], 'data', 'id' );
+		if ( empty( $subscription_id ) || ! is_string( $subscription_id ) ) {
+			return false;
+		}
 
 		// Update subscription status to unsubscribed.
 		$request_body = [

@@ -24,9 +24,9 @@ class WP_Newsletter_Builder {
 		add_action( 'wp_after_insert_post', [ $this, 'on_newsletter_after_insert_post' ], 10, 4 );
 		add_action( 'wp_after_insert_post', [ $this, 'on_after_insert_post' ] );
 		add_filter( 'wp_newsletter_builder_html_url', [ $this, 'modify_html_url' ] );
-		add_filter( 'pre_get_posts', [ $this, 'modify_query' ] );
+		add_action( 'pre_get_posts', [ $this, 'modify_query' ] );
 		add_action( 'init', [ $this, 'check_for_fieldmanager' ] );
-		add_filter( 'block_categories_all', [ $this, 'add_newsletter_block_category' ], 10, 2 );
+		add_filter( 'block_categories_all', [ $this, 'add_newsletter_block_category' ] );
 	}
 
 	/**
@@ -83,14 +83,15 @@ class WP_Newsletter_Builder {
 	/**
 	 * Adds the local template file to the template hierarchy.
 	 *
-	 * @param string $template The existing template.
+	 * @param mixed $template The existing template.
 	 *
 	 * @return string
 	 */
-	public function include_template( string $template ): string {
+	public function include_template( $template ): string {
+		$template = is_string( $template ) ? $template : '';
 		global $post;
 		global $wp_query;
-		$query_post = $wp_query->get_queried_object();
+		$query_post = $wp_query instanceof \WP_Query ? $wp_query->get_queried_object() : null;
 
 		$local_path = WP_NEWSLETTER_BUILDER_DIR . '/single-nb_newsletter.php';
 
@@ -201,11 +202,14 @@ class WP_Newsletter_Builder {
 	/**
 	 * Override the HTML URL for the newsletter - return a public url if local, add auth if staging.
 	 *
-	 * @param string $url The existing url.
+	 * @param mixed $url The existing url.
 	 *
 	 * @return string
 	 */
-	public function modify_html_url( string $url ): string {
+	public function modify_html_url( $url ): string {
+		if ( ! is_string( $url ) ) {
+			return '';
+		}
 		$url      = str_replace(
 			[
 				'https://www.',
@@ -221,15 +225,23 @@ class WP_Newsletter_Builder {
 		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return $url;
 		}
-		if ( ! empty( $settings['dev_settings']['static_preview_url'] ) ) {
-			return $settings['dev_settings']['static_preview_url'];
+		$dev_settings = $settings['dev_settings'] ?? null;
+		if ( ! is_array( $dev_settings ) ) {
+			return $url;
 		}
+		$static_preview_url = $dev_settings['static_preview_url'] ?? '';
+		if ( ! empty( $static_preview_url ) && is_string( $static_preview_url ) ) {
+			return $static_preview_url;
+		}
+		$basic_auth_username = $dev_settings['basic_auth_username'] ?? '';
+		$basic_auth_password = $dev_settings['basic_auth_password'] ?? '';
 		if (
-			! empty( $settings['dev_settings']['basic_auth_username'] ) && ! empty( $settings['dev_settings']['basic_auth_password'] )
+			! empty( $basic_auth_username ) && is_string( $basic_auth_username )
+			&& ! empty( $basic_auth_password ) && is_string( $basic_auth_password )
 		) {
 			return str_replace(
 				'://',
-				sprintf( '://%s:%s@', $settings['dev_settings']['basic_auth_username'], $settings['dev_settings']['basic_auth_password'] ),
+				sprintf( '://%s:%s@', $basic_auth_username, $basic_auth_password ),
 				$url
 			);
 		}
@@ -252,21 +264,23 @@ class WP_Newsletter_Builder {
 		if ( ! is_array( $lists ) ) {
 			$lists = [ $lists ];
 		}
+		$lists = array_values( array_filter( $lists, 'is_string' ) );
 		if ( empty( $lists ) ) {
 			return;
 		}
 
 		// Newsletter from name.
 		$nl_from_name = get_post_meta( $post_id, 'nb_newsletter_from_name', true );
+		$nl_from_name = is_string( $nl_from_name ) ? $nl_from_name : '';
 
 		// If newsletter from name is not set try to fill from email type.
 		if ( empty( $nl_from_name ) ) {
 			$nl_email_type = get_post_meta( $post_id, 'nb_newsletter_email_type', true );
-			$email_types   = get_option( 'nb_email_types' );
-			if ( is_array( $email_types ) ) {
-				$type_key = array_search( $nl_email_type, array_column( $email_types, 'uuid4' ), true );
-				if ( false !== $type_key ) {
-					$nl_from_name = $email_types[ $type_key ]['from_name'] ?? '';
+			foreach ( Email_Types::get_email_types() as $email_type ) {
+				if ( $email_type['uuid4'] === $nl_email_type ) {
+					$from_name    = $email_type['from_name'] ?? '';
+					$nl_from_name = is_string( $from_name ) ? $from_name : '';
+					break;
 				}
 			}
 		}
@@ -293,13 +307,12 @@ class WP_Newsletter_Builder {
 	/**
 	 * Modifies the query, so we can view draft newsletters as well as published ones.
 	 *
-	 * @param WP_Query $query The query.
-	 *
-	 * @return WP_Query
+	 * @param mixed $query The query.
 	 */
-	public function modify_query( WP_Query $query ): WP_Query {
+	public function modify_query( $query ): void {
 		if (
-			$query->is_main_query()
+			$query instanceof WP_Query
+			&& $query->is_main_query()
 			&& isset( $query->query_vars['post_type'] )
 			&& ! $query->is_admin
 			&& 'nb_newsletter' === $query->query_vars['post_type']
@@ -307,7 +320,6 @@ class WP_Newsletter_Builder {
 			$query->query['post_status']      = [ 'publish', 'draft' ];
 			$query->query_vars['post_status'] = [ 'publish', 'draft' ];
 		}
-		return $query;
 	}
 
 	/**
@@ -346,12 +358,15 @@ class WP_Newsletter_Builder {
 	/**
 	 * Adds a new Newsletter block category.
 	 *
-	 * @param array $categories Array of categories for block types.
-	 * 
-	 * @return array
+	 * @param mixed $categories Array of categories for block types.
+	 *
+	 * @return array<mixed>
 	 */
 	public function add_newsletter_block_category( $categories ): array {
-		
+		if ( ! is_array( $categories ) ) {
+			$categories = [];
+		}
+
 		$categories[] = [
 			'slug'  => 'wp-newsletter-builder-newsletter',
 			'title' => 'Newsletter',

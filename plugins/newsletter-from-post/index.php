@@ -43,7 +43,7 @@ function action_enqueue_post_sidebar_assets(): void {
 	$templates    = get_posts( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_posts_get_posts
 		[
 			'post_type'        => 'nb_template',
-			'posts_per_page'   => -1,
+			'posts_per_page'   => -1, // phpcs:ignore WordPressVIPMinimum.Performance.NoPaging.posts_per_page_posts_per_page
 			'orderby'          => 'ID',
 			'suppress_filters' => false,
 		]

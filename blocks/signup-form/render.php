@@ -2,9 +2,9 @@
 /**
  * All of the parameters passed to the function where this file is being required are accessible in this scope:
  *
- * @param array    $attributes     The array of attributes for this block.
- * @param string   $content        Rendered block output. ie. <InnerBlocks.Content />.
- * @param WP_Block $block_instance The instance of the WP_Block class that represents the block being rendered.
+ * @var array{headerText?: string, subheaderText?: string, disclaimerText?: string, buttonText?: string, listId?: string} $attributes The array of attributes for this block.
+ * @var string $content Rendered block output. ie. <InnerBlocks.Content />.
+ * @var WP_Block $block The instance of the WP_Block class that represents the block being rendered.
  *
  * @package wp-newsletter-builder
  */
@@ -14,7 +14,7 @@ $wp_newsletter_builder_subheader_text  = $attributes['subheaderText'] ?? '';
 $wp_newsletter_builder_disclaimer_text = $attributes['disclaimerText'] ?? '';
 $wp_newsletter_builder_button_text     = $attributes['buttonText'] ?? __( 'Subscribe', 'wp-newsletter-builder' );
 $wp_newsletter_builder_list_id         = $attributes['listId'] ?? '';
-$wp_newsletter_builder_content         = $content ?? '';
+$wp_newsletter_builder_content         = $content;
 ?>
 <form <?php echo wp_kses_data( get_block_wrapper_attributes() ); ?> data-component="wp-newsletter-builder-signup">
 	<div class="wp-block-wp-newsletter-builder-signup-form__header container container--entry-content">

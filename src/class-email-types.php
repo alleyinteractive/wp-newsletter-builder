@@ -101,7 +101,7 @@ class Email_Types {
 		 */
 		$additional_fields = apply_filters( 'wp_newsletter_builder_email_type_additional_fields', [] );
 
-		if ( is_array( $additional_fields ) && $additional_fields !== [] ) {
+		if ( [] !== $additional_fields ) {
 			$children += $additional_fields;
 		}
 
@@ -120,7 +120,7 @@ class Email_Types {
 					'label',
 				],
 				// We need to specify this condition since there will always be a UUID in the group.
-				'group_is_empty' => fn ( $values ) => empty( $values['label'] ) && empty( $values['template'] ),
+				'group_is_empty' => fn ( $values ) => ! is_array( $values ) || ( empty( $values['label'] ) && empty( $values['templates'] ) ),
 			],
 		);
 
@@ -130,14 +130,19 @@ class Email_Types {
 	/**
 	 * Sort the email types on save so that they are always alphabetical.
 	 *
-	 * @param array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}> $new_value The value being saved.
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
+	 * @param mixed $new_value The value being saved.
+	 * @return mixed
 	 */
-	public function sort_settings_on_save( array $new_value ): array {
+	public function sort_settings_on_save( $new_value ): mixed {
+		if ( ! is_array( $new_value ) ) {
+			return $new_value;
+		}
 		usort(
 			$new_value,
 			function ( $a, $b ) {
-				return strcasecmp( $a['label'], $b['label'] );
+				$a_label = is_array( $a ) && is_string( $a['label'] ?? null ) ? $a['label'] : '';
+				$b_label = is_array( $b ) && is_string( $b['label'] ?? null ) ? $b['label'] : '';
+				return strcasecmp( $a_label, $b_label );
 			}
 		);
 
@@ -145,18 +150,25 @@ class Email_Types {
 	}
 
 	/**
-	 * Gets the lists for the client.
+	 * Gets the configured email types.
+	 *
+	 * Email types without a string `uuid4` are skipped; all other stored fields are returned as-is.
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array<array{uuid4: string, label: string, image: int, templates: array<int>, from_name: string, safe_rtb?: string, ad_tags?: array<array{tag_code: string}>, roadblock?: bool, key_values?: array<array{key: string, value: string}>}>
+	 * @return array<array<mixed>>
 	 */
-	public function get_email_types(): array {
+	public static function get_email_types(): array {
 		$settings = get_option( static::SETTINGS_KEY );
 		if ( empty( $settings ) || ! is_array( $settings ) ) {
 			return [];
 		}
 
-		return $settings;
+		return array_values(
+			array_filter(
+				$settings,
+				fn ( $email_type ) => is_array( $email_type ) && ! empty( $email_type['uuid4'] ) && is_string( $email_type['uuid4'] ),
+			)
+		);
 	}
 }

@@ -2,6 +2,12 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
+## unreleased
+
+- Drop support for PHP 8.2
+- Broad update to ensure the codebase passes `composer test` PHP checks
+- Include block filter and editor plugin entries in build
+
 ## 0.8.0 - 2026-05-28
 
 - Adds an email provider for Campaign Monitor integrations which use a single list with segments instead of multiple separate lists.

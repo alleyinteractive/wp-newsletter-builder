@@ -2,22 +2,22 @@
 /**
  * All of the parameters passed to the function where this file is being required are accessible in this scope:
  *
- * @param array    $attributes     The array of attributes for this block.
- * @param string   $content        Rendered block output. ie. <InnerBlocks.Content />.
- * @param WP_Block $block_instance The instance of the WP_Block class that represents the block being rendered.
+ * @var array{narrow_separator?: bool} $attributes The array of attributes for this block.
+ * @var string $content Rendered block output. ie. <InnerBlocks.Content />.
+ * @var WP_Block $block The instance of the WP_Block class that represents the block being rendered.
  *
  * @package wp-newsletter-builder
  */
 
 $nb_settings         = get_option( 'nb_settings' );
-$nb_footer_settings  = is_array( $nb_settings ) ? $nb_settings['footer_settings'] : [];
-$nb_facebook_url     = $nb_footer_settings['facebook_url'] ?? '';
-$nb_twitter_url      = $nb_footer_settings['twitter_url'] ?? '';
-$nb_instagram_url    = $nb_footer_settings['instagram_url'] ?? '';
-$nb_youtube_url      = $nb_footer_settings['youtube_url'] ?? '';
-$nb_image_id         = $nb_footer_settings['image'] ?? 0;
-$nb_address          = $nb_footer_settings['address'] ?? '';
-$nb_address_2        = $nb_footer_settings['address_2'] ?? '';
+$nb_footer_settings  = is_array( $nb_settings ) && isset( $nb_settings['footer_settings'] ) && is_array( $nb_settings['footer_settings'] ) ? $nb_settings['footer_settings'] : [];
+$nb_facebook_url     = isset( $nb_footer_settings['facebook_url'] ) && is_string( $nb_footer_settings['facebook_url'] ) ? $nb_footer_settings['facebook_url'] : '';
+$nb_twitter_url      = isset( $nb_footer_settings['twitter_url'] ) && is_string( $nb_footer_settings['twitter_url'] ) ? $nb_footer_settings['twitter_url'] : '';
+$nb_instagram_url    = isset( $nb_footer_settings['instagram_url'] ) && is_string( $nb_footer_settings['instagram_url'] ) ? $nb_footer_settings['instagram_url'] : '';
+$nb_youtube_url      = isset( $nb_footer_settings['youtube_url'] ) && is_string( $nb_footer_settings['youtube_url'] ) ? $nb_footer_settings['youtube_url'] : '';
+$nb_image_id         = isset( $nb_footer_settings['image'] ) && is_numeric( $nb_footer_settings['image'] ) ? absint( $nb_footer_settings['image'] ) : 0;
+$nb_address          = isset( $nb_footer_settings['address'] ) && is_string( $nb_footer_settings['address'] ) ? $nb_footer_settings['address'] : '';
+$nb_address_2        = isset( $nb_footer_settings['address_2'] ) && is_string( $nb_footer_settings['address_2'] ) ? $nb_footer_settings['address_2'] : '';
 $nb_has_social_links = ! empty( $nb_facebook_url ) || ! empty( $nb_twitter_url ) || ! empty( $nb_instagram_url ) || ! empty( $nb_youtube_url );
 
 $plugin_url = plugins_url( 'wp-newsletter-builder' );

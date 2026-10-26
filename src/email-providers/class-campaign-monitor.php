@@ -102,17 +102,23 @@ class Campaign_Monitor implements Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
-	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string|null   $campaign_id Optional campaign id to update, or null.
 	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
+	public function create_campaign( int $newsletter_id, array $list_ids, ?string $campaign_id, string $from_name ): array|false {
 		// TODO: Move non-email provider code to the core plugin.
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['api_key'] ) || empty( $settings['client_id'] ) ) {
+		if (
+			empty( $settings )
+			|| ! is_array( $settings )
+			|| empty( $settings['api_key'] )
+			|| empty( $settings['client_id'] )
+			|| ! is_string( $settings['client_id'] )
+		) {
 			return false;
 		}
 		$auth = [ 'api_key' => $settings['api_key'] ];

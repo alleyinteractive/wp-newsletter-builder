@@ -123,11 +123,10 @@ class Rest_API_Endpoints {
 		if ( ! current_user_can( 'edit_posts' ) ) {
 			return new WP_Error( 'rest_forbidden', esc_html__( 'You do not have permission to access this endpoint.', 'wp-newsletter-builder' ), [ 'status' => 401 ] );
 		}
-		$types_class = new Email_Types();
-		$types       = $types_class->get_email_types();
-		$new_types   = [];
+		$types     = Email_Types::get_email_types();
+		$new_types = [];
 		foreach ( $types as $type ) {
-			if ( ! empty( $type['uuid4'] ) ) {
+			if ( ! empty( $type['uuid4'] ) && is_string( $type['uuid4'] ) ) {
 				$new_types[ $type['uuid4'] ] = (object) $type;
 			}
 		}
@@ -137,15 +136,7 @@ class Rest_API_Endpoints {
 	/**
 	 * Gets the settings from options.
 	 *
-	 * @return WP_Error|false|array{
-	 *   facebook_url?: string,
-	 *   twitter_url?: string,
-	 *   instagram_url?: string,
-	 *   youtube_url?: string,
-	 *   image?: int,
-	 *   address?: string,
-	 *   address_2?: string,
-	 * }
+	 * @return WP_Error|false|array<mixed>
 	 */
 	public function get_footer_settings(): WP_Error|false|array {
 		if ( ! current_user_can( 'edit_posts' ) ) {
@@ -166,14 +157,15 @@ class Rest_API_Endpoints {
 	 * }  The newsletter status.
 	 */
 	public function get_status( WP_REST_Request $request ): array {
-		$post_id = absint( $request->get_param( 'post_id' ) );
-		if ( empty( $post_id ) || ! is_int( $post_id ) ) {
+		$post_id_param = $request->get_param( 'post_id' );
+		$post_id       = is_numeric( $post_id_param ) ? absint( $post_id_param ) : 0;
+		if ( empty( $post_id ) ) {
 			return [];
 		}
 		$cache_key = 'nb_status_' . $post_id;
 		$cache     = wp_cache_get( $cache_key );
 		if ( false !== $cache ) {
-			if ( is_array( $cache ) ) {
+			if ( is_array( $cache ) && isset( $cache['Status'] ) && is_string( $cache['Status'] ) ) {
 				return $cache;
 			} else {
 				return [];
@@ -217,11 +209,6 @@ class Rest_API_Endpoints {
 				return $result;
 			}
 		}
-		/**
-		 * The result of the campaign.
-		 *
-		 * @var array{response: mixed, http_status_code: int}|false $campaign_result
-		 */
 		$campaign_result = get_post_meta( $post_id, 'nb_newsletter_campaign_result', true );
 		if ( ! empty( $campaign_result ) && is_array( $campaign_result ) ) {
 			if ( is_string( $campaign_result['response'] ) && ( 200 > $campaign_result['http_status_code'] || 300 <= $campaign_result['http_status_code'] ) ) {
@@ -263,13 +250,7 @@ class Rest_API_Endpoints {
 				'message' => __( 'No lists provided.', 'wp-newsletter-builder' ),
 			];
 		}
-		$list_ids = explode( ',', $list_ids_param );
-		if ( ! is_array( $list_ids ) ) {
-			return [
-				'success' => false,
-				'message' => __( 'No lists selected.', 'wp-newsletter-builder' ),
-			];
-		}
+		$list_ids     = explode( ',', $list_ids_param );
 		$list_results = [];
 		global $newsletter_builder_email_provider;
 		if ( empty( $newsletter_builder_email_provider ) || ! $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {

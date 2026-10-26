@@ -158,15 +158,7 @@ class Settings {
 	 *
 	 * @TODO: Add caching that works on Pantheon and WordPress VIP.
 	 *
-	 * @return array{
-	 *   facebook_url?: string,
-	 *   twitter_url?: string,
-	 *   instagram_url?: string,
-	 *   youtube_url?: string,
-	 *   image?: int,
-	 *   address?: string,
-	 *   address_2?: string,
-	 * }|false  The footer settings.
+	 * @return array<mixed>|false The footer settings.
 	 */
 	public function get_footer_settings(): array|false {
 		$settings = get_option( static::SETTINGS_KEY );
@@ -183,12 +175,17 @@ class Settings {
 	 * @return array<string>|false
 	 */
 	public function get_from_names(): array|false {
-		$settings = get_option( static::SETTINGS_KEY, [] );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings['from_names'] ) || ! is_array( $settings['from_names'] ) ) {
-			// @phpstan-ignore-next-line
-			$settings['from_names'] = [];
+		$settings   = get_option( static::SETTINGS_KEY, [] );
+		$from_names = [];
+		if ( is_array( $settings ) && ! empty( $settings['from_names'] ) && is_array( $settings['from_names'] ) ) {
+			$from_names = array_filter( $settings['from_names'], 'is_string' );
 		}
 
-		return apply_filters( 'wp_newsletter_builder_from_names', $settings['from_names'] );
+		$from_names = apply_filters( 'wp_newsletter_builder_from_names', $from_names );
+		if ( ! is_array( $from_names ) ) {
+			return false;
+		}
+
+		return array_filter( $from_names, 'is_string' );
 	}
 }

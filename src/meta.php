@@ -18,10 +18,10 @@ register_post_meta_from_defs();
  * @see \register_post_meta
  * @see \register_term_meta
  *
- * @param string        $object_type  The type of meta to register, which must be one of 'post' or 'term'.
- * @param array<string> $object_slugs The post type or taxonomy slugs to register with.
- * @param string        $meta_key     The meta key to register.
- * @param array<mixed>  $args         Optional. Additional arguments for register_post_meta or register_term_meta. Defaults to an empty array.
+ * @param string               $object_type  The type of meta to register, which must be one of 'post' or 'term'.
+ * @param array<string>        $object_slugs The post type or taxonomy slugs to register with.
+ * @param string               $meta_key     The meta key to register.
+ * @param array<string, mixed> $args         Optional. Additional arguments for register_post_meta or register_term_meta. Defaults to an empty array.
  * @return bool      True if the meta key was successfully registered in the global array, false if not.
  */
 function register_meta_helper(
@@ -46,7 +46,7 @@ function register_meta_helper(
 	 *
 	 * @link https://developer.wordpress.org/reference/functions/register_meta/
 	 *
-	 * @param array  $args {
+	 * @param array<string, mixed> $args {
 	 *     Array of args to be passed to register_meta().
 	 *
 	 *     @type string     $object_subtype    A subtype; e.g. if the object type is "post", the post type. If left empty,
@@ -73,18 +73,20 @@ function register_meta_helper(
 	 */
 	$args = apply_filters(
 		'wp_newsletter_builder_register_meta_helper_args', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-		wp_parse_args(
-			$args,
+		array_merge(
 			[
 				'show_in_rest' => true,
 				'single'       => true,
 				'type'         => 'string',
-			]
+			],
+			$args
 		),
 		$object_type,
 		$object_slugs,
 		$meta_key
 	);
+
+	$args = normalize_meta_args( $args );
 
 	// Fork for object type.
 	switch ( $object_type ) {
@@ -107,6 +109,62 @@ function register_meta_helper(
 	}
 
 	return true;
+}
+
+/**
+ * Normalizes register_meta() arguments to the types WordPress expects.
+ *
+ * Unknown keys are dropped (register_meta() ignores them anyway), as are known keys whose values have the wrong type.
+ *
+ * @param array<string, mixed> $args Arguments to normalize.
+ * @return array{
+ *   object_subtype?: string,
+ *   type?: string,
+ *   label?: string,
+ *   description?: string,
+ *   single?: bool,
+ *   default?: mixed,
+ *   sanitize_callback?: callable,
+ *   auth_callback?: callable,
+ *   show_in_rest?: bool|array<mixed>,
+ *   revisions_enabled?: bool,
+ * } The normalized arguments.
+ */
+function normalize_meta_args( array $args ): array {
+	$normalized = [];
+
+	if ( isset( $args['object_subtype'] ) && is_string( $args['object_subtype'] ) ) {
+		$normalized['object_subtype'] = $args['object_subtype'];
+	}
+	if ( isset( $args['type'] ) && is_string( $args['type'] ) ) {
+		$normalized['type'] = $args['type'];
+	}
+	if ( isset( $args['label'] ) && is_string( $args['label'] ) ) {
+		$normalized['label'] = $args['label'];
+	}
+	if ( isset( $args['description'] ) && is_string( $args['description'] ) ) {
+		$normalized['description'] = $args['description'];
+	}
+	if ( isset( $args['single'] ) && is_bool( $args['single'] ) ) {
+		$normalized['single'] = $args['single'];
+	}
+	if ( array_key_exists( 'default', $args ) ) {
+		$normalized['default'] = $args['default'];
+	}
+	if ( isset( $args['sanitize_callback'] ) && is_callable( $args['sanitize_callback'] ) ) {
+		$normalized['sanitize_callback'] = $args['sanitize_callback'];
+	}
+	if ( isset( $args['auth_callback'] ) && is_callable( $args['auth_callback'] ) ) {
+		$normalized['auth_callback'] = $args['auth_callback'];
+	}
+	if ( isset( $args['show_in_rest'] ) && ( is_bool( $args['show_in_rest'] ) || is_array( $args['show_in_rest'] ) ) ) {
+		$normalized['show_in_rest'] = $args['show_in_rest'];
+	}
+	if ( isset( $args['revisions_enabled'] ) && is_bool( $args['revisions_enabled'] ) ) {
+		$normalized['revisions_enabled'] = $args['revisions_enabled'];
+	}
+
+	return $normalized;
 }
 
 /**
@@ -135,14 +193,25 @@ function register_post_meta_from_defs(): void {
 
 	// Loop through definitions and register each.
 	foreach ( $definitions as $meta_key => $definition ) {
+		if ( ! is_string( $meta_key ) || ! is_array( $definition ) ) {
+			continue;
+		}
+
+		// Only string keys are valid register_meta args.
+		$definition = array_filter( $definition, 'is_string', ARRAY_FILTER_USE_KEY );
+
 		// Extract post types.
-		$post_types = $definition['post_types'] ?? [];
+		$post_types = isset( $definition['post_types'] ) && is_array( $definition['post_types'] )
+			? array_values( array_filter( $definition['post_types'], 'is_string' ) )
+			: [];
 		// Unset since $definition is passed as register_meta args.
 		unset( $definition['post_types'] );
 
 		// Relocate schema, if specified at the top level.
 		if ( ! empty( $definition['schema'] ) ) {
-			$definition['show_in_rest']['schema'] = $definition['schema'];
+			$show_in_rest               = isset( $definition['show_in_rest'] ) && is_array( $definition['show_in_rest'] ) ? $definition['show_in_rest'] : [];
+			$show_in_rest['schema']     = $definition['schema'];
+			$definition['show_in_rest'] = $show_in_rest;
 			// Unset since $definition is passed as register_meta args.
 			unset( $definition['schema'] );
 		}

@@ -11,6 +11,8 @@ namespace WP_Newsletter_Builder\Email_Providers;
  * Campaign Monitor Client class for implementations which use a single list with segments instead of individual lists.
  */
 class Campaign_Monitor_Segment implements Email_Provider {
+	use Api_Response;
+
 	/**
 	 * Settings key.
 	 *
@@ -21,7 +23,7 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	/**
 	 * Authentication details for the API client.
 	 *
-	 * @var array
+	 * @var array{api_key?: string}
 	 */
 	private array $auth = [];
 
@@ -44,6 +46,7 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		$api_key = $this->get_setting( 'api_key' );
 		if ( ! $api_key ) {
 			$this->auth = [];
+			return;
 		}
 		$this->auth = [ 'api_key' => $api_key ];
 	}
@@ -56,7 +59,7 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 */
 	private function get_setting( string $key ): string|false {
 		$settings = get_option( static::SETTINGS_KEY );
-		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings[ $key ] ) ) {
+		if ( empty( $settings ) || ! is_array( $settings ) || empty( $settings[ $key ] ) || ! is_string( $settings[ $key ] ) ) {
 			return false;
 		}
 		return $settings[ $key ];
@@ -143,13 +146,15 @@ class Campaign_Monitor_Segment implements Email_Provider {
 		}
 
 		foreach ( $segments as $segment ) {
-			if ( ! in_array( $segment->Title, $default_segments, true ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				// Reshape the segments into the list format the rest of the plugin expects.
-				$output_lists[] = (object) [
-					'ListID' => $segment->SegmentID, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-					'Name'   => $segment->Title, // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-				];
+			$title = $this->get_response_value( $segment, 'Title' );
+			if ( ! is_string( $title ) || in_array( $title, $default_segments, true ) ) {
+				continue;
 			}
+			// Reshape the segments into the list format the rest of the plugin expects.
+			$output_lists[] = (object) [
+				'ListID' => $this->get_response_value( $segment, 'SegmentID' ),
+				'Name'   => $title,
+			];
 		}
 
 		return $output_lists;
@@ -160,15 +165,16 @@ class Campaign_Monitor_Segment implements Email_Provider {
 	 *
 	 * @param int           $newsletter_id The id of the nb_newsletter post.
 	 * @param array<string> $list_ids    The list ids to send the campaign to.
-	 * @param string        $campaign_id Optional campaign id to update.
+	 * @param string|null   $campaign_id Optional campaign id to update, or null.
 	 * @param string        $from_name   The from name.
 	 * @return array{
 	 *   response: mixed,
 	 *   http_status_code: int,
 	 * }|false  The response from the API.
 	 */
-	public function create_campaign( int $newsletter_id, array $list_ids, string $campaign_id = null, string $from_name ): array|false {
-		if ( empty( $this->auth ) ) {
+	public function create_campaign( int $newsletter_id, array $list_ids, ?string $campaign_id, string $from_name ): array|false {
+		$client_id = $this->get_setting( 'client_id' );
+		if ( empty( $this->auth ) || ! $client_id ) {
 			return false;
 		}
 
@@ -189,12 +195,12 @@ class Campaign_Monitor_Segment implements Email_Provider {
 
 		$segment_id = get_post_meta( $newsletter->ID, 'nb_newsletter_list', true ); // This meta field is used to store the segment id instead of the list id in this provider.
 
-		if ( empty( $segment_id ) ) {
-			return false;
-		}
-
 		if ( is_array( $segment_id ) ) {
 			$segment_id = reset( $segment_id );
+		}
+
+		if ( empty( $segment_id ) || ( ! is_string( $segment_id ) && ! is_int( $segment_id ) ) ) {
+			return false;
 		}
 
 		/**
@@ -214,7 +220,7 @@ class Campaign_Monitor_Segment implements Email_Provider {
 			'SegmentIDs' => [ (string) $segment_id ],
 		];
 
-		$result = $campaigns->create( $this->get_setting( 'client_id' ), $params );
+		$result = $campaigns->create( $client_id, $params );
 
 		return [
 			'response'         => $result->response,

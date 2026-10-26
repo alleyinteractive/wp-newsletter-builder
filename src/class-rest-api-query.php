@@ -23,11 +23,14 @@ class Rest_API_Query {
 	/**
 	 * Add date query to reset search query if the after param is set.
 	 *
-	 * @param array<string, mixed> $query_args The existing query args.
-	 * @param \WP_REST_Request     $request The REST request.
-	 * @return array<string, mixed>
+	 * @param mixed $query_args The existing query args.
+	 * @param mixed $request    The REST request.
+	 * @return array<mixed>
 	 */
-	public function add_after_param( array $query_args, \WP_REST_Request $request ): array {
+	public function add_after_param( $query_args, $request ): array {
+		if ( ! is_array( $query_args ) || ! $request instanceof \WP_REST_Request ) {
+			return (array) $query_args;
+		}
 		if ( ! empty( $request->get_param( 'after' ) ) ) {
 			$query_args['date_query'] = [
 				'after' => $request->get_param( 'after' ),
@@ -39,11 +42,14 @@ class Rest_API_Query {
 	/**
 	 * Checks if the search string is a url and if it is, returns the appropriate post.
 	 *
-	 * @param array<string, mixed> $query_args The existing query args.
-	 * @param \WP_REST_Request     $request The REST request.
-	 * @return array<string, mixed>
+	 * @param mixed $query_args The existing query args.
+	 * @param mixed $request    The REST request.
+	 * @return array<mixed>
 	 */
-	public function check_for_url_match( array $query_args, \WP_REST_Request $request ): array {
+	public function check_for_url_match( $query_args, $request ): array {
+		if ( ! is_array( $query_args ) || ! $request instanceof \WP_REST_Request ) {
+			return (array) $query_args;
+		}
 		$search_param = $request->get_param( 'search' );
 		if ( ! is_string( $search_param ) ) {
 			return $query_args;
@@ -67,11 +73,14 @@ class Rest_API_Query {
 	/**
 	 * Checks if the search string is a Post ID and if it is, returns the appropriate post.
 	 *
-	 * @param array<string, mixed> $query_args The existing query args.
-	 * @param \WP_REST_Request     $request The REST request.
-	 * @return array<string, mixed>
+	 * @param mixed $query_args The existing query args.
+	 * @param mixed $request    The REST request.
+	 * @return array<mixed>
 	 */
-	public function check_for_post_id_match( array $query_args, \WP_REST_Request $request ): array {
+	public function check_for_post_id_match( $query_args, $request ): array {
+		if ( ! is_array( $query_args ) || ! $request instanceof \WP_REST_Request ) {
+			return (array) $query_args;
+		}
 		$search_post_id = $request->get_param( 'search' );
 		if ( ! is_int( $search_post_id ) && ! $search_post_id instanceof \WP_Post ) {
 			return $query_args;

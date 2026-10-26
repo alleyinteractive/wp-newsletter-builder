@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 WP Newsletter Builder is a WordPress plugin that provides an interface to manage and build email newsletters. It creates Custom Post Types (`nb_newsletter` and `nb_template`) with full Gutenberg block editor integration.
 
-- **PHP:** 8.1+
+- **PHP:** 8.3+
 - **Node:** 16-20
 - **WordPress:** 6.2+
 
@@ -82,7 +82,7 @@ Entry points compiled by webpack. Include `index.php` in an entry directory for 
 
 ### PHP
 - Namespace: `WP_Newsletter_Builder`
-- Singleton pattern via `Trait_Instance`
+- Classes are instantiated once in `plugin.php`
 - Hooks registered in `__construct()`
 - PSR-4 autoloading via Composer
 

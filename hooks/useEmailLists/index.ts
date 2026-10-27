@@ -16,6 +16,7 @@ export interface Option {
 function useEmailLists() {
   const { meta } = useNewsletterMeta();
   const [lists, setLists] = useState<ListResult[]>([]);
+  const [listsLoaded, setListsLoaded] = useState(false);
 
   const emailListOptions = useMemo(() => {
     if (lists.length === 0) {
@@ -28,17 +29,23 @@ function useEmailLists() {
   const selectedEmailList = useMemo(() => emailListOptions
     .filter((item: Option) => meta.list.includes(item.value)), [meta.list, emailListOptions]);
 
-  useEffect(() => { // eslint-disable-line
-    if (!sendsEmail() || lists.length > 0) {
+  // Fetch once on mount. Depending on `lists` here would refetch forever when the
+  // endpoint returns an empty array.
+  useEffect(() => {
+    if (!sendsEmail()) {
       return;
     }
-    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
-    });
-  }, [lists]);
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' })
+      .then((response) => {
+        setLists(Array.isArray(response) ? response as ListResult[] : []);
+      })
+      .catch(() => setLists([]))
+      .finally(() => setListsLoaded(true));
+  }, []);
 
   return {
     emailListOptions,
+    listsLoaded,
     selectedEmailList,
   };
 }

@@ -97,6 +97,7 @@ export default function Edit() {
   };
 
   const [lists, setLists] = useState<ListResult[]>([]);
+  const [listsLoaded, setListsLoaded] = useState(false);
   const listArray = Array.isArray(list) ? list : [list];
 
   const [suppressionLists, setSuppressionLists] = useState<ListResult[]>([]);
@@ -114,26 +115,28 @@ export default function Edit() {
   const options = lists.length > 0 ? listsToOptions(lists) : [];
   const selected = options.filter((item: Option) => listArray.includes(item.value));
 
+  // Fetch each list once on mount. Depending on the list state here would refetch
+  // forever when an endpoint returns an empty array.
   useEffect(() => {
-    if (lists.length > 0) {
-      return;
-    }
-    apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
-    });
-  }, [lists]);
+    apiFetch({ path: '/wp-newsletter-builder/v1/lists' })
+      .then((response) => {
+        setLists(Array.isArray(response) ? response as ListResult[] : []);
+      })
+      .catch(() => setLists([]))
+      .finally(() => setListsLoaded(true));
+  }, []);
 
   useEffect(() => {
-    if (suppressionLists.length > 0) {
+    if (!usesSuppressionLists) {
       return;
     }
     apiFetch({ path: '/wp-newsletter-builder/v1/suppression-lists' }).then((response) => {
-      const newLists = response as any as ListResult[];
+      const newLists = Array.isArray(response) ? response as ListResult[] : [];
       newLists.unshift({ Name: __('Select a suppression list', 'wp-newsletter-builder'), ListID: '' });
 
       setSuppressionLists(newLists);
     });
-  }, [suppressionLists]);
+  }, [usesSuppressionLists]);
 
   return (
     <div {...useBlockProps()}>
@@ -178,10 +181,14 @@ export default function Edit() {
             }}
           />
         </label>
-      ) : (
+      ) : null}
+      {lists.length === 0 && listsLoaded ? (
+        <p>{__('No email lists are available.', 'wp-newsletter-builder')}</p>
+      ) : null}
+      {lists.length === 0 && !listsLoaded ? (
         /* @ts-ignore */
         <Spinner />
-      )}
+      ) : null}
       {/* @ts-ignore */}
       {usesSuppressionLists && suppressionLists.length > 0 ? (
         <SelectControl

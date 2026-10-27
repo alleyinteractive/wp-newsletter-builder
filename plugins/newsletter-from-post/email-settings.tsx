@@ -36,7 +36,7 @@ function EmailSettings() {
   const [fetched, setFetched] = useState(false);
   const [invalidTemplate, setInvalidTemplate] = useState(false);
   const { meta, resetTemplate, setMeta } = useNewsletterMeta();
-  const { emailListOptions, selectedEmailList } = useEmailLists();
+  const { emailListOptions, listsLoaded, selectedEmailList } = useEmailLists();
   const manualSubject = meta.subject !== '';
   const manualPreview = meta.preview !== '';
   const listArray = Array.isArray(meta.list) ? meta.list : [meta.list];
@@ -185,9 +185,13 @@ function EmailSettings() {
               }}
             />
           </label>
-        ) : (
+        ) : null}
+        {emailListOptions.length === 0 && listsLoaded ? (
+          <p>{__('No email lists are available.', 'wp-newsletter-builder')}</p>
+        ) : null}
+        {emailListOptions.length === 0 && !listsLoaded ? (
           <NewsletterSpinner />
-        )}
+        ) : null}
         <div style={{ marginTop: '1rem' }}>
           <CheckboxControl
             label={postStatus === 'draft' || postStatus === 'auto-draft' ? __('Send Newsletter on Publish', 'wp-newsletter-builder') : __('Send Newsletter on Update', 'wp-newsletter-builder')}

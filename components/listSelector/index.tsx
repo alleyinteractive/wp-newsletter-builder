@@ -27,14 +27,13 @@ export default function ListSelector({
 
   const options = lists.length > 0 ? listsToOptions(lists) : [];
 
+  // Fetch once on mount. Depending on `lists` here would refetch forever when the
+  // endpoint returns an empty array.
   useEffect(() => {
-    if (lists.length > 0) {
-      return;
-    }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
-      setLists(response as any as ListResult[]);
+      setLists(Array.isArray(response) ? response as ListResult[] : []);
     });
-  }, [lists]);
+  }, []);
 
   return (
     <SelectControl

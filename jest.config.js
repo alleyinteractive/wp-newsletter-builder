@@ -14,6 +14,7 @@ module.exports = {
   },
   modulePathIgnorePatterns: [
     '.buddy-tests',
+    '<rootDir>/build/',
   ],
   testEnvironment: 'node',
 };

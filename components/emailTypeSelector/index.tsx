@@ -66,14 +66,14 @@ function EmailTypeSelector({
 }: EmailTypeSelectorProps) {
   const [types, setTypes] = useState<TypeResult>({} as TypeResult);
 
+  // Fetch once on mount. Depending on `types` here would refetch forever when the
+  // endpoint returns no types, since each response creates a new object.
   useEffect(() => {
-    if (Object.keys(types).length > 0) {
-      return;
-    }
     apiFetch({ path: '/wp-newsletter-builder/v1/email-types' }).then((response) => {
-      setTypes(response as any as TypeResult);
+      const isTypeResult = response && typeof response === 'object' && !Array.isArray(response);
+      setTypes((isTypeResult ? response : {}) as TypeResult);
     });
-  }, [types]);
+  }, []);
 
   // Set the meta to be the first option if it's not set. This matches what is already
   // happpening in the UI.

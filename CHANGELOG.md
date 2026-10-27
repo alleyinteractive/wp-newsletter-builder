@@ -6,6 +6,8 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 
 - Drop support for PHP 8.2
 - Broad update to ensure the codebase passes `composer test` PHP checks
+- Add tests for newsletter settings block components
+- Prevent looping requests when remote calls return empty
 - Include block filter and editor plugin entries in build
 
 ## 0.8.0 - 2026-05-28

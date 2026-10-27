@@ -96,7 +96,7 @@ function EmailSettings() {
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
-    || meta.fromName === ''
+    || (sendsEmail() && meta.fromName === '')
     || (meta.subject === '' && postTitle === '')
     || (meta.preview === '' && postExcerpt === '')
     || (sendsEmail() && meta.list.length === 0);

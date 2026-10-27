@@ -59,4 +59,34 @@ describe('EmailTypeSelector', () => {
     expect(container.querySelector('option[value="daily"]')?.textContent).toBe('Daily');
     unmount();
   });
+
+  describe('From Name', () => {
+    afterEach(() => {
+      delete (globalThis as any).newsletterBuilder;
+    });
+
+    it('is shown when the provider sends email', async () => {
+      mockApiFetch.mockResolvedValue({});
+
+      const { container, unmount } = await render(<EmailTypeSelector {...props} />);
+      await flush();
+
+      // Header Type and From Name.
+      expect(container.querySelectorAll('select')).toHaveLength(2);
+      unmount();
+    });
+
+    it('is hidden when the provider does not send email', async () => {
+      // wp_localize_script() passes false as ''.
+      (globalThis as any).newsletterBuilder = { sendsEmail: '' };
+      mockApiFetch.mockResolvedValue({});
+
+      const { container, unmount } = await render(<EmailTypeSelector {...props} />);
+      await flush();
+
+      // Header Type only.
+      expect(container.querySelectorAll('select')).toHaveLength(1);
+      unmount();
+    });
+  });
 });

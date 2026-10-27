@@ -17,7 +17,7 @@ function RequiredFields({ meta, postTitle, postExcerpt }: RequiredFieldsProps) {
       {!meta.template ? (
         <p style={{ color: 'red' }}>{__('Template is Required', 'wp-newsletter-builder')}</p>
       ) : null}
-      {!meta.fromName ? (
+      {sendsEmail() && !meta.fromName ? (
         <p style={{ color: 'red' }}>{__('From Name is Required', 'wp-newsletter-builder')}</p>
       ) : null}
       {!meta.subject && !postTitle ? (

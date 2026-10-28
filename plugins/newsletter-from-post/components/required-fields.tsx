@@ -20,10 +20,10 @@ function RequiredFields({ meta, postTitle, postExcerpt }: RequiredFieldsProps) {
       {sendsEmail() && !meta.fromName ? (
         <p style={{ color: 'red' }}>{__('From Name is Required', 'wp-newsletter-builder')}</p>
       ) : null}
-      {!meta.subject && !postTitle ? (
+      {sendsEmail() && !meta.subject && !postTitle ? (
         <p style={{ color: 'red' }}>{__('Subject is Required', 'wp-newsletter-builder')}</p>
       ) : null}
-      {!meta.preview && !postExcerpt ? (
+      {sendsEmail() && !meta.preview && !postExcerpt ? (
         <p style={{ color: 'red' }}>{__('Preview Text is Required', 'wp-newsletter-builder')}</p>
       ) : null}
       {sendsEmail() && meta.list.length === 0 ? (

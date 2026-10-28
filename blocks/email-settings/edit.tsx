@@ -97,6 +97,10 @@ export default function Edit() {
     dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 
+  // Subject and preview text are only used when sending email, so hide them if the
+  // provider doesn't.
+  const showSubjectAndPreview = sendsEmail();
+
   // Email lists come from the provider, so hide them if it doesn't send email.
   const showLists = sendsEmail();
   const [lists, setLists] = useState<ListResult[]>([]);
@@ -156,20 +160,24 @@ export default function Edit() {
         templateValue={template}
         fromNameValue={fromname}
       />
-      {/* @ts-ignore */}
-      <TextControl
-        label={__('Subject', 'wp-newsletter-builder')}
-        placeholder={__('Enter subject', 'wp-newsletter-builder')}
-        value={subject}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
-      />
-      {/* @ts-ignore */}
-      <TextControl
-        label={__('Preview Text', 'wp-newsletter-builder')}
-        placeholder={__('Enter preview text', 'wp-newsletter-builder')}
-        value={preview}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
-      />
+      {showSubjectAndPreview ? (
+        <>
+          {/* @ts-ignore */}
+          <TextControl
+            label={__('Subject', 'wp-newsletter-builder')}
+            placeholder={__('Enter subject', 'wp-newsletter-builder')}
+            value={subject}
+            onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
+          />
+          {/* @ts-ignore */}
+          <TextControl
+            label={__('Preview Text', 'wp-newsletter-builder')}
+            placeholder={__('Enter preview text', 'wp-newsletter-builder')}
+            value={preview}
+            onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
+          />
+        </>
+      ) : null}
       {/* @ts-ignore */}
       {showLists && lists.length > 0 ? (
         <label

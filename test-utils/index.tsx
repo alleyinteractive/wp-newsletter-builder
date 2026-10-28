@@ -55,5 +55,5 @@ export const mockComponents = {
     </select>
   ),
   Spinner: () => null,
-  TextControl: () => null,
+  TextControl: () => <input type="text" />,
 };

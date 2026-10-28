@@ -97,8 +97,8 @@ function EmailSettings() {
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
     || (sendsEmail() && meta.fromName === '')
-    || (meta.subject === '' && postTitle === '')
-    || (meta.preview === '' && postExcerpt === '')
+    || (sendsEmail() && meta.subject === '' && postTitle === '')
+    || (sendsEmail() && meta.preview === '' && postExcerpt === '')
     || (sendsEmail() && meta.list.length === 0);
 
   /**
@@ -143,18 +143,22 @@ function EmailSettings() {
           templateValue={meta.template}
           fromNameValue={meta.fromName}
         />
-        <TextareaControl
-          label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
-          placeholder={__('Enter subject', 'wp-newsletter-builder')}
-          value={meta.subject !== '' ? meta.subject : postTitle}
-          onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
-        />
-        <TextareaControl
-          label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
-          placeholder={__('Enter preview text', 'wp-newsletter-builder')}
-          value={meta.preview !== '' ? meta.preview : postExcerpt}
-          onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
-        />
+        {sendsEmail() ? (
+          <>
+            <TextareaControl
+              label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
+              placeholder={__('Enter subject', 'wp-newsletter-builder')}
+              value={meta.subject !== '' ? meta.subject : postTitle}
+              onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
+            />
+            <TextareaControl
+              label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
+              placeholder={__('Enter preview text', 'wp-newsletter-builder')}
+              value={meta.preview !== '' ? meta.preview : postExcerpt}
+              onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
+            />
+          </>
+        ) : null}
         {sendsEmail() ? Object.keys(breakingLists).map((key: string) => {
           const value: string = breakingLists[key];
           return (

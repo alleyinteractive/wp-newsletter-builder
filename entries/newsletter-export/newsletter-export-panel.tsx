@@ -34,6 +34,9 @@ export default function NewsletterExportPanel() {
     };
   }, []);
 
+  // The export renders the saved newsletter, so unsaved changes wouldn't be included.
+  const canExport = isSaved && !isDirty;
+
   const fetchExport = () => apiFetch<ExportResponse>({
     path: `/wp-newsletter-builder/v1/export/${postId}`,
   });
@@ -106,20 +109,20 @@ export default function NewsletterExportPanel() {
         <p>{__('Save the newsletter to export its HTML.', 'wp-newsletter-builder')}</p>
       ) : null}
       {isSaved && isDirty ? (
-        <p>{__('The export uses the last saved version. Save to include your latest changes.', 'wp-newsletter-builder')}</p>
+        <p>{__('Save your changes to export the newsletter HTML.', 'wp-newsletter-builder')}</p>
       ) : null}
       <Flex justify="flex-start" wrap>
         <Button
           variant="secondary"
           onClick={copyHtml}
-          disabled={!isSaved || busy}
+          disabled={!canExport || busy}
         >
           {__('Copy HTML', 'wp-newsletter-builder')}
         </Button>
         <Button
           variant="secondary"
           onClick={downloadHtml}
-          disabled={!isSaved || busy}
+          disabled={!canExport || busy}
         >
           {__('Download .html', 'wp-newsletter-builder')}
         </Button>

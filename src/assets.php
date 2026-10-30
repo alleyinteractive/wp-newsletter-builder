@@ -15,6 +15,7 @@ add_action( 'wp_newsletter_builder_enqueue_styles', __NAMESPACE__ . '\action_new
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\action_admin_enqueue_scripts' );
 add_action( 'enqueue_block_editor_assets', __NAMESPACE__ . '\action_enqueue_block_editor_assets' );
 add_action( 'admin_head', __NAMESPACE__ . '\set_template_values' );
+add_filter( 'block_editor_settings_all', __NAMESPACE__ . '\filter_newsletter_editor_styles', 10, 2 );
 
 /**
  * A callback for the wp_enqueue_scripts hook.
@@ -321,4 +322,69 @@ function set_template_values(): void {
 		$bg_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$link_color, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
+}
+
+/**
+ * Replaces the theme's styles in the newsletter and template editors.
+ *
+ * Newsletters are rendered without the theme's styles, so showing them in the
+ * editor makes it a poor preview of the output. This removes the same styles as
+ * turning off the editor's "Use theme styles" preference, so the editor falls
+ * back to the default editor styles, then adds any styles for newsletters.
+ *
+ * @param mixed $settings The block editor settings.
+ * @param mixed $context  The block editor context.
+ * @return mixed
+ */
+function filter_newsletter_editor_styles( $settings, $context ) {
+	if (
+		! is_array( $settings )
+		|| ! $context instanceof \WP_Block_Editor_Context
+		|| ! $context->post instanceof \WP_Post
+		|| ! in_array( $context->post->post_type, [ 'nb_newsletter', 'nb_template' ], true )
+	) {
+		return $settings;
+	}
+
+	$styles = is_array( $settings['styles'] ?? null ) ? $settings['styles'] : [];
+
+	/**
+	 * Filters whether to remove the theme's styles from the newsletter and template editors.
+	 *
+	 * @param bool $remove Whether to remove the theme's styles. Defaults to true.
+	 */
+	if ( apply_filters( 'wp_newsletter_builder_remove_theme_editor_styles', true ) ) {
+		// 'theme' styles are the theme's global styles and editor stylesheets, and 'user'
+		// styles are the site's Additional CSS. Like the editor, also drop untyped styles
+		// and keep the rest, such as preset variables and duotone filters.
+		$styles = array_values(
+			array_filter(
+				$styles,
+				fn ( $style ) => is_array( $style )
+					&& is_string( $style['__unstableType'] ?? null )
+					&& ! in_array( $style['__unstableType'], [ 'theme', 'user' ], true )
+			)
+		);
+	}
+
+	/**
+	 * Filters the styles added to the newsletter and template editors.
+	 *
+	 * Use this to show styles added to newsletters with the
+	 * wp_newsletter_builder_enqueue_styles action in the editor as well.
+	 *
+	 * @param array<array{css: string, baseURL?: string}> $editor_styles The styles. Defaults to none.
+	 */
+	$editor_styles = apply_filters( 'wp_newsletter_builder_editor_styles', [] );
+
+	foreach ( $editor_styles as $style ) {
+		// The editor treats untyped styles as theme styles, which would turn its
+		// default styles back off.
+		$style['__unstableType'] = 'user';
+		$styles[]                = $style;
+	}
+
+	$settings['styles'] = $styles;
+
+	return $settings;
 }

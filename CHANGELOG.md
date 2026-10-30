@@ -10,6 +10,7 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 - Prevent looping requests when remote calls return empty
 - Include block filter and editor plugin entries in build
 - Remove theme styles from the newsletter and template editors, and add the `wp_newsletter_builder_editor_styles` and `wp_newsletter_builder_remove_theme_editor_styles` filters
+- Apply the plugin's editor styles and the template's font and colors inside the editor canvas iframe
 
 ## 0.8.0 - 2026-05-28
 

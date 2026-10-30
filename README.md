@@ -75,7 +75,7 @@ add_filter( 'wp_newsletter_builder_allowed_post_types',
 
 ### Styling Newsletters
 
-Newsletters are rendered without the theme's styles, so the plugin removes the theme's styles from the newsletter and template editors to keep them close to the output. This works like turning off the editor's "Use theme styles" preference and also removes the site's Additional CSS. The theme's color and font size presets are still available in the editor.
+Newsletters are rendered without the theme's styles, so the plugin removes the theme's styles from the newsletter and template editors to keep them close to the output. This works like turning off the editor's "Use theme styles" preference and also removes the site's Additional CSS. The editor still offers the theme's color and font size presets, but newsletters don't include their CSS.
 
 To style newsletters, add CSS to the output with the `wp_newsletter_builder_enqueue_styles` action, and add the same CSS to the editor with the `wp_newsletter_builder_editor_styles` filter:
 

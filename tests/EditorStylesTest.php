@@ -51,13 +51,22 @@ class EditorStylesTest extends Test_Case {
 	];
 
 	/**
-	 * Gets the filtered editor styles for a post of a post type.
+	 * The template variables for a newsletter without a template.
 	 *
-	 * @param string $post_type The post type.
+	 * @var string
+	 */
+	private const DEFAULT_VARIABLES = ':root {--template-font-family: Arial, sans-serif; --template-bg-color: #fefefe; --template-link-color: #0073aa;}';
+
+	/**
+	 * Gets the filtered editor styles for a post.
+	 *
+	 * @param string|\WP_Post $post A post, or a post type to create one of.
 	 * @return array<array<string, mixed>>
 	 */
-	private function get_editor_styles( string $post_type ): array {
-		$post = static::factory()->post->create_and_get( [ 'post_type' => $post_type ] );
+	private function get_editor_styles( string|\WP_Post $post ): array {
+		if ( is_string( $post ) ) {
+			$post = static::factory()->post->create_and_get( [ 'post_type' => $post ] );
+		}
 
 		return filter_newsletter_editor_styles(
 			[ 'styles' => self::STYLES ],
@@ -66,13 +75,31 @@ class EditorStylesTest extends Test_Case {
 	}
 
 	/**
-	 * Gets the CSS of the filtered editor styles for a post of a post type.
+	 * Gets the CSS of the filtered editor styles for a post.
 	 *
-	 * @param string $post_type The post type.
+	 * @param string|\WP_Post $post A post, or a post type to create one of.
 	 * @return array<string>
 	 */
-	private function get_editor_css( string $post_type ): array {
-		return array_column( $this->get_editor_styles( $post_type ), 'css' );
+	private function get_editor_css( string|\WP_Post $post ): array {
+		return array_column( $this->get_editor_styles( $post ), 'css' );
+	}
+
+	/**
+	 * Creates a template with a font and colors.
+	 *
+	 * @return int The template ID.
+	 */
+	private function create_template(): int {
+		return static::factory()->post->create(
+			[
+				'post_type'  => 'nb_template',
+				'meta_input' => [
+					'nb_template_font'       => 'Georgia, serif',
+					'nb_template_bg_color'   => '#eeeeee',
+					'nb_template_link_color' => '#ff0000',
+				],
+			]
+		);
 	}
 
 	public function test_filter_is_hooked() {
@@ -80,7 +107,7 @@ class EditorStylesTest extends Test_Case {
 	}
 
 	public function test_theme_styles_are_removed_from_newsletters_and_templates() {
-		$expected = [ '/* variables */', '/* duotone */' ];
+		$expected = [ '/* variables */', '/* duotone */', self::DEFAULT_VARIABLES ];
 
 		$this->assertSame( $expected, $this->get_editor_css( 'nb_newsletter' ) );
 		$this->assertSame( $expected, $this->get_editor_css( 'nb_template' ) );
@@ -93,7 +120,37 @@ class EditorStylesTest extends Test_Case {
 	public function test_theme_styles_can_be_kept() {
 		add_filter( 'wp_newsletter_builder_remove_theme_editor_styles', '__return_false' );
 
-		$this->assertSame( array_column( self::STYLES, 'css' ), $this->get_editor_css( 'nb_newsletter' ) );
+		$this->assertSame(
+			[ ...array_column( self::STYLES, 'css' ), self::DEFAULT_VARIABLES ],
+			$this->get_editor_css( 'nb_newsletter' )
+		);
+	}
+
+	public function test_template_variables_are_added_for_templates() {
+		$expected = ':root {--template-font-family: Georgia, serif; --template-bg-color: #eeeeee; --template-link-color: #ff0000;}';
+
+		$this->assertSame(
+			[
+				'css'            => $expected,
+				'id'             => 'wp-newsletter-builder-template-variables',
+				'__unstableType' => 'user',
+			],
+			$this->get_editor_styles( get_post( $this->create_template() ) )[2]
+		);
+	}
+
+	public function test_template_variables_are_added_for_newsletters_from_their_template() {
+		$newsletter = static::factory()->post->create_and_get(
+			[
+				'post_type'  => 'nb_newsletter',
+				'meta_input' => [ 'nb_newsletter_template' => $this->create_template() ],
+			]
+		);
+
+		$this->assertSame(
+			':root {--template-font-family: Georgia, serif; --template-bg-color: #eeeeee; --template-link-color: #ff0000;}',
+			$this->get_editor_css( $newsletter )[2]
+		);
 	}
 
 	public function test_newsletter_styles_can_be_added() {
@@ -105,15 +162,9 @@ class EditorStylesTest extends Test_Case {
 		);
 
 		$this->assertSame(
-			[
-				self::STYLES[0],
-				self::STYLES[4],
-				[
-					'css'            => '/* newsletter */',
-					'__unstableType' => 'user',
-				],
-			],
-			$this->get_editor_styles( 'nb_newsletter' )
+			[ '/* variables */', '/* duotone */', self::DEFAULT_VARIABLES, '/* newsletter */' ],
+			$this->get_editor_css( 'nb_newsletter' )
 		);
+		$this->assertSame( 'user', $this->get_editor_styles( 'nb_newsletter' )[3]['__unstableType'] );
 	}
 }

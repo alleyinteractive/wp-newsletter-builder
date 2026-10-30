@@ -1,8 +1,10 @@
-import React, { useEffect } from '@wordpress/element';
+import React from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { PluginDocumentSettingPanel } from '@wordpress/edit-post';
 import { usePostMetaValue } from '@alleyinteractive/block-editor-tools';
 import { ColorPicker, SelectControl } from '@wordpress/components';
+
+import setTemplateVariables from './set-template-variables';
 
 // @ts-ignore
 export default function NewsletterTemplateStylesPanel() {
@@ -16,12 +18,15 @@ export default function NewsletterTemplateStylesPanel() {
     linkColor: '#0073aa',
   };
 
-  // Set intial styles on load.
-  useEffect(() => {
-    document.documentElement.style.setProperty('--template-bg-color', bgColor || defaultValues.bgColor);
-    document.documentElement.style.setProperty('--template-font-family', fontStack || defaultValues.fontStack);
-    document.documentElement.style.setProperty('--template-link-color', linkColor || defaultValues.linkColor);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // The editor loads with the saved values, so this only updates it after a change.
+  const updateEditor = (changes: Partial<typeof defaultValues>) => {
+    setTemplateVariables({
+      bgColor: bgColor || defaultValues.bgColor,
+      fontStack: fontStack || defaultValues.fontStack,
+      linkColor: linkColor || defaultValues.linkColor,
+      ...changes,
+    });
+  };
 
   const emailSafeFonts = [
     { label: 'Arial', value: 'Arial, sans-serif' },
@@ -46,7 +51,7 @@ export default function NewsletterTemplateStylesPanel() {
         color={bgColor || defaultValues.bgColor}
         onChange={(color) => {
           setBgColor(color);
-          document.documentElement.style.setProperty('--template-bg-color', color);
+          updateEditor({ bgColor: color });
         }}
       />
       <h3>{__('Link color', 'wp-newsletter-builder')}</h3>
@@ -54,7 +59,7 @@ export default function NewsletterTemplateStylesPanel() {
         color={linkColor || defaultValues.linkColor}
         onChange={(color) => {
           setLinkColor(color);
-          document.documentElement.style.setProperty('--template-link-color', color);
+          updateEditor({ linkColor: color });
         }}
       />
       <h3>{__('Font family', 'wp-newsletter-builder')}</h3>
@@ -63,7 +68,7 @@ export default function NewsletterTemplateStylesPanel() {
         options={emailSafeFonts}
         onChange={(font) => {
           setFontStack(font);
-          document.documentElement.style.setProperty('--template-font-family', font);
+          updateEditor({ fontStack: font });
         }}
       />
     </PluginDocumentSettingPanel>

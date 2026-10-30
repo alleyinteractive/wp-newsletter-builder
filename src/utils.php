@@ -100,6 +100,29 @@ function get_edit_post_type(): string {
 }
 
 /**
+ * Whether the selected email provider sends email.
+ *
+ * Providers may implement an optional `sends_email(): bool` method to opt out of
+ * sending (see Email_Providers\Null_Provider). It isn't part of the Email_Provider
+ * interface so that existing third-party providers keep working; providers
+ * without it are assumed to send email.
+ *
+ * @return bool False only if the selected provider has opted out of sending.
+ */
+function provider_sends_email(): bool {
+	global $newsletter_builder_email_provider;
+
+	if (
+		$newsletter_builder_email_provider instanceof Email_Providers\Email_Provider
+		&& method_exists( $newsletter_builder_email_provider, 'sends_email' )
+	) {
+		return (bool) $newsletter_builder_email_provider->sends_email();
+	}
+
+	return true;
+}
+
+/**
  * Get the ID of the template assigned to a newsletter.
  *
  * @param int $newsletter_id The newsletter post ID.

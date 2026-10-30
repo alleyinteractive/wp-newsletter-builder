@@ -15,6 +15,7 @@ import { WP_REST_API_Post } from 'wp-types';
 import NewsletterSpinner from '@/components/newsletterSpinner';
 import useEmailLists, { Option } from '@/hooks/useEmailLists';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import sendsEmail from '@/services/sends-email';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import InvalidTemplate from './components/invalid-template';
@@ -95,10 +96,10 @@ function EmailSettings() {
 
   const areRequiredFieldsSet = meta.type === ''
     || meta.template === ''
-    || meta.fromName === ''
-    || (meta.subject === '' && postTitle === '')
-    || (meta.preview === '' && postExcerpt === '')
-    || meta.list.length === 0;
+    || (sendsEmail() && meta.fromName === '')
+    || (sendsEmail() && meta.subject === '' && postTitle === '')
+    || (sendsEmail() && meta.preview === '' && postExcerpt === '')
+    || (sendsEmail() && meta.list.length === 0);
 
   /**
    * Update the template content when the template is changed.
@@ -142,19 +143,23 @@ function EmailSettings() {
           templateValue={meta.template}
           fromNameValue={meta.fromName}
         />
-        <TextareaControl
-          label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
-          placeholder={__('Enter subject', 'wp-newsletter-builder')}
-          value={meta.subject !== '' ? meta.subject : postTitle}
-          onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
-        />
-        <TextareaControl
-          label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
-          placeholder={__('Enter preview text', 'wp-newsletter-builder')}
-          value={meta.preview !== '' ? meta.preview : postExcerpt}
-          onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
-        />
-        {Object.keys(breakingLists).map((key: string) => {
+        {sendsEmail() ? (
+          <>
+            <TextareaControl
+              label={manualSubject ? __('Subject', 'wp-newsletter-builder') : __('Subject (linked)', 'wp-newsletter-builder')}
+              placeholder={__('Enter subject', 'wp-newsletter-builder')}
+              value={meta.subject !== '' ? meta.subject : postTitle}
+              onChange={(value) => { setMeta({ nb_breaking_subject: value }); }}
+            />
+            <TextareaControl
+              label={manualPreview ? __('Preview Text', 'wp-newsletter-builder') : __('Preview Text (linked)', 'wp-newsletter-builder')}
+              placeholder={__('Enter preview text', 'wp-newsletter-builder')}
+              value={meta.preview !== '' ? meta.preview : postExcerpt}
+              onChange={(value) => { setMeta({ nb_breaking_preview: value }); }}
+            />
+          </>
+        ) : null}
+        {sendsEmail() ? Object.keys(breakingLists).map((key: string) => {
           const value: string = breakingLists[key];
           return (
             <CheckboxControl
@@ -168,8 +173,8 @@ function EmailSettings() {
               }}
             />
           );
-        })}
-        {emailListOptions.length > 0 ? (
+        }) : null}
+        {sendsEmail() && emailListOptions.length > 0 ? (
           <label
             htmlFor="wp-newsletter-builder-list"
           >
@@ -186,10 +191,10 @@ function EmailSettings() {
             />
           </label>
         ) : null}
-        {emailListOptions.length === 0 && listsLoaded ? (
+        {sendsEmail() && emailListOptions.length === 0 && listsLoaded ? (
           <p>{__('No email lists are available.', 'wp-newsletter-builder')}</p>
         ) : null}
-        {emailListOptions.length === 0 && !listsLoaded ? (
+        {sendsEmail() && emailListOptions.length === 0 && !listsLoaded ? (
           <NewsletterSpinner />
         ) : null}
         <div style={{ marginTop: '1rem' }}>

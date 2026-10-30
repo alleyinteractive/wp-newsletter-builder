@@ -9,6 +9,7 @@ import { useBlockProps } from '@wordpress/block-editor';
 
 import EmailTypeSelector from '../../components/emailTypeSelector';
 import usePostMeta from '../../hooks/usePostMeta';
+import sendsEmail from '../../services/sends-email';
 
 import './index.scss';
 
@@ -96,6 +97,12 @@ export default function Edit() {
     dispatch('core/block-editor').resetBlocks(newBlocks);
   };
 
+  // Subject and preview text are only used when sending email, so hide them if the
+  // provider doesn't.
+  const showSubjectAndPreview = sendsEmail();
+
+  // Email lists come from the provider, so hide them if it doesn't send email.
+  const showLists = sendsEmail();
   const [lists, setLists] = useState<ListResult[]>([]);
   const [listsLoaded, setListsLoaded] = useState(false);
   const listArray = Array.isArray(list) ? list : [list];
@@ -118,13 +125,16 @@ export default function Edit() {
   // Fetch each list once on mount. Depending on the list state here would refetch
   // forever when an endpoint returns an empty array.
   useEffect(() => {
+    if (!showLists) {
+      return;
+    }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' })
       .then((response) => {
         setLists(Array.isArray(response) ? response as ListResult[] : []);
       })
       .catch(() => setLists([]))
       .finally(() => setListsLoaded(true));
-  }, []);
+  }, [showLists]);
 
   useEffect(() => {
     if (!usesSuppressionLists) {
@@ -150,22 +160,26 @@ export default function Edit() {
         templateValue={template}
         fromNameValue={fromname}
       />
+      {showSubjectAndPreview ? (
+        <>
+          {/* @ts-ignore */}
+          <TextControl
+            label={__('Subject', 'wp-newsletter-builder')}
+            placeholder={__('Enter subject', 'wp-newsletter-builder')}
+            value={subject}
+            onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
+          />
+          {/* @ts-ignore */}
+          <TextControl
+            label={__('Preview Text', 'wp-newsletter-builder')}
+            placeholder={__('Enter preview text', 'wp-newsletter-builder')}
+            value={preview}
+            onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
+          />
+        </>
+      ) : null}
       {/* @ts-ignore */}
-      <TextControl
-        label={__('Subject', 'wp-newsletter-builder')}
-        placeholder={__('Enter subject', 'wp-newsletter-builder')}
-        value={subject}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_subject: newValue })}
-      />
-      {/* @ts-ignore */}
-      <TextControl
-        label={__('Preview Text', 'wp-newsletter-builder')}
-        placeholder={__('Enter preview text', 'wp-newsletter-builder')}
-        value={preview}
-        onChange={(newValue: string) => setMeta({ nb_newsletter_preview: newValue })}
-      />
-      {/* @ts-ignore */}
-      {lists.length > 0 ? (
+      {showLists && lists.length > 0 ? (
         <label
           htmlFor="wp-newsletter-builder-list"
         >
@@ -182,10 +196,10 @@ export default function Edit() {
           />
         </label>
       ) : null}
-      {lists.length === 0 && listsLoaded ? (
+      {showLists && lists.length === 0 && listsLoaded ? (
         <p>{__('No email lists are available.', 'wp-newsletter-builder')}</p>
       ) : null}
-      {lists.length === 0 && !listsLoaded ? (
+      {showLists && lists.length === 0 && !listsLoaded ? (
         /* @ts-ignore */
         <Spinner />
       ) : null}

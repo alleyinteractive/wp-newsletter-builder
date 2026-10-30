@@ -9,6 +9,10 @@ namespace WP_Newsletter_Builder\Email_Providers;
 
 /**
  * Interface Email_Provider
+ *
+ * Providers may also implement an optional `sends_email(): bool` method. Return
+ * false to indicate the provider never sends email, which disables sending and
+ * the email list requirements. See \WP_Newsletter_Builder\provider_sends_email().
  */
 interface Email_Provider {
 	/**

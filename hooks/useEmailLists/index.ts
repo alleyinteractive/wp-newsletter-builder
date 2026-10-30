@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import useNewsletterMeta from '@/hooks/useNewsletterMeta';
+import sendsEmail from '@/services/sends-email';
 
 interface ListResult {
   ListID: string;
@@ -31,6 +32,9 @@ function useEmailLists() {
   // Fetch once on mount. Depending on `lists` here would refetch forever when the
   // endpoint returns an empty array.
   useEffect(() => {
+    if (!sendsEmail()) {
+      return;
+    }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' })
       .then((response) => {
         setLists(Array.isArray(response) ? response as ListResult[] : []);

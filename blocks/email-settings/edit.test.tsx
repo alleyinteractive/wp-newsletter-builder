@@ -28,7 +28,9 @@ jest.mock('../../components/emailTypeSelector', () => ({
 jest.mock('./index.scss', () => ({}));
 
 const mockApiFetch = apiFetch as unknown as jest.Mock;
-const testWindow = window as unknown as { newsletterBuilder?: { usesSuppressionLists: boolean } };
+const testWindow = window as unknown as {
+  newsletterBuilder?: { usesSuppressionLists?: boolean; sendsEmail?: boolean | string };
+};
 
 const callsTo = (path: string) => mockApiFetch.mock.calls
   .filter(([options]) => options.path === `/wp-newsletter-builder/v1/${path}`).length;
@@ -66,5 +68,29 @@ describe('Email settings block', () => {
     expect(callsTo('lists')).toBe(1);
     expect(callsTo('suppression-lists')).toBe(0);
     unmount();
+  });
+
+  describe('Subject and Preview Text', () => {
+    it('are shown when the provider sends email', async () => {
+      mockApiFetch.mockResolvedValue([]);
+
+      const { container, unmount } = await render(<Edit />);
+      await flush();
+
+      expect(container.querySelectorAll('input[type="text"]')).toHaveLength(2);
+      unmount();
+    });
+
+    it('are hidden when the provider does not send email', async () => {
+      // wp_localize_script() passes false as ''.
+      testWindow.newsletterBuilder = { sendsEmail: '' };
+      mockApiFetch.mockResolvedValue([]);
+
+      const { container, unmount } = await render(<Edit />);
+      await flush();
+
+      expect(container.querySelectorAll('input[type="text"]')).toHaveLength(0);
+      unmount();
+    });
   });
 });

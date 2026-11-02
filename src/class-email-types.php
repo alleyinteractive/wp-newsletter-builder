@@ -94,6 +94,11 @@ class Email_Types {
 			),
 		];
 
+		// From names are only used when sending email.
+		if ( ! provider_sends_email() ) {
+			unset( $children['from_name'] );
+		}
+
 		/**
 		 * Filters the additional Fieldmanager group children that can be used to configure email types.
 		 *

@@ -62,6 +62,7 @@ function action_enqueue_post_sidebar_assets(): void {
 			'fromNames'     => $settings->get_from_names(),
 			'templates'     => $template_map,
 			'breakingLists' => ( new Breaking_Recipients() )->get_breaking_recipients(),
+			'sendsEmail'    => provider_sends_email(),
 		]
 	);
 }

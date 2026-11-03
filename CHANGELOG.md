@@ -9,6 +9,8 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 - Add tests for newsletter settings block components
 - Prevent looping requests when remote calls return empty
 - Include block filter and editor plugin entries in build
+- Remove theme styles from the newsletter and template editors, and add the `wp_newsletter_builder_editor_styles` and `wp_newsletter_builder_remove_theme_editor_styles` filters
+- Apply the plugin's editor styles and the template's font and colors inside the editor canvas iframe
 - Adds a `Null_Provider` email provider that enables all Newsletter Builder functionality except sending email. Editors can build newsletters and export their HTML without connecting an email service provider.
 - Adds an Export HTML panel to the newsletter editor to copy the rendered newsletter HTML to the clipboard or download it as an `.html` file.
 - Adds `wp-newsletter-builder/v1/export/{id}` REST endpoint that returns a newsletter's rendered HTML with CSS inlined.

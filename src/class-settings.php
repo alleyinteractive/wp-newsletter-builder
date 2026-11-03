@@ -106,12 +106,15 @@ class Settings {
 			],
 		];
 		global $newsletter_builder_email_provider;
-		if ( ! empty( $newsletter_builder_email_provider ) && $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider ) {
-			if ( $newsletter_builder_email_provider->provider_manages_from_names() ) {
-				unset( $fields['children']['from_email'] );
-				unset( $fields['children']['reply_to_email'] );
-				unset( $fields['children']['from_names'] );
-			}
+		$manages_from_names = ! empty( $newsletter_builder_email_provider )
+			&& $newsletter_builder_email_provider instanceof Email_Providers\Email_Provider
+			&& $newsletter_builder_email_provider->provider_manages_from_names();
+
+		// The From fields aren't needed if the provider manages them or doesn't send email.
+		if ( $manages_from_names || ! provider_sends_email() ) {
+			unset( $fields['children']['from_email'] );
+			unset( $fields['children']['reply_to_email'] );
+			unset( $fields['children']['from_names'] );
 		}
 		$settings = new \Fieldmanager_Group( $fields );
 		$settings->activate_submenu_page();

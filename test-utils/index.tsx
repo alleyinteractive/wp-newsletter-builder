@@ -36,6 +36,12 @@ export async function flush() {
   });
 }
 
+interface ButtonProps {
+  children?: React.ReactNode;
+  disabled?: boolean;
+  onClick?: () => void;
+}
+
 interface SelectControlProps {
   options?: Array<{ label: string; value: string }>;
   value?: string;
@@ -47,6 +53,10 @@ interface SelectControlProps {
  * `jest.mock('@wordpress/components', () => jest.requireActual('@/test-utils').mockComponents)`.
  */
 export const mockComponents = {
+  Button: ({ children, disabled, onClick }: ButtonProps) => (
+    <button type="button" disabled={disabled} onClick={onClick}>{children}</button>
+  ),
+  Flex: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
   SelectControl: ({ options = [], value }: SelectControlProps) => (
     <select value={value} onChange={() => {}}>
       {options.map((option) => (
@@ -55,5 +65,5 @@ export const mockComponents = {
     </select>
   ),
   Spinner: () => null,
-  TextControl: () => null,
+  TextControl: () => <input type="text" />,
 };

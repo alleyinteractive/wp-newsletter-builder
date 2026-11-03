@@ -35,7 +35,8 @@ add_action( 'init', __NAMESPACE__ . '\register_status_plugin_scripts' );
  */
 function action_enqueue_status_sidebar_assets(): void {
 	$post_type = get_edit_post_type();
-	if ( 'nb_newsletter' !== $post_type ) {
+	// Stats come from the email provider, so there are none if it doesn't send email.
+	if ( 'nb_newsletter' !== $post_type || ! provider_sends_email() ) {
 		return;
 	}
 	wp_enqueue_script( 'plugin-newsletter-status' );

@@ -175,6 +175,7 @@ function action_enqueue_block_editor_assets(): void {
 			'fromNames'            => $settings->get_from_names(),
 			'templates'            => $template_map,
 			'usesSuppressionLists' => $uses_suppression_lists,
+			'sendsEmail'           => provider_sends_email(),
 			'allowedPostTypes'     => $allowed_post_types,
 		]
 	);

@@ -39,8 +39,12 @@ class Block_Modifications {
 			if ( empty( $post_id ) || ( ! is_int( $post_id ) && ! $post_id instanceof \WP_Post ) ) {
 				return $block_content;
 			}
+			$newsletter_post = get_newsletter_post( $post_id );
+			if ( ! $newsletter_post instanceof \WP_Post ) {
+				return $block_content;
+			}
 			global $post;
-			$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$post = $newsletter_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 			if ( ! empty( $block['attrs']['overrideUrl'] ) ) {
 				add_filter(

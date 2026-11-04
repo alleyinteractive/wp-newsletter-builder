@@ -95,6 +95,7 @@ Entry points compiled by webpack. Include `index.php` in an entry directory for 
 ### Important Filters
 - `wp_newsletter_builder_selected_provider`: Select email provider class
 - `wp_newsletter_builder_allowed_post_types`: Filter post types in post picker
+- `wp_newsletter_builder_allowed_post_statuses`: Filter post statuses shown in newsletter post blocks (default: `publish`)
 - `wp_newsletter_builder_html_url`: Modify newsletter HTML URLs
 
 ## Build System

@@ -11,3 +11,4 @@ jobs:
     with:
       composer_install: true
       node: 22
+      php: '8.3'

@@ -94,6 +94,23 @@ add_filter( 'wp_newsletter_builder_allowed_post_types',
 );
 ```
 
+### Filtering Post Statuses Shown in Newsletters
+
+Newsletters only show published posts. A post with any other status, such as a draft or private post, is left out of the newsletter's output, its export, and the email that's sent, even if it was picked in the editor.
+
+To allow other statuses, filter `wp_newsletter_builder_allowed_post_statuses`. For example, to also show scheduled posts:
+
+```php
+add_filter( 'wp_newsletter_builder_allowed_post_statuses',
+  function( array $allowed_post_statuses ) {
+    $allowed_post_statuses[] = 'future';
+    return $allowed_post_statuses;
+  }
+);
+```
+
+Newsletters are public, so only allow statuses whose posts can be shown to anyone.
+
 ### Styling Newsletters
 
 Newsletters are rendered without the theme's styles, so the plugin removes the theme's styles from the newsletter and template editors to keep them close to the output. This works like turning off the editor's "Use theme styles" preference and also removes the site's Additional CSS. The editor still offers the theme's color and font size presets, but newsletters don't include their CSS.

@@ -74,6 +74,40 @@ function get_byline( \WP_Post|int $post ): string {
 }
 
 /**
+ * Gets a post to show in a newsletter, if its status is allowed.
+ *
+ * Newsletters are public and can be exported by anyone who can edit them, so by
+ * default only published posts are shown, whoever is viewing.
+ *
+ * @param mixed $post A post ID or object.
+ * @return \WP_Post|null The post, or null if it doesn't exist or its status isn't allowed.
+ */
+function get_newsletter_post( mixed $post ): ?\WP_Post {
+	if ( ! is_numeric( $post ) && ! $post instanceof \WP_Post ) {
+		return null;
+	}
+
+	$post = get_post( $post instanceof \WP_Post ? $post : absint( $post ) );
+	if ( ! $post instanceof \WP_Post ) {
+		return null;
+	}
+
+	/**
+	 * Filters the post statuses of posts that can be shown in newsletters.
+	 *
+	 * @param array<string> $allowed_post_statuses The allowed post statuses. Defaults to `publish`.
+	 * @param \WP_Post      $post                  The post being shown.
+	 */
+	$allowed_post_statuses = apply_filters( 'wp_newsletter_builder_allowed_post_statuses', [ 'publish' ], $post );
+
+	if ( ! in_array( get_post_status( $post ), (array) $allowed_post_statuses, true ) ) {
+		return null;
+	}
+
+	return $post;
+}
+
+/**
  * Gets the post type on the post edit screen.
  *
  * @return string

@@ -9,9 +9,11 @@
  * @package wp-newsletter-builder
  */
 
+use function WP_Newsletter_Builder\get_newsletter_post;
+
 $wp_newsletter_builder_block_post_id = $block->context['postId'] ?? null;
 
-$wp_newsletter_builder_block_post = get_post( is_numeric( $wp_newsletter_builder_block_post_id ) ? absint( $wp_newsletter_builder_block_post_id ) : null );
+$wp_newsletter_builder_block_post = get_newsletter_post( $wp_newsletter_builder_block_post_id );
 if ( empty( $wp_newsletter_builder_block_post ) ) {
 	return;
 }

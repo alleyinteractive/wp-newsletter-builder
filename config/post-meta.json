@@ -136,18 +136,21 @@
     "post_types": [
       "nb_template"
     ],
-    "type": "string"
+    "type": "string",
+    "sanitize_callback": "WP_Newsletter_Builder\\sanitize_template_font"
   },
   "nb_template_bg_color": {
     "post_types": [
       "nb_template"
     ],
-    "type": "string"
+    "type": "string",
+    "sanitize_callback": "WP_Newsletter_Builder\\sanitize_template_color"
   },
   "nb_template_link_color": {
     "post_types": [
       "nb_template"
     ],
-    "type": "string"
+    "type": "string",
+    "sanitize_callback": "WP_Newsletter_Builder\\sanitize_template_color"
   }
 }

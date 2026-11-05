@@ -13,6 +13,8 @@ All notable changes to `Newsletter Builder` will be documented in this file.
 - Apply the plugin's editor styles and the template's font and colors inside the editor canvas iframe
 - Adds a `Null_Provider` email provider that enables all Newsletter Builder functionality except sending email. Editors can build newsletters and export their HTML without connecting an email service provider.
 - Adds an Export HTML panel to the newsletter editor to copy the rendered newsletter HTML to the clipboard or download it as an `.html` file.
+- Only show published posts in newsletter post blocks, and add the `wp_newsletter_builder_allowed_post_statuses` filter to allow other statuses
+- Sanitize template font and color settings, which are output in CSS
 - Adds `wp-newsletter-builder/v1/export/{id}` REST endpoint that returns a newsletter's rendered HTML with CSS inlined.
 - The suppression group pre-publish check now only applies to providers that use suppression lists.
 

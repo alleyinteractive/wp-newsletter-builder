@@ -51,9 +51,10 @@ function action_newsletters_enqueue_styles(): void {
 	<style type="text/css">
 	<?php
 	$template_id = get_newsletter_template_id( get_queried_object_id() );
-	$font        = get_template_meta_string( $template_id, 'nb_template_font' );
-	$bg_color    = get_template_meta_string( $template_id, 'nb_template_bg_color' );
-	$link_color  = get_template_meta_string( $template_id, 'nb_template_link_color' );
+	// Sanitize again, since values saved before the meta was sanitized could contain any CSS.
+	$font       = sanitize_template_font( get_template_meta_string( $template_id, 'nb_template_font' ) );
+	$bg_color   = sanitize_template_color( get_template_meta_string( $template_id, 'nb_template_bg_color' ) );
+	$link_color = sanitize_template_color( get_template_meta_string( $template_id, 'nb_template_link_color' ) );
 	foreach ( $blocks as $block ) {
 		if ( validate_path( trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css' ) ) {
 			$entry_base_url = trailingslashit( get_entry_dir_path( $block, true ) ) . 'style-index.css';
@@ -322,9 +323,10 @@ load_scripts();
  * @return string
  */
 function get_template_variables_css( int $template_id ): string {
-	$bg_color_meta   = get_template_meta_string( $template_id, 'nb_template_bg_color' );
-	$font_meta       = get_template_meta_string( $template_id, 'nb_template_font' );
-	$link_color_meta = get_template_meta_string( $template_id, 'nb_template_link_color' );
+	// Sanitize again, since values saved before the meta was sanitized could contain any CSS.
+	$bg_color_meta   = sanitize_template_color( get_template_meta_string( $template_id, 'nb_template_bg_color' ) );
+	$font_meta       = sanitize_template_font( get_template_meta_string( $template_id, 'nb_template_font' ) );
+	$link_color_meta = sanitize_template_color( get_template_meta_string( $template_id, 'nb_template_link_color' ) );
 	$bg_color        = ! empty( $bg_color_meta ) ? $bg_color_meta : '#fefefe';
 	$font            = ! empty( $font_meta ) ? $font_meta : 'Arial, sans-serif';
 	$link_color      = ! empty( $link_color_meta ) ? $link_color_meta : '#0073aa';

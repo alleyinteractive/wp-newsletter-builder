@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "wp-newsletter-builder/header",
+  "version": "0.1.0",
+  "title": "Newsletter Header",
+  "category": "wp-newsletter-builder-newsletter",
+  "icon": "format-image",
+  "description": "Displays the header image for a newsletter",
+  "textdomain": "wp-newsletter-builder",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php"
+}

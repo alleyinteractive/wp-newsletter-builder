@@ -2,7 +2,7 @@
 
 All notable changes to `Newsletter Builder` will be documented in this file.
 
-## unreleased
+## 0.9.0 - 2026-11-04
 
 - Drop support for PHP 8.2
 - Broad update to ensure the codebase passes `composer test` PHP checks

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "wp-newsletter-builder/button",
+  "version": "0.1.0",
+  "title": "Newsletter Button",
+  "allowedBlocks": [
+    "core/button"
+  ],
+  "category": "design",
+  "icon": "button",
+  "description": "Button wrapper that provides email-friendly enhancements",
+  "textdomain": "button",
+  "editorScript": "file:index.js",
+  "editorStyle": "file:index.css",
+  "style": [
+    "file:style-index.css"
+  ],
+  "render": "file:render.php",
+  "attributes": {
+    "textColor": {
+      "type": "string",
+      "default": "#fff"
+    },
+    "bgColor": {
+      "type": "string",
+      "default": "#0279af"
+    },
+    "radius": {
+      "type": "string",
+      "default": "0"
+    },
+    "btnWidth": {
+      "type": "string",
+      "default": "max-content"
+    }
+  }
+}

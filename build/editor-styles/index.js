@@ -1,0 +1,1 @@
+!function(){"use strict";var t=window.wp.data,e=t=>!!t.isGlobalStyles&&!t.__unstableType;(0,t.subscribe)(()=>{const{styles:s=[]}=(0,t.select)("core/editor").getEditorSettings();s.some(e)&&(0,t.dispatch)("core/editor").updateEditorSettings({styles:s.filter(t=>!e(t))})},"core/editor")}();

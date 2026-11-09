@@ -3,8 +3,9 @@
  * allowing our custom blocks' styles to win.
  */
 
-// Block editor styles.
-.block-editor {
+// Block editor styles. The editor canvas is an iframe whose body is the
+// .editor-styles-wrapper. :root keeps the specificity of the old .block-editor parent.
+:root {
   .editor-styles-wrapper {
     margin: 0 auto;
     max-width: 600px;
@@ -18,7 +19,7 @@
 
     // Reset this style so that the editor matches the email client output.
     // stylelint-disable-next-line selector-max-compound-selectors
-    :where(body .is-layout-flow) > * {
+    :where(.is-layout-flow) > * {
       margin-block-start: 0;
     }
 

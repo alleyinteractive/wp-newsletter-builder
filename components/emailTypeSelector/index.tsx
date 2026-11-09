@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { WP_REST_API_Post } from 'wp-types'; // eslint-disable-line camelcase
+import sendsEmail from '@/services/sends-email';
 
 interface AdTag {
   tag_code: string;
@@ -66,6 +67,9 @@ function EmailTypeSelector({
 }: EmailTypeSelectorProps) {
   const [types, setTypes] = useState<TypeResult>({} as TypeResult);
 
+  // From names are only used when sending email, so hide them if the provider doesn't.
+  const showFromName = sendsEmail();
+
   // Fetch once on mount. Depending on `types` here would refetch forever when the
   // endpoint returns no types, since each response creates a new object.
   useEffect(() => {
@@ -78,10 +82,10 @@ function EmailTypeSelector({
   // Set the meta to be the first option if it's not set. This matches what is already
   // happpening in the UI.
   useEffect(() => {
-    if (!fromNameValue && fromNames.length > 0) {
+    if (showFromName && !fromNameValue && fromNames.length > 0) {
       fromNameHandler(fromNames[0]);
     }
-  }, [fromNameHandler, fromNameValue]);
+  }, [fromNameHandler, fromNameValue, showFromName]);
 
   const sortByLabel = (a: Option, b: Option): number => {
     if (a.label < b.label) {
@@ -124,7 +128,9 @@ function EmailTypeSelector({
     const type = types[typeValue];
     const { image, from_name: fromName } = type;
     imageHandler(parseInt(image, 10));
-    fromNameHandler(fromName);
+    if (showFromName) {
+      fromNameHandler(fromName);
+    }
     apiFetch({
       path: `/wp/v2/nb_template/${value}?context=edit`,
     }).then((response) => {
@@ -160,12 +166,14 @@ function EmailTypeSelector({
           onChange={handleChange}
         />
       ) : null}
-      <SelectControl
-        label={__('From Name', 'wp-newsletter-builder')}
-        value={fromNameValue || types[typeValue]?.from_name}
-        options={fromOptions}
-        onChange={fromNameHandler}
-      />
+      {showFromName ? (
+        <SelectControl
+          label={__('From Name', 'wp-newsletter-builder')}
+          value={fromNameValue || types[typeValue]?.from_name}
+          options={fromOptions}
+          onChange={fromNameHandler}
+        />
+      ) : null}
     </>
   );
 }

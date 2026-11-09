@@ -11,6 +11,35 @@ namespace WP_Newsletter_Builder;
 register_post_meta_from_defs();
 
 /**
+ * Sanitizes a template color, which is output in CSS.
+ *
+ * Also used as the meta's sanitize_callback in config/post-meta.json, so it's
+ * defined here, where it's available when the meta is registered.
+ *
+ * @param mixed $value The color.
+ * @return string The hex color, or an empty string if it isn't one.
+ */
+function sanitize_template_color( mixed $value ): string {
+	return is_string( $value ) ? (string) sanitize_hex_color( $value ) : '';
+}
+
+/**
+ * Sanitizes a template font stack, which is output in CSS.
+ *
+ * Allows font stacks like "Times New Roman, serif", and nothing that could end the
+ * CSS declaration or rule.
+ *
+ * Also used as the meta's sanitize_callback in config/post-meta.json, so it's
+ * defined here, where it's available when the meta is registered.
+ *
+ * @param mixed $value The font stack.
+ * @return string The font stack, or an empty string if it isn't valid.
+ */
+function sanitize_template_font( mixed $value ): string {
+	return is_string( $value ) && preg_match( '/^[A-Za-z0-9 ,-]+$/', $value ) ? $value : '';
+}
+
+/**
  * Register meta for posts or terms with sensible defaults and sanitization.
  *
  * @throws \InvalidArgumentException For unmet requirements.

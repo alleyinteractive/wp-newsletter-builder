@@ -17,3 +17,4 @@ jobs:
       - uses: alleyinteractive/action-release@develop
         with:
           node-version: '22'
+          php-version: '8.3'

@@ -2,6 +2,7 @@ import { __ } from '@wordpress/i18n';
 import { SelectControl } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
+import sendsEmail from '@/services/sends-email';
 
 type ListSelectorProps = {
   selected: string;
@@ -30,10 +31,18 @@ export default function ListSelector({
   // Fetch once on mount. Depending on `lists` here would refetch forever when the
   // endpoint returns an empty array.
   useEffect(() => {
+    if (!sendsEmail()) {
+      return;
+    }
     apiFetch({ path: '/wp-newsletter-builder/v1/lists' }).then((response) => {
       setLists(Array.isArray(response) ? response as ListResult[] : []);
     });
   }, []);
+
+  // Lists come from the email provider, so there are none if it doesn't send email.
+  if (!sendsEmail()) {
+    return null;
+  }
 
   return (
     <SelectControl

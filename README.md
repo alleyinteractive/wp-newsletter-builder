@@ -58,6 +58,27 @@ add_filter( 'wp_newsletter_builder_selected_provider',
 	fn( $provider ) => 'WP_Newsletter_Builder\Email_Providers\PROVIDER'
 );
 ```
+#### Null Provider
+
+`WP_Newsletter_Builder\Email_Providers\Null_Provider` enables all Newsletter Builder functionality except sending email. Use it when newsletters are built in WordPress but sent from another tool: editors can draft newsletters and copy or download their HTML without an email service provider connection.
+
+```php
+add_filter( 'wp_newsletter_builder_selected_provider',
+	fn( $provider ) => 'WP_Newsletter_Builder\Email_Providers\Null_Provider'
+);
+```
+
+With the Null provider selected:
+
+- Publishing a newsletter doesn't send email or make any request to an email service provider.
+- Email lists aren't required, and controls that depend on email service provider data (email lists, suppression groups, newsletter stats) are hidden.
+
+Custom providers can opt out of sending the same way by adding a `sends_email(): bool` method that returns `false`.
+
+### Exporting Newsletter HTML
+
+The newsletter editor has an **Export HTML** panel in the document settings sidebar, with buttons to copy the newsletter's HTML to the clipboard or download it as an `.html` file. The export renders the last saved version of the newsletter through the same template as the front-end view, with CSS inlined and absolute URLs, and works for drafts and published newsletters. It's available with any email provider to users who can edit the newsletter.
+
 ### Filtering Post Types Available in the Post Picker
 
 The plugin allows filtering of post types available in the Gutenberg post picker. The post picker appears in the `wp-newsletter-builder/post` block as a single post picker and in the `wp-newsletter-builder/section` block as a multiple post picker.
@@ -71,6 +92,46 @@ add_filter( 'wp_newsletter_builder_allowed_post_types',
     return $allowed_post_types;
   }
 );
+```
+
+### Filtering Post Statuses Shown in Newsletters
+
+Newsletters only show published posts. A post with any other status, such as a draft or private post, is left out of the newsletter's output, its export, and the email that's sent, even if it was picked in the editor.
+
+To allow other statuses, filter `wp_newsletter_builder_allowed_post_statuses`. For example, to also show scheduled posts:
+
+```php
+add_filter( 'wp_newsletter_builder_allowed_post_statuses',
+  function( array $allowed_post_statuses ) {
+    $allowed_post_statuses[] = 'future';
+    return $allowed_post_statuses;
+  }
+);
+```
+
+Newsletters are public, so only allow statuses whose posts can be shown to anyone.
+
+### Styling Newsletters
+
+Newsletters are rendered without the theme's styles, so the plugin removes the theme's styles from the newsletter and template editors to keep them close to the output. This works like turning off the editor's "Use theme styles" preference and also removes the site's Additional CSS. The editor still offers the theme's color and font size presets, but newsletters don't include their CSS.
+
+To style newsletters, add CSS to the output with the `wp_newsletter_builder_enqueue_styles` action, and add the same CSS to the editor with the `wp_newsletter_builder_editor_styles` filter:
+
+```php
+add_action( 'wp_newsletter_builder_enqueue_styles', function () {
+  printf( '<style>%s</style>', file_get_contents( __DIR__ . '/newsletter.css' ) );
+} );
+
+add_filter( 'wp_newsletter_builder_editor_styles', function ( array $styles ) {
+  $styles[] = [ 'css' => file_get_contents( __DIR__ . '/newsletter.css' ) ];
+  return $styles;
+} );
+```
+
+To keep the theme's styles in the editor instead:
+
+```php
+add_filter( 'wp_newsletter_builder_remove_theme_editor_styles', '__return_false' );
 ```
 
 ## Testing
